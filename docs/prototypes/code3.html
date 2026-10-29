@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface-bright":"#f8f9ff","surface-container-low":"#eff4ff","error-container":"#ffdad6","inverse-surface":"#213145","on-surface-variant":"#3f4850","surface":"#f8f9ff","primary-container":"#007bb9","secondary-fixed-dim":"#89ceff","on-tertiary-fixed-variant":"#004b74","on-secondary-container":"#004666","primary-fixed-dim":"#93ccff","secondary":"#006591","surface-tint":"#006398","surface-container-highest":"#d3e4fe","on-primary-fixed-variant":"#004b73","surface-variant":"#d3e4fe","secondary-container":"#39b8fd","on-error-container":"#93000a","error":"#ba1a1a","surface-dim":"#cbdbf5","on-tertiary-fixed":"#001d32","tertiary":"#006195","primary-fixed":"#cce5ff","on-error":"#ffffff","on-background":"#0b1c30","on-tertiary":"#ffffff","background":"#f8f9ff","on-secondary-fixed":"#001e2f","tertiary-container":"#287ab3","on-tertiary-container":"#fdfcff","on-secondary":"#ffffff","surface-container-high":"#dce9ff","on-surface":"#0b1c30","on-primary":"#ffffff","tertiary-fixed-dim":"#94ccff","secondary-fixed":"#c9e6ff","inverse-primary":"#93ccff","on-primary-fixed":"#001d31","primary":"#006194","surface-container":"#e5eeff","outline":"#707881","on-secondary-fixed-variant":"#004c6e","surface-container-lowest":"#ffffff","outline-variant":"#bfc7d2","inverse-on-surface":"#eaf1ff","on-primary-container":"#fdfcff","tertiary-fixed":"#cde5ff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-sm":"0.5rem","gutter":"1rem","space-lg":"1.5rem","margin-desktop":"2rem","margin-tablet":"1.5rem","space-md":"1rem","margin":"1rem","space-2xl":"3rem","space-xl":"2rem","space-xs":"0.25rem","gutter-desktop":"1.5rem"},"fontFamily":{"headline-md":["Plus Jakarta Sans"],"body-lg":["Inter"],"label-sm":["Inter"],"headline-lg":["Plus Jakarta Sans"],"body-sm":["Inter"],"label-md":["Inter"],"body-md":["Inter"],"label-lg":["Inter"],"display-hero-mobile":["Plus Jakarta Sans"],"telemetry-data":["Inter"],"title-md":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"display-hero":["Plus Jakarta Sans"]},"fontSize":{"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"500"}],"display-hero-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],"telemetry-data":["13px",{"lineHeight":"16px","letterSpacing":"-0.01em","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"26px","letterSpacing":"-0.01em","fontWeight":"600"}],"display-hero":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"700"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen">
+<!-- BANNER DE EMERGENCIA INMEDIATA -->
+<aside aria-label="Alerta de emergencia directa" class="bg-error text-on-error px-4 py-2 text-center text-xs sm:text-sm font-medium flex items-center justify-center gap-2 flex-wrap">
+<span class="inline-flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+    ¿Peligro de vida inminente o inundación activa en tu casa?
+  </span>
+<span class="hidden sm:inline">•</span>
+<span>Llama de inmediato y gratis a:</span>
+<a class="underline font-bold hover:text-error-container inline-flex items-center gap-0.5" href="tel:115">
+    INDECI 115
+  </a>
+<span class="mx-1">o</span>
+<a class="underline font-bold hover:text-error-container inline-flex items-center gap-0.5" href="tel:116">
+    Bomberos 116
+  </a>
+</aside>
+<!-- HEADER CIUDADANO -->
+<header class="sticky top-0 w-full z-50 bg-surface-container-lowest/95 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+<div class="h-16 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-on-primary text-[22px]">water_drop</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md tracking-tight text-on-surface flex items-center gap-1.5">
+          WARI GEO
+          <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed">Comunitario</span>
+</span>
+<span class="font-label-sm text-[11px] tracking-wide text-primary font-semibold">Portal de Reporte Ciudadano</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<a class="inline-flex items-center gap-1.5 font-label-md text-label-md text-secondary hover:text-primary transition-colors py-2 px-3 rounded-lg hover:bg-surface-container-low" data-path="dashboard-hidrologico" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span class="hidden sm:inline">Volver al Dashboard Público</span>
+<span class="sm:hidden">Dashboard</span>
+</a>
+<div class="hidden md:flex items-center gap-2 pl-2 border-l border-outline-variant/40">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-error"></span>
+</span>
+<span class="text-xs text-on-surface-variant font-medium">Recepción 24h activa</span>
+</div>
+</div>
+</div>
+</header>
+<main class="w-full bg-surface pb-16">
+<div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+<!-- ENCABEZADO CIUDADANO EMPÁTICO -->
+<div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 pb-8 border-b border-outline-variant/20">
+<div class="flex flex-col gap-2">
+<nav aria-label="Navegación secundaria" class="flex items-center gap-2 text-xs">
+<a class="text-secondary hover:text-primary transition-colors font-medium flex items-center gap-1" data-path="dashboard-hidrologico" href="#">
+<span class="material-symbols-outlined text-[14px]">home</span>
+            Inicio
+          </a>
+<span class="text-outline-variant">/</span>
+<span class="text-on-surface-variant">Comunidad</span>
+<span class="text-outline-variant">/</span>
+<span class="text-primary font-semibold">Alerta Fluvial Ciudadana</span>
+</nav>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight flex items-center gap-2">
+          Reporte Ciudadano de Alerta Fluvial
+        </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">
+          Reporta el estado del río en tu zona o comunidad para alertar a las autoridades y vecinos de Lima Metropolitana. Tu observación ayuda a activar evacuaciones y defensas a tiempo.
+        </p>
+</div>
+<div class="flex items-center gap-2 self-start bg-surface-container-low px-3.5 py-2 rounded-xl border border-outline-variant/30 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
+<span>Llega a Defensa Civil y WARI GEO en tiempo real</span>
+</div>
+</div>
+<!-- GRID PRINCIPAL -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-8">
+<!-- FORMULARIO CIUDADANO (8 / 12) -->
+<form class="lg:col-span-8 flex flex-col gap-6" id="citizenReportForm" onsubmit="event.preventDefault(); handleCitizenSubmit();">
+<!-- SECCIÓN 1: ¿DÓNDE VISTE EL PROBLEMA? -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">1</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">¿Dónde viste el problema?</h2>
+<p class="text-xs text-on-surface-variant">Selecciona el río y la zona aproximada para que las brigadas sepan a dónde acudir.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="cuencaSelect">
+                ¿Qué río es? <span class="text-error">*</span>
+</label>
+<div class="relative">
+<select class="w-full h-12 px-3.5 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer border border-transparent focus:border-primary" id="cuencaSelect" required="">
+<option disabled="" value="">Selecciona tu río...</option>
+<option selected="" value="Río Chillón">Río Chillón (Lima Norte: Carabayllo, Comas, Puente Piedra, SMP, Callao)</option>
+<option value="Río Rímac">Río Rímac (Chosica, Chaclacayo, Huachipa, Cercado de Lima, San Juan de Lurigancho)</option>
+<option value="Río Lurín">Río Lurín (Cieneguilla, Pachacámac, Lurín, Manchay)</option>
+<option value="Río Piura">Río Piura (Piura, Tambogrande, Catacaos)</option>
+<option value="Río Santa">Río Santa (Áncash)</option>
+<option value="Otro río o quebrada">Otro río, quebrada o torrentera</option>
+</select>
+<span class="material-symbols-outlined absolute right-3.5 top-3.5 pointer-events-none text-on-surface-variant text-[20px]">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="distritoInput">
+                Distrito o Localidad <span class="text-error">*</span>
+</label>
+<input class="w-full h-12 px-3.5 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary border border-transparent focus:border-primary" id="distritoInput" placeholder="Ej: Carabayllo / Chosica / Cieneguilla" required="" type="text" value="Comas - Puente Piedra"/>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="referenciaVecinal">
+              Puente, calle o referencia conocida por los vecinos <span class="text-error">*</span>
+</label>
+<input class="w-full h-12 px-3.5 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary border border-transparent focus:border-primary" id="referenciaVecinal" placeholder="Ej: A 50 metros del Puente Trapiche, frente al mercado o parque..." required="" type="text" value="A 50 metros del Puente Trapiche, frente a la parada de buses"/>
+<span class="text-xs text-on-surface-variant">Menciona puntos conocidos (paraderos, colegios, puentes, asentamiento humano) para una respuesta rápida.</span>
+</div>
+</div>
+<!-- SECCIÓN 2: ¿QUÉ NIVEL DE PELIGRO VES? -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4">
+<div class="flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">2</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">¿Qué nivel de peligro ves en este momento?</h2>
+<p class="text-xs text-on-surface-variant">Elige la opción que mejor describa la situación con tus propios ojos.</p>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-error-container text-on-error-container" id="badgeActiveRisk">
+              🔴 Peligro Inminente Seleccionado
+            </span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1" id="riskCardsGroup">
+<!-- TARJETA ROJA: CRÍTICO -->
+<label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl border-2 transition-all flex flex-col gap-2 border-error bg-error-container/20 shadow-sm" data-color="error" data-label="Peligro Inminente / Desborde" data-risk="critico">
+<input checked="" class="sr-only" name="nivelPeligro" type="radio" value="critico"/>
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-error">
+<span class="w-3 h-3 rounded-full bg-error ring-4 ring-error-container"></span>
+                  Nivel Crítico
+                </span>
+<span class="text-xl">🚨</span>
+</div>
+<span class="font-title-md text-title-md font-bold text-on-surface">Peligro Inminente / Desborde</span>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                El agua ya se está saliendo del cauce, inundando calles, viviendas o la orilla se está desplomando ahora mismo.
+              </p>
+</label>
+<!-- TARJETA NARANJA: MUY ALTO -->
+<label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl border-2 transition-all flex flex-col gap-2 border-transparent bg-surface-container-low hover:bg-surface-container opacity-85" data-color="secondary" data-label="Nivel Muy Alto" data-risk="muy-alto">
+<input class="sr-only" name="nivelPeligro" type="radio" value="muy-alto"/>
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-secondary">
+<span class="w-3 h-3 rounded-full bg-secondary ring-4 ring-secondary-fixed"></span>
+                  Nivel Severo
+                </span>
+<span class="text-xl">⚠️</span>
+</div>
+<span class="font-title-md text-title-md font-bold text-on-surface">Nivel Muy Alto</span>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                El agua está a punto de desbordar (al borde de la pista) o arrastra grandes troncos y piedras con fuerza.
+              </p>
+</label>
+<!-- TARJETA AMARILLA: ALTO / CRECIDA -->
+<label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl border-2 transition-all flex flex-col gap-2 border-transparent bg-surface-container-low hover:bg-surface-container opacity-85" data-color="tertiary" data-label="Nivel Alto / Crecida" data-risk="alto">
+<input class="sr-only" name="nivelPeligro" type="radio" value="alto"/>
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-tertiary">
+<span class="w-3 h-3 rounded-full bg-tertiary ring-4 ring-tertiary-fixed"></span>
+                  Alerta Amarilla
+                </span>
+<span class="text-xl">🌊</span>
+</div>
+<span class="font-title-md text-title-md font-bold text-on-surface">Nivel Alto / Crecida</span>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                El río ruge, está turbio (marrón) y lleva notablemente más caudal de lo habitual, pero aún dentro del cauce.
+              </p>
+</label>
+<!-- TARJETA VERDE: NORMAL -->
+<label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl border-2 transition-all flex flex-col gap-2 border-transparent bg-surface-container-low hover:bg-surface-container opacity-85" data-color="primary" data-label="Normal / Sin Peligro" data-risk="normal">
+<input class="sr-only" name="nivelPeligro" type="radio" value="normal"/>
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-primary">
+<span class="w-3 h-3 rounded-full bg-primary ring-4 ring-primary-fixed"></span>
+                  Tranquilo
+                </span>
+<span class="text-xl">✅</span>
+</div>
+<span class="font-title-md text-title-md font-bold text-on-surface">Normal / Sin Peligro</span>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                El río fluye a nivel regular, no hay aumento alarmante y no se percibe riesgo para las personas de la zona.
+              </p>
+</label>
+</div>
+</div>
+<!-- SECCIÓN 3: ¿QUÉ ESTÁ PASANDO EN EL RÍO? (MARCA LO QUE VEAS) -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">3</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">¿Qué está pasando en el río?</h2>
+<p class="text-xs text-on-surface-variant">Marca todas las situaciones que observes directamente desde donde estás.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+<label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+<input checked="" class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="Desborde de agua hacia pistas o casas"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Desborde de agua hacia pistas o casas</span>
+<span class="text-xs text-on-surface-variant">El agua ha sobrepasado el muro o terraplén</span>
+</div>
+</label>
+<label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+<input checked="" class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="El agua está carcomiendo la orilla"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">El agua carcome la orilla / orilla cayéndose</span>
+<span class="text-xs text-on-surface-variant">Trozos de tierra o enrocado caen al agua</span>
+</div>
+</label>
+<label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+<input checked="" class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="Basura, troncos o rocas atorados en el puente"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Basura, troncos o rocas atorados en el puente</span>
+<span class="text-xs text-on-surface-variant">Palizada acumulada que represa el paso del río</span>
+</div>
+</label>
+<label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+<input class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="Ruidos fuertes de piedras o amenaza de huaico"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Ruidos fuertes de piedras o amenaza de huaico</span>
+<span class="text-xs text-on-surface-variant">Estruendo de rocas rodando o lodo desde quebradas</span>
+</div>
+</label>
+<label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+<input checked="" class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="Casas, muros o postes en peligro de caer"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Casas, muros o postes en peligro de caer</span>
+<span class="text-xs text-on-surface-variant">Infraestructura vecinal amenazada por la corriente</span>
+</div>
+</label>
+<label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+<input class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="Personas o animales atrapados en el cauce"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Personas o animales atrapados en el cauce</span>
+<span class="text-xs text-error font-medium">Requiere rescate urgente de bomberos o policía</span>
+</div>
+</label>
+</div>
+</div>
+<!-- SECCIÓN 4: UBICACIÓN EXACTA Y GPS FÁCIL -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">4</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Ubicación del Reporte</h2>
+<p class="text-xs text-on-surface-variant">Puedes usar tu GPS automático o indicar la dirección en palabras sencillas.</p>
+</div>
+</div>
+<button class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors shadow-sm self-start sm:self-auto" id="btnGpsEasy" type="button">
+<span class="material-symbols-outlined text-[20px]">my_location</span>
+<span>Usar mi ubicación actual (GPS)</span>
+</button>
+</div>
+<div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between flex-wrap gap-2" id="gpsStatusBox">
+<div class="flex items-center gap-2.5">
+<span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">location_on</span>
+</span>
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant">Coordenadas detectadas:</span>
+<span class="font-telemetry-data text-telemetry-data font-semibold text-on-surface" id="gpsCoordsText">-11.892401, -77.068215 (Puente Trapiche, Comas)</span>
+</div>
+</div>
+<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed" id="gpsBadge">
+              GPS Fijado
+            </span>
+</div>
+<input id="hiddenLat" type="hidden" value="-11.892401"/>
+<input id="hiddenLon" type="hidden" value="-77.068215"/>
+</div>
+<!-- SECCIÓN 5: FOTOS O VIDEOS DEL RÍO -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">5</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Fotos o videos del río</h2>
+<p class="text-xs text-on-surface-variant">Una imagen ayuda a los rescatistas a evaluar el tamaño de la crecida.</p>
+</div>
+</div>
+<!-- ADVERTENCIA DE SEGURIDAD CIUDADANA -->
+<div class="p-3.5 rounded-xl bg-error-container/40 border border-error/30 flex items-start gap-3">
+<span class="material-symbols-outlined text-error text-[22px] shrink-0 mt-0.5">security</span>
+<div class="text-xs text-on-surface leading-relaxed">
+<strong class="font-semibold text-error">Por tu seguridad:</strong> Toma la foto o video desde un puente seguro o zona alta. <strong>No bajes al borde del agua</strong> ni te pares sobre muros o taludes que puedan desmoronarse.
+            </div>
+</div>
+<!-- ZONA DE CARGA FÁCIL -->
+<div class="rounded-2xl p-6 sm:p-8 bg-surface-container-low border-2 border-dashed border-outline-variant/60 hover:border-primary text-center flex flex-col items-center justify-center cursor-pointer transition-colors relative group">
+<input accept="image/*,video/*" class="absolute inset-0 opacity-0 cursor-pointer" id="citizenPhotoInput" multiple="" type="file"/>
+<div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-105 transition-transform mb-2">
+<span class="material-symbols-outlined text-[32px]">photo_camera</span>
+</div>
+<span class="font-title-md text-title-md text-on-surface font-semibold">Toma una foto o sube un video desde tu celular</span>
+<span class="text-xs text-on-surface-variant mt-1">Formatos admitidos: Fotos (JPG, PNG) o Videos cortos (MP4). Máximo 50 MB.</span>
+</div>
+<!-- FOTOS ADJUNTAS DE MUESTRA -->
+<div class="flex flex-col gap-2 pt-1">
+<span class="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">2 fotos listas para adjuntar</span>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-outline-variant/30">
+<div class="w-14 h-14 rounded-lg bg-cover bg-center shrink-0 overflow-hidden" data-alt="Fotografía técnica de río crecido en Lima con caudal torrencial marrón golpeando las defensas ribereñas y un puente de concreto al fondo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA5jh9oArCT_dqgV6FSIZSkeOVaIF12vLNFfORSGS0XsWKXg9OfHrBd9L_y0tnMtMGbFHWpRYMQhcRVLqMDH3gFPucoXFe12wqcvmYGDbnJA8-xsExVJ5v75AmJUlY6ropwtOgXrLLiJUdAMdsiNmzu3m6F1tpsRiWj2uA9Xb5j8Jm1jROwUOVOJTz1_dpqF_xl-bpC0DYTFx_UIVVyZ1XRdM6axs-61V3nJnKiOw')"></div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-label-md text-label-md text-on-surface font-medium truncate">Foto_Puente_Trapiche.jpg</span>
+<span class="text-xs text-on-surface-variant">Agua casi a nivel de losa</span>
+</div>
+<button class="text-outline hover:text-error p-1 transition-colors" title="Quitar foto" type="button">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-outline-variant/30">
+<div class="w-14 h-14 rounded-lg bg-cover bg-center shrink-0 overflow-hidden" data-alt="Vista de talud erosionado y piedras arrastradas por fuerte corriente de agua turbia cerca a una defensa ribereña" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAVRjS3xpJ4zqyTGNc1bpediDq3OkYJPufUFAP2Zo_3CxttlVWFPY5FZCsPVcpO9JC3sWUQkiSLDcKUe5LGjUhpDi2Dt6ru6C3ccs8szDLPRMcW5KlC_tU12pSe3EvoKfjDC_vOE4OMAgEHU9ESrKX6h4J-v4iyZZ5L-9p81e2qH6FP0c08KzThLF2O0eBmPjOB3ybwIy4YYAjul6Wm6j0bKS7WKWBZFo5YtkMiYw')"></div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-label-md text-label-md text-on-surface font-medium truncate">Foto_Orilla_Caida.jpg</span>
+<span class="text-xs text-on-surface-variant">Talud de tierra derrumbándose</span>
+</div>
+<button class="text-outline hover:text-error p-1 transition-colors" title="Quitar foto" type="button">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- SECCIÓN 6: ¿QUÉ MÁS PUEDES CONTARNOS? -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-3">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">6</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">¿Qué más puedes contarnos?</h2>
+<p class="text-xs text-on-surface-variant">Escribe con tus propias palabras lo que está pasando o lo que más te preocupa.</p>
+</div>
+</div>
+<textarea class="w-full p-4 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary border border-transparent focus:border-primary leading-relaxed" id="descripcionCiudadana" placeholder="Ej: El río creció muy rápido en la última hora. El agua está chocando contra las bases del puente y los vecinos del asentamiento humano estamos asustados porque comenzó a filtrarse agua a la calle principal..." rows="4">El río Chillón ha subido mucho desde las 7 de la mañana y el agua golpea con fuerza la orilla izquierda cerca al puente Trapiche. Parte del enrocado ya se cayó y hay 5 casas en la ribera con riesgo de inundarse. Por favor que vengan con sacos o maquinaria para reforzar.</textarea>
+</div>
+<!-- SECCIÓN 7: TUS DATOS DE CONTACTO (VERIFICACIÓN) -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4">
+<div class="flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">7</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Tus datos de contacto (para verificar el reporte)</h2>
+<p class="text-xs text-on-surface-variant">Nos comunicaremos si los rescatistas necesitan más detalles para llegar al lugar.</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="contactFields">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface font-medium" for="nombreVecino">
+                Tu nombre o apodo
+              </label>
+<input class="w-full h-11 px-3.5 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary border border-transparent focus:border-primary" id="nombreVecino" placeholder="Ej: Carlos Quispe" type="text" value="Carlos Quispe"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface font-medium" for="telefonoVecino">
+                Teléfono o WhatsApp
+              </label>
+<input class="w-full h-11 px-3.5 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary border border-transparent focus:border-primary" id="telefonoVecino" placeholder="Ej: 998 765 432" type="tel" value="998 765 432"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface font-medium" for="barrioVecino">
+                Barrio / Asentamiento Humano
+              </label>
+<input class="w-full h-11 px-3.5 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary border border-transparent focus:border-primary" id="barrioVecino" placeholder="Ej: A.H. Los Álamos, Sector 3" type="text" value="A.H. Los Álamos (Sector Trapiche)"/>
+</div>
+</div>
+<label class="flex items-center gap-2.5 pt-1 cursor-pointer">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary" id="checkAnonimo" type="checkbox"/>
+<span class="text-xs text-on-surface-variant font-medium">Deseo que mi reporte sea completamente anónimo (no mostraremos mi nombre al público)</span>
+</label>
+</div>
+<!-- ACCIONES DE ENVÍO -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+<a class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors flex items-center justify-center gap-2 border border-outline-variant/30" data-path="dashboard-hidrologico" href="#">
+<span class="material-symbols-outlined text-[20px]">close</span>
+<span>Cancelar</span>
+</a>
+<button class="w-full sm:w-auto px-8 py-4 rounded-xl bg-error hover:bg-red-700 text-on-error font-title-md text-title-md font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-3 group" id="btnSubmitCitizen" type="submit">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">send</span>
+<span>Enviar Alerta Ciudadana</span>
+</button>
+</div>
+</form>
+<!-- LATERAL DERECHO DE APOYO AL VECINO (4 / 12) -->
+<aside class="lg:col-span-4 flex flex-col gap-6 lg:sticky lg:top-24">
+<!-- TARJETA 1: RESUMEN DE TU ALERTA -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline-variant/20 flex flex-col gap-3.5">
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">visibility</span>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Resumen de tu Reporte</h3>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-error animate-ping"></span>
+</div>
+<div class="flex flex-col gap-2.5 text-xs">
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low">
+<span class="text-on-surface-variant">Río / Zona:</span>
+<span class="font-semibold text-on-surface" id="summaryCuenca">Río Chillón (Comas)</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low">
+<span class="text-on-surface-variant">Nivel de Peligro:</span>
+<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-error-container text-on-error-container" id="summaryRiesgoBadge">
+                🚨 Peligro Inminente
+              </span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low">
+<span class="text-on-surface-variant">Ubicación GPS:</span>
+<span class="font-telemetry-data font-semibold text-primary" id="summaryCoords">-11.892, -77.068</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low">
+<span class="text-on-surface-variant">Hora de reporte:</span>
+<span class="font-semibold text-on-surface" id="summaryHora">Ahora mismo</span>
+</div>
+</div>
+</div>
+<!-- TARJETA 2: TU REPORTE SALVA VIDAS -->
+<div class="bg-gradient-to-br from-primary/10 via-surface-container-lowest to-surface-container-low rounded-2xl p-5 border border-primary/20 shadow-sm flex flex-col gap-3">
+<div class="flex items-center gap-2.5 text-primary">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Tu reporte salva vidas</h3>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+            Cuando envías esta alerta, nuestro sistema notifica al instante a las brigadas de <strong>Defensa Civil</strong>, serenos municipales y a la red de monitoreo WARI GEO para despachar ayuda y avisar a los vecinos aguas abajo.
+          </p>
+</div>
+<!-- TARJETA 3: RECOMENDACIONES DE SEGURIDAD INMEDIATA -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline-variant/20 flex flex-col gap-3.5">
+<div class="flex items-center gap-2 text-secondary pb-1">
+<span class="material-symbols-outlined text-[24px]">health_and_safety</span>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Qué hacer en caso de crecida</h3>
+</div>
+<div class="flex flex-col gap-3 text-xs text-on-surface">
+<div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-surface-container-low">
+<span class="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">1</span>
+<div>
+<strong class="font-semibold block text-on-surface">Aléjate de la ribera</strong>
+<span class="text-on-surface-variant">El terreno bajo tus pies puede desmoronarse sin previo aviso.</span>
+</div>
+</div>
+<div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-surface-container-low">
+<span class="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">2</span>
+<div>
+<strong class="font-semibold block text-on-surface">No cruces puentes si el agua los toca</strong>
+<span class="text-on-surface-variant">La fuerza del agua debilita las bases y puede arrastrar vehículos.</span>
+</div>
+</div>
+<div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-surface-container-low">
+<span class="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">3</span>
+<div>
+<strong class="font-semibold block text-on-surface">Mochila de emergencia lista</strong>
+<span class="text-on-surface-variant">Agua, linterna, documentos y radio a pilas cerca a la puerta de salida.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- TARJETA 4: NÚMEROS DE AUXILIO RÁPIDO -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline-variant/20 flex flex-col gap-3">
+<div class="flex items-center gap-2 text-on-surface pb-1">
+<span class="material-symbols-outlined text-error text-[22px]">phone_in_talk</span>
+<h3 class="font-title-md text-title-md font-bold">Números de Auxilio Gratuito</h3>
+</div>
+<div class="flex flex-col gap-2.5">
+<a class="flex items-center justify-between p-3 rounded-xl bg-error-container/30 hover:bg-error-container/60 transition-colors group border border-error/20" href="tel:115">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-error text-on-error flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[20px]">emergency</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold">INDECI / COEN Nacional</span>
+<span class="text-xs text-on-surface-variant">Emergencias por desastres</span>
+</div>
+</div>
+<span class="font-telemetry-data text-xl text-error font-extrabold group-hover:scale-105 transition-transform">115</span>
+</a>
+<a class="flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors group border border-outline-variant/30" href="tel:116">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-error/10 text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">local_fire_department</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Bomberos del Perú</span>
+<span class="text-xs text-on-surface-variant">Rescate y primeros auxilios</span>
+</div>
+</div>
+<span class="font-telemetry-data text-lg text-on-surface font-bold group-hover:text-error transition-colors">116</span>
+</a>
+<a class="flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors group border border-outline-variant/30" href="tel:105">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">local_police</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Policía Nacional (PNP)</span>
+<span class="text-xs text-on-surface-variant">Central 105 / Rescate</span>
+</div>
+</div>
+<span class="font-telemetry-data text-lg text-on-surface font-bold group-hover:text-primary transition-colors">105</span>
+</a>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<!-- MODAL DE ÉXITO CIUDADANO -->
+<div class="fixed inset-0 z-50 bg-on-surface/50 backdrop-blur-sm hidden items-center justify-center p-4" id="successCitizenModal">
+<div class="bg-surface-container-lowest max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col gap-6 text-center transform transition-all scale-95 opacity-0 duration-200 border border-outline-variant/30" id="successCitizenModalContent">
+<div class="w-20 h-20 rounded-full bg-primary-fixed text-primary flex items-center justify-center mx-auto shadow-inner">
+<span class="material-symbols-outlined text-[42px]">check_circle</span>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-xs uppercase tracking-wider text-primary font-bold">¡Gracias por avisar a tiempo!</span>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">Tu reporte ha sido enviado</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Tu alerta ya fue recibida por el equipo de hidrología de WARI GEO y se transmitió a Defensa Civil de tu distrito para movilizar ayuda.
+        </p>
+</div>
+<div class="p-4 rounded-2xl bg-surface-container-low flex flex-col gap-2.5 text-left border border-outline-variant/30 text-xs">
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant">Número de ticket vecinal:</span>
+<span class="font-telemetry-data font-bold text-primary text-sm" id="modalTicket">#ALERTA-VECINAL-4921</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant">Hora de registro:</span>
+<span class="font-telemetry-data font-semibold text-on-surface" id="modalHora">Ahora mismo</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant">Estado:</span>
+<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-secondary-fixed text-on-secondary-fixed">
+            Enviado a Brigadas de Campo
+          </span>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+<a class="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg transition-colors text-center font-semibold" data-path="dashboard-hidrologico" href="#">
+          Ver el Mapa en Vivo
+        </a>
+<button class="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg transition-colors font-semibold shadow-sm" id="btnReportAnother" type="button">
+          Hacer Otro Reporte
+        </button>
+</div>
+</div>
+</div>
+<!-- SCRIPT INTERACTIVO CIUDADANO -->
+<script>
+    (function initCitizenReport() {
+      const cuencaSelect = document.getElementById('cuencaSelect');
+      const distritoInput = document.getElementById('distritoInput');
+      const summaryCuenca = document.getElementById('summaryCuenca');
+      const summaryRiesgoBadge = document.getElementById('summaryRiesgoBadge');
+      const summaryCoords = document.getElementById('summaryCoords');
+      const summaryHora = document.getElementById('summaryHora');
+      const badgeActiveRisk = document.getElementById('badgeActiveRisk');
+      const riskCards = document.querySelectorAll('.citizen-risk-card');
+      const btnGpsEasy = document.getElementById('btnGpsEasy');
+      const gpsCoordsText = document.getElementById('gpsCoordsText');
+      const gpsBadge = document.getElementById('gpsBadge');
+      const successModal = document.getElementById('successCitizenModal');
+      const successModalContent = document.getElementById('successCitizenModalContent');
+      const modalTicket = document.getElementById('modalTicket');
+      const modalHora = document.getElementById('modalHora');
+      const btnReportAnother = document.getElementById('btnReportAnother');
+
+      // Actualizar hora en el resumen
+      function updateClock() {
+        const now = new Date();
+        const hrs = String(now.getHours()).padStart(2, '0');
+        const min = String(now.getMinutes()).padStart(2, '0');
+        if (summaryHora) {
+          summaryHora.textContent = `${hrs}:${min} hrs (Hoy)`;
+        }
+      }
+      updateClock();
+
+      // Cambio de río o distrito en el resumen
+      function updateZoneSummary() {
+        if (!summaryCuenca) return;
+        const rio = cuencaSelect ? cuencaSelect.value : 'Río Chillón';
+        const dist = distritoInput && distritoInput.value ? ` (${distritoInput.value})` : '';
+        summaryCuenca.textContent = `${rio}${dist}`;
+      }
+      if (cuencaSelect) cuencaSelect.addEventListener('change', updateZoneSummary);
+      if (distritoInput) distritoInput.addEventListener('input', updateZoneSummary);
+
+      // Selección de nivel de riesgo
+      const riskConfig = {
+        'critico': {
+          badge: '🔴 Peligro Inminente Seleccionado',
+          badgeClass: 'bg-error-container text-on-error-container',
+          summaryBadge: '🚨 Peligro Inminente',
+          borderClass: 'border-error bg-error-container/20'
+        },
+        'muy-alto': {
+          badge: '🟠 Nivel Muy Alto Seleccionado',
+          badgeClass: 'bg-secondary-fixed text-on-secondary-container',
+          summaryBadge: '⚠️ Nivel Muy Alto',
+          borderClass: 'border-secondary bg-secondary-fixed/20'
+        },
+        'alto': {
+          badge: '🟡 Nivel Alto Seleccionado',
+          badgeClass: 'bg-tertiary-fixed text-on-tertiary-fixed-variant',
+          summaryBadge: '🌊 Crecida / Nivel Alto',
+          borderClass: 'border-tertiary bg-tertiary-fixed/20'
+        },
+        'normal': {
+          badge: '🟢 Nivel Normal Seleccionado',
+          badgeClass: 'bg-primary-fixed text-on-primary-fixed-variant',
+          summaryBadge: '✅ Normal / Sin Peligro',
+          borderClass: 'border-primary bg-primary-fixed/20'
+        }
+      };
+
+      riskCards.forEach(card => {
+        card.addEventListener('click', () => {
+          const risk = card.getAttribute('data-risk');
+          const radio = card.querySelector('input[type="radio"]');
+          if (radio) radio.checked = true;
+
+          // Remover clases activas de todas
+          riskCards.forEach(c => {
+            c.classList.remove('border-error', 'border-secondary', 'border-tertiary', 'border-primary', 'bg-error-container/20', 'bg-secondary-fixed/20', 'bg-tertiary-fixed/20', 'bg-primary-fixed/20');
+            c.classList.add('border-transparent', 'bg-surface-container-low', 'opacity-85');
+          });
+
+          // Activar la seleccionada
+          const cfg = riskConfig[risk];
+          if (cfg) {
+            card.classList.remove('border-transparent', 'bg-surface-container-low', 'opacity-85');
+            const classesToAdd = cfg.borderClass.split(' ');
+            card.classList.add(...classesToAdd);
+
+            if (badgeActiveRisk) {
+              badgeActiveRisk.textContent = cfg.badge;
+              badgeActiveRisk.className = `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${cfg.badgeClass}`;
+            }
+
+            if (summaryRiesgoBadge) {
+              summaryRiesgoBadge.textContent = cfg.summaryBadge;
+              summaryRiesgoBadge.className = `px-2 py-0.5 rounded-full text-[11px] font-bold ${cfg.badgeClass}`;
+            }
+          }
+        });
+      });
+
+      // Botón GPS fácil
+      if (btnGpsEasy) {
+        btnGpsEasy.addEventListener('click', () => {
+          const originalHtml = btnGpsEasy.innerHTML;
+          btnGpsEasy.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Detectando tu zona...</span>';
+          btnGpsEasy.disabled = true;
+
+          setTimeout(() => {
+            const lat = (-11.8924 + (Math.random() - 0.5) * 0.004).toFixed(6);
+            const lon = (-77.0682 + (Math.random() - 0.5) * 0.004).toFixed(6);
+            if (gpsCoordsText) {
+              gpsCoordsText.textContent = `${lat}, ${lon} (Ubicación GPS precisa)`;
+            }
+            if (summaryCoords) {
+              summaryCoords.textContent = `${lat.slice(0,7)}, ${lon.slice(0,7)}`;
+            }
+            if (gpsBadge) {
+              gpsBadge.textContent = 'GPS Actualizado';
+              gpsBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed';
+            }
+            btnGpsEasy.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>¡Ubicación fijada!</span>';
+            setTimeout(() => {
+              btnGpsEasy.innerHTML = originalHtml;
+              btnGpsEasy.disabled = false;
+            }, 2500);
+          }, 800);
+        });
+      }
+
+      // Enviar formulario
+      window.handleCitizenSubmit = function() {
+        const ticketNum = Math.floor(1000 + Math.random() * 9000);
+        if (modalTicket) modalTicket.textContent = `#ALERTA-VECINAL-${ticketNum}`;
+        const now = new Date();
+        if (modalHora) modalHora.textContent = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} (Hora local)`;
+
+        if (successModal && successModalContent) {
+          successModal.classList.remove('hidden');
+          successModal.classList.add('flex');
+          setTimeout(() => {
+            successModalContent.classList.remove('scale-95', 'opacity-0');
+            successModalContent.classList.add('scale-100', 'opacity-100');
+          }, 10);
+        }
+      };
+
+      if (btnReportAnother && successModal && successModalContent) {
+        btnReportAnother.addEventListener('click', () => {
+          successModalContent.classList.add('scale-95', 'opacity-0');
+          successModalContent.classList.remove('scale-100', 'opacity-100');
+          setTimeout(() => {
+            successModal.classList.add('hidden');
+            successModal.classList.remove('flex');
+            updateClock();
+          }, 200);
+        });
+      }
+    })();
+  </script>
+</main>
+<!-- FOOTER CIUDADANO -->
+<footer class="w-full bg-surface-container-lowest border-t border-outline-variant/30 py-6">
+<div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="font-bold text-on-surface">WARI GEO Perú</span>
+<span>•</span>
+<span>Red de Monitoreo Fluvial Comunitario</span>
+</div>
+<div class="flex items-center gap-4">
+<a class="hover:text-primary transition-colors" data-path="dashboard-hidrologico" href="#">Dashboard Público</a>
+<a class="hover:text-primary transition-colors" href="tel:115">Línea de Emergencia 115</a>
+<span>© 2025 WARI GEO</span>
+</div>
+</div>
+</footer>
+</body></html>

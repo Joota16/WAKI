@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-50" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WARI - Sistema de Monitoreo Fluvial y Riesgo de Inundaciones</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Leaflet CSS & JS -->
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
+<script crossorigin="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+            },
+            danger: {
+              500: '#ef4444',
+              600: '#dc2626',
+            },
+            warning: {
+              500: '#f59e0b',
+            },
+            caution: {
+              500: '#eab308',
+            },
+            success: {
+              500: '#10b981',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-scrollbars">
+    /* Custom clean scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+<style data-purpose="map-animations">
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 0.8; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    .pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    /* Leaflet popup customization */
+    .leaflet-popup-content-wrapper {
+      padding: 0;
+      border-radius: 0.75rem;
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      overflow: hidden;
+    }
+    .leaflet-popup-content {
+      margin: 0;
+      line-height: inherit;
+    }
+    .leaflet-popup-tip {
+      background: white;
+    }
+    .leaflet-container {
+      font-family: inherit;
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col font-sans text-slate-800 antialiased selection:bg-sky-500 selection:text-white">
+<!-- BEGIN: MainHeader -->
+<header class="bg-white border-b border-slate-200/80 sticky top-0 z-30 px-4 lg:px-6 py-2.5">
+<div class="max-w-[1920px] mx-auto flex items-center justify-between gap-4">
+<!-- Brand & Search Bar -->
+<div class="flex items-center flex-1 max-w-xl gap-4">
+<!-- Logo / Platform identity badge -->
+<div class="flex items-center gap-2 pr-2">
+<div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<span class="font-bold text-slate-900 tracking-tight text-base hidden sm:inline-block">WARI<span class="text-sky-600 font-semibold text-xs ml-1 px-1.5 py-0.5 rounded bg-sky-50 border border-sky-100">GEO</span></span>
+</div>
+<!-- Search Input -->
+<div class="relative w-full">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<input class="w-full pl-10 pr-10 py-1.5 text-sm bg-slate-100/75 hover:bg-slate-100 focus:bg-white border-none rounded-xl text-slate-700 placeholder-slate-400 focus:ring-2 focus:ring-sky-500 transition-all" id="global-search" placeholder="Buscar río, región o distrito..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+<kbd class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-medium text-slate-400 bg-white border border-slate-200 rounded shadow-xs">⌘K</kbd>
+</div>
+</div>
+</div>
+<!-- Right Actions: Notifications, Profile, Settings -->
+<div class="flex items-center gap-2 sm:gap-4 shrink-0">
+<!-- Notification button with active alert indicator -->
+<button aria-label="Ver notificaciones" class="relative p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+</button>
+<!-- Divider -->
+<div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
+<!-- User/Team profile chip -->
+<div class="flex items-center gap-2.5 pl-1 py-1 pr-2 rounded-full hover:bg-slate-100 transition-colors cursor-pointer" data-purpose="user-profile">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white text-xs font-semibold shadow-xs">
+            EW
+          </div>
+<div class="text-left hidden md:block">
+<p class="text-xs font-semibold text-slate-800 leading-tight">Equipo WARI</p>
+<p class="text-[11px] text-slate-500 leading-none">Hidrología Perú</p>
+</div>
+<svg class="w-4 h-4 text-slate-400 hidden sm:block" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<!-- Settings icon -->
+<button aria-label="Configuración" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 p-3 sm:p-4 lg:p-5 max-w-[1920px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 overflow-hidden">
+<!-- BEGIN: LeftMapColumn -->
+<section aria-label="Visualizador cartográfico interactivo de riesgo" class="lg:col-span-6 xl:col-span-6 flex flex-col rounded-2xl overflow-hidden border border-slate-200/80 bg-slate-900 shadow-sm relative min-h-[580px] lg:min-h-full">
+<!-- Top Floating Map Toolbar -->
+<div class="absolute top-3 left-3 right-3 z-[1000] flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+<!-- Category Toggle Pill -->
+<div class="pointer-events-auto bg-white/95 backdrop-blur-md p-1 rounded-xl shadow-lg border border-slate-200/60 flex items-center gap-1 text-xs font-medium" id="map-mode-toggle">
+<button class="px-3 py-1.5 rounded-lg bg-sky-600 text-white font-medium shadow-xs transition-colors" id="mode-risk" onclick="setMapMode('risk')">
+            Riesgo de inundación
+          </button>
+<button class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" id="mode-level" onclick="setMapMode('level')">
+            Nivel de río
+          </button>
+<button class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" id="mode-reports" onclick="setMapMode('reports')">
+            Reportes recientes
+          </button>
+</div>
+<!-- Timestamp & Layer Controls -->
+<div class="pointer-events-auto flex items-center gap-1.5">
+<div class="bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-slate-200/60 flex items-center gap-2 text-xs font-medium text-slate-700">
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span id="current-time-badge">24 sep 2026, 17:20</span>
+</div>
+<button aria-label="Recentrar mapa" class="bg-white/95 backdrop-blur-md p-2 rounded-xl shadow-lg border border-slate-200/60 text-slate-700 hover:text-slate-950 hover:bg-white transition-colors" id="btn-recenter" onclick="recenterLima()" title="Recentrar Lima">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 2v4m0 12v4M2 12h4m12 0h4m-7-5a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Leaflet Map Container -->
+<div class="w-full h-full min-h-[560px] z-10" id="map"></div>
+<!-- Legend Card (Bottom-Left) -->
+<div class="absolute bottom-3 left-3 z-[1000] bg-white/95 backdrop-blur-md p-3 rounded-xl shadow-lg border border-slate-200/70 text-xs w-44 pointer-events-auto">
+<p class="font-semibold text-slate-900 mb-2 text-[11px] uppercase tracking-wider">Nivel de riesgo por tramo</p>
+<div class="space-y-1.5 font-medium text-slate-700 text-[11px]">
+<div class="flex items-center gap-2">
+<span class="w-5 h-1.5 rounded-full bg-red-500"></span>
+<span>Alto</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-5 h-1.5 rounded-full bg-amber-500"></span>
+<span>Medio</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-5 h-1.5 rounded-full bg-yellow-400"></span>
+<span>Bajo</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-5 h-1.5 rounded-full bg-emerald-500"></span>
+<span>Sin riesgo</span>
+</div>
+</div>
+</div>
+<!-- Zoom Controls (Bottom-Right) -->
+<div class="absolute bottom-3 right-3 z-[1000] flex flex-col gap-1 bg-white/95 backdrop-blur-md rounded-xl p-1 shadow-lg border border-slate-200/70 pointer-events-auto">
+<button aria-label="Acercar mapa" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 font-bold transition-colors" onclick="map.zoomIn()">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<div class="h-px bg-slate-200"></div>
+<button aria-label="Alejar mapa" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 font-bold transition-colors" onclick="map.zoomOut()">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M20 12H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</section>
+<!-- END: LeftMapColumn -->
+<!-- BEGIN: RightDataColumn -->
+<section aria-label="Datos de monitoreo y detalle del tramo" class="lg:col-span-6 xl:col-span-6 flex flex-col gap-4 overflow-y-auto pr-0.5">
+<!-- BEGIN: PriorityTableCard -->
+<article class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 sm:p-5" data-purpose="priority-stretches-list">
+<div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-3">
+<div>
+<h2 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">Tramos prioritarios</h2>
+<p class="text-xs text-slate-500 mt-0.5">Cuencas hidrográficas con monitoreo activo continuo</p>
+</div>
+<button class="inline-flex items-center text-xs font-semibold text-sky-600 hover:text-sky-700 group transition-colors" onclick="recenterLima()">
+            Ver todos
+            <svg class="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Table / List Layout -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-xs sm:text-sm">
+<thead>
+<tr class="text-[11px] font-semibold uppercase text-slate-400 border-b border-slate-100">
+<th class="py-2.5 pl-2 font-medium w-8">#</th>
+<th class="py-2.5 font-medium">Río / Tramo</th>
+<th class="py-2.5 font-medium">Ubicación</th>
+<th class="py-2.5 font-medium">Nivel de riesgo</th>
+<th class="py-2.5 pr-2 font-medium text-right">Última actualización</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100/80" id="river-rows">
+<!-- Row 1: Chillón (Active selection) -->
+<tr class="river-row bg-sky-50/60 hover:bg-sky-50 transition-colors cursor-pointer" id="row-chillon" onclick="selectRiver('chillon')">
+<td class="py-3 pl-2 font-medium text-slate-400">1</td>
+<td class="py-3 font-semibold text-slate-900">
+<div>Río Chillón</div>
+<span class="text-xs font-normal text-slate-500">Tramo Comas</span>
+</td>
+<td class="py-3 text-slate-600 font-medium">Lima</td>
+<td class="py-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200/60">
+<span class="w-2 h-2 rounded-full bg-red-500"></span>
+                    Alto
+                  </span>
+</td>
+<td class="py-3 pr-2 text-right text-xs text-slate-500 whitespace-nowrap">
+                  24 sep 2026<br/><span class="text-[11px] text-slate-400">17:20</span>
+</td>
+</tr>
+<!-- Row 2: Rímac (Lima) -->
+<tr class="river-row hover:bg-slate-50/80 transition-colors cursor-pointer" id="row-rimac" onclick="selectRiver('rimac')">
+<td class="py-3 pl-2 font-medium text-slate-400">2</td>
+<td class="py-3 font-semibold text-slate-900">
+<div>Río Rímac</div>
+<span class="text-xs font-normal text-slate-500">Tramo Chosica / Centro</span>
+</td>
+<td class="py-3 text-slate-600 font-medium">Lima</td>
+<td class="py-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200/60">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                    Medio
+                  </span>
+</td>
+<td class="py-3 pr-2 text-right text-xs text-slate-500 whitespace-nowrap">
+                  24 sep 2026<br/><span class="text-[11px] text-slate-400">16:30</span>
+</td>
+</tr>
+<!-- Row 3: Lurín (Lima) -->
+<tr class="river-row hover:bg-slate-50/80 transition-colors cursor-pointer" id="row-lurin" onclick="selectRiver('lurin')">
+<td class="py-3 pl-2 font-medium text-slate-400">3</td>
+<td class="py-3 font-semibold text-slate-900">
+<div>Río Lurín</div>
+<span class="text-xs font-normal text-slate-500">Tramo Pachacámac</span>
+</td>
+<td class="py-3 text-slate-600 font-medium">Lima</td>
+<td class="py-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-800 border border-yellow-200/60">
+<span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+                    Bajo
+                  </span>
+</td>
+<td class="py-3 pr-2 text-right text-xs text-slate-500 whitespace-nowrap">
+                  24 sep 2026<br/><span class="text-[11px] text-slate-400">16:15</span>
+</td>
+</tr>
+<!-- Row 4: Piura -->
+<tr class="river-row hover:bg-slate-50/80 transition-colors cursor-pointer" id="row-piura" onclick="selectRiver('piura')">
+<td class="py-3 pl-2 font-medium text-slate-400">4</td>
+<td class="py-3 font-semibold text-slate-900">
+<div>Río Piura</div>
+<span class="text-xs font-normal text-slate-500">Tramo Bajo</span>
+</td>
+<td class="py-3 text-slate-600 font-medium">Piura</td>
+<td class="py-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200/60">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                    Medio
+                  </span>
+</td>
+<td class="py-3 pr-2 text-right text-xs text-slate-500 whitespace-nowrap">
+                  24 sep 2026<br/><span class="text-[11px] text-slate-400">16:50</span>
+</td>
+</tr>
+<!-- Row 5: Huallaga -->
+<tr class="river-row hover:bg-slate-50/80 transition-colors cursor-pointer" id="row-huallaga" onclick="selectRiver('huallaga')">
+<td class="py-3 pl-2 font-medium text-slate-400">5</td>
+<td class="py-3 font-semibold text-slate-900">
+<div>Río Huallaga</div>
+<span class="text-xs font-normal text-slate-500">Tramo Tocache</span>
+</td>
+<td class="py-3 text-slate-600 font-medium">San Martín</td>
+<td class="py-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-800 border border-yellow-200/60">
+<span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+                    Bajo
+                  </span>
+</td>
+<td class="py-3 pr-2 text-right text-xs text-slate-500 whitespace-nowrap">
+                  24 sep 2026<br/><span class="text-[11px] text-slate-400">14:05</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article>
+<!-- END: PriorityTableCard -->
+<!-- BEGIN: StretchDetailCard -->
+<article class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 sm:p-5 flex-1 flex flex-col justify-between" data-purpose="stretch-detailed-card" id="detalle-chillon">
+<!-- Header Info & Alert Badge -->
+<div>
+<div class="flex items-start justify-between gap-3 mb-3">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight" id="card-river-title">Río Chillón – Tramo Comas</h3>
+</div>
+<p class="text-xs text-slate-500 mt-0.5" id="card-river-station">Estación Telemétrica Puente Comas • Cuenca Chillón</p>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600 text-white shadow-sm shrink-0" id="card-river-badge">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span id="card-river-badge-text">Riesgo Alto</span>
+</span>
+</div>
+<!-- Secondary Tabs Navigation -->
+<div class="flex items-center border-b border-slate-200 overflow-x-auto text-xs font-medium text-slate-500 gap-6 mb-4" id="detail-tabs">
+<button class="tab-button py-2 border-b-2 border-sky-600 text-sky-600 font-semibold whitespace-nowrap transition-colors" id="tab-btn-resumen" onclick="switchTab('resumen')">Resumen</button>
+<button class="tab-button py-2 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap transition-colors" id="tab-btn-nivel" onclick="switchTab('nivel')">Nivel del río</button>
+<button class="tab-button py-2 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap transition-colors" id="tab-btn-imagenes" onclick="switchTab('imagenes')">Imágenes</button>
+<button class="tab-button py-2 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap transition-colors" id="tab-btn-reportes" onclick="switchTab('reportes')">Reportes</button>
+<button class="tab-button py-2 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap transition-colors" id="tab-btn-historico" onclick="switchTab('historico')">Histórico</button>
+</div>
+<!-- TAB PANELS CONTAINER -->
+<!-- 1. RESUMEN PANEL -->
+<div class="tab-panel flex flex-col gap-4" id="tab-panel-resumen">
+<!-- Metrics and Monitoring Inner Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+<!-- Live Camera Feed Box -->
+<div class="md:col-span-7 bg-slate-950 rounded-xl overflow-hidden relative shadow-sm group min-h-[160px] flex items-center justify-center">
+<!-- Visual River Camera Render Placeholder SVG -->
+<svg class="w-full h-full object-cover min-h-[160px]" viewbox="0 0 400 240">
+<rect fill="#78716c" height="240" width="400"></rect>
+<path d="M 0,90 Q 150,70 400,85 L 400,240 Z" fill="#44403c"></path>
+<polygon fill="#57534e" points="0,110 130,110 90,240 0,240"></polygon>
+<polygon fill="#57534e" points="400,110 270,110 310,240 400,240"></polygon>
+<path d="M 90,240 L 130,110 Q 200,105 270,110 L 310,240 Z" fill="#854d0e" id="cam-water-path"></path>
+<path d="M 100,220 Q 200,200 300,215" fill="none" stroke="#a16207" stroke-width="3"></path>
+<path d="M 120,180 Q 200,160 280,175" fill="none" stroke="#ca8a04" stroke-width="2.5"></path>
+<path d="M 140,140 Q 200,130 260,138" fill="none" stroke="#a16207" stroke-width="2"></path>
+</svg>
+<!-- Live badge overlay -->
+<div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md text-[11px] text-white font-medium">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+<span><span id="cam-code-name">Cámara C-01</span> <span class="text-emerald-400 font-bold">(En vivo)</span></span>
+</div>
+<!-- Live timestamp overlay -->
+<div class="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-md px-2 py-1 rounded-md text-[11px] text-slate-200 font-mono">
+                24 sep 2026, 17:20
+              </div>
+<!-- Camera controls bar -->
+<div class="absolute bottom-2 inset-x-2 flex items-center justify-between text-white/80 text-[10px] px-2 bg-gradient-to-t from-black/80 to-transparent pt-3 pb-1">
+<span>FPS: 30 • 1080p Stream</span>
+<span class="hover:text-white cursor-pointer underline">Pantalla completa</span>
+</div>
+</div>
+<!-- Current Water Level & Trend Sparkline Box -->
+<div class="md:col-span-5 bg-slate-50 border border-slate-200/70 rounded-xl p-3.5 flex flex-col justify-between">
+<div>
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Nivel actual del río</p>
+<div class="flex items-baseline gap-2 mt-1.5">
+<span class="text-3xl font-extrabold text-slate-900 tracking-tight" id="current-water-level">↑ 2.35 m</span>
+</div>
+<div class="inline-flex items-center gap-1 mt-1 text-xs font-bold text-red-600 bg-red-100/60 px-2 py-0.5 rounded-md" id="level-delta-badge">
+<span id="level-delta-text">↑ +0.48 m</span>
+<span class="font-normal text-slate-600 text-[11px]">respecto a hace 24 horas</span>
+</div>
+</div>
+<!-- Sparkline Chart (Trend last 24h) -->
+<div class="mt-3">
+<div class="flex justify-between items-center text-[10px] text-slate-400 font-medium mb-1">
+<span>Tendencia (últimas 24 h)</span>
+<span class="font-bold text-red-600" id="trend-summary-text">Alza continua</span>
+</div>
+<!-- Sparkline SVG -->
+<div class="h-14 w-full">
+<svg class="w-full h-full overflow-visible" viewbox="0 0 200 60">
+<defs>
+<lineargradient id="gradientRed" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#ef4444" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#ef4444" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<path d="M 0,46 Q 35,45 70,42 T 140,32 T 200,12 L 200,60 L 0,60 Z" fill="url(#gradientRed)" id="sparkline-fill"></path>
+<path d="M 0,46 Q 35,45 70,42 T 140,32 T 200,12" fill="none" id="sparkline-path" stroke="#ef4444" stroke-linecap="round" stroke-width="2.5"></path>
+<circle cx="200" cy="12" fill="#ef4444" id="sparkline-dot" r="3.5" stroke="#ffffff" stroke-width="2"></circle>
+</svg>
+</div>
+<div class="flex justify-between text-[9px] text-slate-400 font-mono mt-0.5">
+<span>17:00</span>
+<span>23:00</span>
+<span>05:00</span>
+<span>11:00</span>
+<span>17:00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Modules: IA Analysis & Citizen Reports -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-3 border-t border-slate-100">
+<!-- AI Vision Analysis Module -->
+<div class="md:col-span-6 bg-white border border-slate-200/80 rounded-xl p-3 flex flex-col justify-between" data-purpose="ai-analysis-block">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+<svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                  Análisis de IA
+                </span>
+<span class="text-[10px] font-semibold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">
+                  Modelo v3.4
+                </span>
+</div>
+<div class="flex items-center gap-3">
+<!-- AI Segmentation Thumbnail SVG -->
+<div class="w-20 h-16 rounded-lg bg-slate-800 overflow-hidden shrink-0 border border-slate-200 relative">
+<svg class="w-full h-full object-cover" viewbox="0 0 100 80">
+<rect fill="#475569" height="80" width="100"></rect>
+<path d="M 20,80 L 35,40 Q 60,35 75,40 L 90,80 Z" fill="#0284c7" opacity="0.9"></path>
+<path d="M 20,80 L 35,40 Q 60,35 75,40 L 90,80 Z" fill="none" stroke="#38bdf8" stroke-dasharray="2,2" stroke-width="2"></path>
+</svg>
+<span class="absolute bottom-0.5 right-0.5 text-[8px] bg-black/70 text-white font-mono px-1 rounded">Mask</span>
+</div>
+<!-- AI bullet verification checks -->
+<ul class="text-[11px] space-y-1 text-slate-700 font-medium">
+<li class="flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg>
+<span>Agua detectada correctamente</span>
+</li>
+<li class="flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg>
+<span id="ai-change-info">Cambio de nivel: <strong>+0.48 m</strong> (estimado)</span>
+</li>
+<li class="flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg>
+<span id="ai-confidence-info">Confianza del modelo: <strong>87%</strong></span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Citizen Reports Module -->
+<div class="md:col-span-6 bg-white border border-slate-200/80 rounded-xl p-3 flex flex-col justify-between" data-purpose="citizen-reports-block">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+<svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                  Últimos reportes ciudadanos
+                </span>
+<span class="text-[10px] text-sky-600 font-semibold cursor-pointer hover:underline" id="reports-count-label" onclick="switchTab('reportes')">Ver 4 reportes</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-20 h-16 rounded-lg bg-amber-950 overflow-hidden shrink-0 border border-slate-200 relative">
+<svg class="w-full h-full object-cover" viewbox="0 0 100 80">
+<rect fill="#78350f" height="80" width="100"></rect>
+<path d="M 0,55 Q 50,45 100,50 L 100,80 L 0,80 Z" fill="#92400e"></path>
+<circle cx="50" cy="25" fill="#d97706" opacity="0.3" r="12"></circle>
+</svg>
+<span class="absolute top-1 left-1 bg-black/60 rounded px-1 text-[8px] text-white">Foto</span>
+</div>
+<div class="text-[11px] leading-tight space-y-1">
+<p class="font-bold text-slate-800" id="citizen-headline">Aumento de nivel</p>
+<p class="text-slate-500 flex items-center gap-1" id="citizen-location">
+<svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    Comas, Lima
+                  </p>
+<p class="text-slate-400 text-[10px] flex items-center gap-1">
+<svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    Hace 2 horas • Validado
+                  </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 2. NIVEL DEL RÍO PANEL -->
+<div class="tab-panel hidden flex flex-col gap-4" id="tab-panel-nivel">
+<div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4">
+<h4 class="font-bold text-sm text-slate-900 mb-1 flex items-center gap-2">
+<svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+Umbrales Hidrológicos y Cotas de Seguridad
+</h4>
+<p class="text-xs text-slate-500 mb-4">Parámetros oficiales del Servicio Nacional de Meteorología e Hidrología (SENAMHI)</p>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+<div class="bg-white p-3 rounded-lg border border-yellow-200 shadow-xs">
+<div class="flex items-center justify-between mb-1">
+<span class="text-xs font-bold text-yellow-700">Alerta Amarilla</span>
+<span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+</div>
+<p class="text-lg font-black text-slate-800">1.60 m</p>
+<p class="text-[11px] text-slate-500 mt-1">Incremento preventivo en cauce normal</p>
+</div>
+<div class="bg-white p-3 rounded-lg border border-amber-200 shadow-xs">
+<div class="flex items-center justify-between mb-1">
+<span class="text-xs font-bold text-amber-700">Alerta Naranja</span>
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+</div>
+<p class="text-lg font-black text-slate-800">2.10 m</p>
+<p class="text-[11px] text-slate-500 mt-1">Posibilidad de socavación y erosión</p>
+</div>
+<div class="bg-white p-3 rounded-lg border border-red-200 shadow-xs">
+<div class="flex items-center justify-between mb-1">
+<span class="text-xs font-bold text-red-700">Alerta Roja</span>
+<span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span>
+</div>
+<p class="text-lg font-black text-red-600">2.30 m</p>
+<p class="text-[11px] text-slate-500 mt-1">Riesgo inminente de desborde e inundación</p>
+</div>
+</div>
+</div>
+<div class="p-3.5 bg-white border border-slate-200/80 rounded-xl">
+<div class="flex items-center justify-between text-xs mb-2">
+<span class="font-semibold text-slate-700">Capacidad hidráulica de cauce ocupada</span>
+<span class="font-bold text-red-600" id="hydraulic-pct">94%</span>
+</div>
+<div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+<div class="bg-red-500 h-3 rounded-full transition-all duration-500" id="hydraulic-bar" style="width: 94%"></div>
+</div>
+<div class="flex justify-between text-[10px] text-slate-400 mt-1.5 font-mono">
+<span>0.0 m (Base)</span>
+<span>1.6 m (Amarilla)</span>
+<span>2.1 m (Naranja)</span>
+<span>2.5 m (Límite Mota)</span>
+</div>
+</div>
+</div>
+<!-- 3. IMÁGENES PANEL -->
+<div class="tab-panel hidden flex flex-col gap-3" id="tab-panel-imagenes">
+<div class="flex items-center justify-between">
+<h4 class="font-bold text-xs uppercase tracking-wider text-slate-500">Capturas Telemétricas en Directo</h4>
+<span class="text-xs text-slate-400">Actualizado hace 2 min</span>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+<div class="group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 aspect-video cursor-pointer">
+<svg class="w-full h-full object-cover" viewbox="0 0 160 90">
+<rect fill="#1e293b" height="90" width="160"></rect>
+<path d="M 0,40 Q 60,30 160,35 L 160,90 Z" fill="#0f172a"></path>
+<path d="M 30,90 L 60,40 Q 90,38 120,40 L 140,90 Z" fill="#3b82f6" opacity="0.4"></path>
+</svg>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">Ver HD</div>
+<span class="absolute top-1.5 left-1.5 bg-black/60 backdrop-blur-xs text-white text-[9px] px-1.5 py-0.5 rounded font-mono">CAM-01 • Frontal</span>
+</div>
+<div class="group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 aspect-video cursor-pointer">
+<svg class="w-full h-full object-cover" viewbox="0 0 160 90">
+<rect fill="#334155" height="90" width="160"></rect>
+<path d="M 20,90 L 40,30 L 130,30 L 150,90 Z" fill="#0369a1" opacity="0.6"></path>
+<circle cx="80" cy="50" fill="#38bdf8" opacity="0.25" r="15"></circle>
+</svg>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">Ver HD</div>
+<span class="absolute top-1.5 left-1.5 bg-black/60 backdrop-blur-xs text-white text-[9px] px-1.5 py-0.5 rounded font-mono">CAM-02 • Pila Central</span>
+</div>
+<div class="group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 aspect-video cursor-pointer">
+<svg class="w-full h-full object-cover" viewbox="0 0 160 90">
+<rect fill="#020617" height="90" width="160"></rect>
+<path d="M 0,30 L 160,50 L 160,90 Z" fill="#1e293b"></path>
+<line stroke="#22c55e" stroke-dasharray="2,2" stroke-width="1.5" x1="10" x2="150" y1="20" y2="80"></line>
+</svg>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">Ver HD</div>
+<span class="absolute top-1.5 left-1.5 bg-emerald-950/80 text-emerald-300 text-[9px] px-1.5 py-0.5 rounded font-mono">Infrarrojo / Nocturna</span>
+</div>
+</div>
+<p class="text-[11px] text-slate-500 italic text-center">Filtro de segmentación neuronal activado sobre sensores ópticos de ribera.</p>
+</div>
+<!-- 4. REPORTES PANEL -->
+<div class="tab-panel hidden flex flex-col gap-2.5" id="tab-panel-reportes">
+<div class="flex items-center justify-between pb-1 border-b border-slate-100">
+<span class="text-xs font-semibold text-slate-700">Avisos comunitarios validados (Últimas 12 horas)</span>
+<button class="text-xs font-medium text-sky-600 hover:text-sky-700">+ Registrar nuevo aviso</button>
+</div>
+<div class="space-y-2 text-xs">
+<div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50/60 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-red-500"></span>
+<div>
+<p class="font-semibold text-slate-800">Filtración leve en muro de contención</p>
+<p class="text-[11px] text-slate-500">Vecinos del Asentamiento Tambo Inga • Hace 45 min</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-700">Verificado</span>
+</div>
+<div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50/60 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<div>
+<p class="font-semibold text-slate-800">Acumulación de palizadas bajo el puente</p>
+<p class="text-[11px] text-slate-500">Comité Vecinal Río Seco • Hace 2 horas</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700">En revisión</span>
+</div>
+<div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50/60 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<div>
+<p class="font-semibold text-slate-800">Despeje exitoso de compuertas auxiliares</p>
+<p class="text-[11px] text-slate-500">Personal Defensa Civil Local • Hace 3 horas</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">Resuelto</span>
+</div>
+</div>
+</div>
+<!-- 5. HISTÓRICO PANEL -->
+<div class="tab-panel hidden flex flex-col gap-3" id="tab-panel-historico">
+<div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+<h4 class="font-bold text-xs text-slate-900 mb-1">Caudales Máximos Históricos vs Fenómeno El Niño</h4>
+<p class="text-[11px] text-slate-500 mb-3">Valores pico registrados en la estación hidrométrica en los últimos 25 años.</p>
+<div class="space-y-2">
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1">
+<span class="text-slate-700">Marzo 2017 (El Niño Costero)</span>
+<span class="text-red-600 font-bold">145 m³/s (Desborde)</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-2">
+<div class="bg-red-500 h-2 rounded-full" style="width: 95%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1">
+<span class="text-slate-700">Marzo 2023 (Ciclón Yaku)</span>
+<span class="text-amber-600 font-bold">118 m³/s (Cercano a cota)</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-2">
+<div class="bg-amber-500 h-2 rounded-full" style="width: 78%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1">
+<span class="text-slate-700">Actual (Septiembre 2026)</span>
+<span class="text-sky-600 font-bold" id="historical-current-flow">88.5 m³/s (Monitoreo)</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-2">
+<div class="bg-sky-500 h-2 rounded-full" id="historical-current-bar" style="width: 58%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- END: StretchDetailCard -->
+</section>
+<!-- END: RightDataColumn -->
+</main>
+<!-- END: MainContent -->
+<script data-purpose="leaflet-and-interactions">
+  // River Datastore for interactive switching
+  const RIVERS_DATA = {
+    chillon: {
+      name: 'Río Chillón',
+      stretch: 'Tramo Comas',
+      title: 'Río Chillón – Tramo Comas',
+      station: 'Estación Telemétrica Puente Comas • Cuenca Chillón',
+      location: 'Lima',
+      riskLevel: 'Alto',
+      badgeClass: 'bg-red-600 text-white',
+      badgeText: 'Riesgo Alto',
+      level: '↑ 2.35 m',
+      delta: '↑ +0.48 m',
+      deltaClass: 'text-red-600 bg-red-100/60',
+      trend: 'Alza continua',
+      trendColor: '#ef4444',
+      camCode: 'Cámara C-01 (Puente Comas)',
+      camWaterColor: '#854d0e',
+      aiChange: '+0.48 m (estimado)',
+      aiConfidence: '87%',
+      citizenHeadline: 'Aumento de nivel',
+      citizenLocation: 'Comas, Lima',
+      citizenCount: 'Ver 4 reportes',
+      hydraulicPct: '94%',
+      hydraulicBarClass: 'bg-red-500',
+      flowM3: '88.5 m³/s (Monitoreo)',
+      flowPct: '58%',
+      latLng: [-11.932, -77.065],
+      zoom: 12.5,
+      polyline: [
+        [-11.750, -76.850],
+        [-11.830, -76.950],
+        [-11.900, -77.030],
+        [-11.932, -77.065],
+        [-11.955, -77.100],
+        [-11.980, -77.140]
+      ],
+      color: '#ef4444'
+    },
+    rimac: {
+      name: 'Río Rímac',
+      stretch: 'Tramo Chosica / Centro',
+      title: 'Río Rímac – Tramo Chosica / Lima Centro',
+      station: 'Estación Chosica - Puente Balta • Cuenca Rímac',
+      location: 'Lima',
+      riskLevel: 'Medio',
+      badgeClass: 'bg-amber-500 text-white',
+      badgeText: 'Riesgo Medio',
+      level: '↑ 1.78 m',
+      delta: '↑ +0.22 m',
+      deltaClass: 'text-amber-700 bg-amber-100/70',
+      trend: 'Tendencia moderada',
+      trendColor: '#f59e0b',
+      camCode: 'Cámara R-04 (Chosica)',
+      camWaterColor: '#92400e',
+      aiChange: '+0.22 m (estimado)',
+      aiConfidence: '91%',
+      citizenHeadline: 'Arrastre moderado de sedimentos',
+      citizenLocation: 'Lurigancho-Chosica, Lima',
+      citizenCount: 'Ver 2 reportes',
+      hydraulicPct: '71%',
+      hydraulicBarClass: 'bg-amber-500',
+      flowM3: '65.2 m³/s (Vigilancia)',
+      flowPct: '45%',
+      latLng: [-11.940, -76.705],
+      zoom: 12.5,
+      polyline: [
+        [-11.850, -76.380],
+        [-11.940, -76.705],
+        [-12.010, -76.900],
+        [-12.043, -77.028],
+        [-12.060, -77.125]
+      ],
+      color: '#f59e0b'
+    },
+    lurin: {
+      name: 'Río Lurín',
+      stretch: 'Tramo Pachacámac',
+      title: 'Río Lurín – Tramo Pachacámac',
+      station: 'Estación Telemétrica Manchay Bajo • Cuenca Lurín',
+      location: 'Lima',
+      riskLevel: 'Bajo',
+      badgeClass: 'bg-yellow-500 text-slate-900',
+      badgeText: 'Riesgo Bajo',
+      level: '→ 0.95 m',
+      delta: '→ +0.05 m',
+      deltaClass: 'text-yellow-800 bg-yellow-100',
+      trend: 'Estable',
+      trendColor: '#eab308',
+      camCode: 'Cámara L-02 (Pachacámac)',
+      camWaterColor: '#a16207',
+      aiChange: '+0.05 m (estable)',
+      aiConfidence: '94%',
+      citizenHeadline: 'Caudal habitual sin desbordes',
+      citizenLocation: 'Pachacámac / Lurín',
+      citizenCount: 'Ver 1 reporte',
+      hydraulicPct: '38%',
+      hydraulicBarClass: 'bg-yellow-400',
+      flowM3: '18.4 m³/s (Normal)',
+      flowPct: '20%',
+      latLng: [-12.215, -76.870],
+      zoom: 12.5,
+      polyline: [
+        [-12.050, -76.500],
+        [-12.130, -76.700],
+        [-12.215, -76.870],
+        [-12.260, -76.905]
+      ],
+      color: '#eab308'
+    },
+    piura: {
+      name: 'Río Piura',
+      stretch: 'Tramo Bajo',
+      title: 'Río Piura – Tramo Bajo',
+      station: 'Estación Sánchez Cerro • Cuenca Piura',
+      location: 'Piura',
+      riskLevel: 'Medio',
+      badgeClass: 'bg-amber-500 text-white',
+      badgeText: 'Riesgo Medio',
+      level: '↑ 1.62 m',
+      delta: '↑ +0.30 m',
+      deltaClass: 'text-amber-700 bg-amber-100/70',
+      trend: 'Creciente',
+      trendColor: '#f59e0b',
+      camCode: 'Cámara P-01 (Puente Cáceres)',
+      camWaterColor: '#854d0e',
+      aiChange: '+0.30 m (estimado)',
+      aiConfidence: '89%',
+      citizenHeadline: 'Repunte matutino por lluvias en sierra',
+      citizenLocation: 'Piura centro',
+      citizenCount: 'Ver 3 reportes',
+      hydraulicPct: '68%',
+      hydraulicBarClass: 'bg-amber-500',
+      flowM3: '420 m³/s (Precaución)',
+      flowPct: '60%',
+      latLng: [-5.194, -80.632],
+      zoom: 12,
+      polyline: [
+        [-5.100, -80.550],
+        [-5.194, -80.632],
+        [-5.250, -80.700]
+      ],
+      color: '#f59e0b'
+    },
+    huallaga: {
+      name: 'Río Huallaga',
+      stretch: 'Tramo Tocache',
+      title: 'Río Huallaga – Tramo Tocache',
+      station: 'Estación Tocache • Cuenca Huallaga',
+      location: 'San Martín',
+      riskLevel: 'Bajo',
+      badgeClass: 'bg-yellow-500 text-slate-900',
+      badgeText: 'Riesgo Bajo',
+      level: '→ 3.80 m',
+      delta: '↓ -0.15 m',
+      deltaClass: 'text-yellow-800 bg-yellow-100',
+      trend: 'Descenso',
+      trendColor: '#10b981',
+      camCode: 'Cámara H-03 (Puerto Tocache)',
+      camWaterColor: '#78350f',
+      aiChange: '-0.15 m (descenso)',
+      aiConfidence: '92%',
+      citizenHeadline: 'Tránsito fluvial normalizado',
+      citizenLocation: 'Tocache, San Martín',
+      citizenCount: 'Ver 1 reporte',
+      hydraulicPct: '42%',
+      hydraulicBarClass: 'bg-yellow-400',
+      flowM3: '1,250 m³/s (Estable)',
+      flowPct: '42%',
+      latLng: [-8.188, -76.513],
+      zoom: 12,
+      polyline: [
+        [-8.100, -76.450],
+        [-8.188, -76.513],
+        [-8.250, -76.580]
+      ],
+      color: '#eab308'
+    }
+  };
+
+  let map;
+  let activeRiverKey = 'chillon';
+  let riverPolylines = {};
+  let riverMarkers = {};
+  let currentMapMode = 'risk';
+  let reportMarkers = [];
+
+  // Initialize Leaflet Map
+  function initMap() {
+    // Centered at Lima Metropolitana
+    map = L.map('map', {
+      center: [-12.0464, -77.0428],
+      zoom: 11,
+      zoomControl: false // Using custom bottom-right controls
+    });
+
+    // Clean, free OpenStreetMap tile layer (No API key required, zero watermarks)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Ensure tiles render seamlessly without container calculation glitches
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 200);
+
+    // Draw River Polylines
+    Object.keys(RIVERS_DATA).forEach(key => {
+      const data = RIVERS_DATA[key];
+      const line = L.polyline(data.polyline, {
+        color: data.color,
+        weight: key === activeRiverKey ? 6 : 4,
+        opacity: 0.85,
+        lineCap: 'round',
+        lineJoin: 'round'
+      }).addTo(map);
+
+      line.on('click', () => {
+        selectRiver(key);
+      });
+
+      riverPolylines[key] = line;
+
+      // Add Custom Station Marker
+      const isRed = data.riskLevel === 'Alto';
+      const isAmber = data.riskLevel === 'Medio';
+      const colorBg = isRed ? 'bg-red-600' : isAmber ? 'bg-amber-500' : 'bg-yellow-500';
+      const pulseHtml = isRed ? '<div class="absolute w-8 h-8 rounded-full bg-red-500/40 pulse-ring"></div>' : '';
+
+      const markerHtml = `
+        <div class="relative flex items-center justify-center cursor-pointer -translate-x-1/2 -translate-y-1/2">
+          ${pulseHtml}
+          <div class="w-6 h-6 rounded-full ${colorBg} border-2 border-white shadow-lg flex items-center justify-center text-[10px] font-bold text-white transition-transform hover:scale-125">
+            !
+          </div>
+        </div>
+      `;
+
+      const customIcon = L.divIcon({
+        className: 'custom-river-marker',
+        html: markerHtml,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      });
+
+      const marker = L.marker(data.latLng, { icon: customIcon }).addTo(map);
+
+      // Popup styled nicely
+      const popupContent = `
+        <div class="p-3 text-left w-48 font-sans">
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 class="font-bold text-xs sm:text-sm text-slate-900 leading-tight">${data.name}</h4>
+              <p class="text-[11px] text-slate-500 mt-0.5">${data.stretch}</p>
+            </div>
+          </div>
+          <div class="mt-2 flex items-center gap-1.5">
+            <span class="text-xs font-semibold ${isRed ? 'text-red-600' : isAmber ? 'text-amber-600' : 'text-yellow-600'}">
+              Riesgo: ${data.riskLevel} (${data.level})
+            </span>
+          </div>
+          <button onclick="selectRiver('${key}')" class="mt-2.5 inline-flex items-center text-[11px] font-semibold text-sky-600 hover:text-sky-700 hover:underline">
+            Ver detalles 
+            <svg class="w-3 h-3 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+          </button>
+        </div>
+      `;
+
+      marker.bindPopup(popupContent, { offset: [0, -10] });
+      marker.on('click', () => {
+        selectRiver(key, false);
+      });
+
+      riverMarkers[key] = marker;
+    });
+
+    // Open active marker popup on start
+    if (riverMarkers['chillon']) {
+      riverMarkers['chillon'].openPopup();
+    }
+  }
+
+  // Switch River and update UI + Map position
+  function selectRiver(key, doFly = true) {
+    if (!RIVERS_DATA[key]) return;
+    activeRiverKey = key;
+    const data = RIVERS_DATA[key];
+
+    // Highlight row in table
+    document.querySelectorAll('.river-row').forEach(row => {
+      row.classList.remove('bg-sky-50/60', 'bg-sky-50/30');
+    });
+    const rowEl = document.getElementById(`row-${key}`);
+    if (rowEl) rowEl.classList.add('bg-sky-50/60');
+
+    // Update Detail Card Headers
+    document.getElementById('card-river-title').textContent = data.title;
+    document.getElementById('card-river-station').textContent = data.station;
+    document.getElementById('card-river-badge-text').textContent = data.badgeText;
+    document.getElementById('card-river-badge').className = `inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold ${data.badgeClass} shadow-sm shrink-0`;
+
+    // Update Resumen Metrics
+    document.getElementById('current-water-level').textContent = data.level;
+    document.getElementById('level-delta-text').textContent = data.delta;
+    document.getElementById('level-delta-badge').className = `inline-flex items-center gap-1 mt-1 text-xs font-bold ${data.deltaClass} px-2 py-0.5 rounded-md`;
+    document.getElementById('trend-summary-text').textContent = data.trend;
+    document.getElementById('trend-summary-text').style.color = data.trendColor;
+
+    // Update Sparkline styling
+    const sparkPath = document.getElementById('sparkline-path');
+    const sparkDot = document.getElementById('sparkline-dot');
+    if (sparkPath && sparkDot) {
+      sparkPath.setAttribute('stroke', data.trendColor);
+      sparkDot.setAttribute('fill', data.trendColor);
+    }
+
+    // Update Camera and AI
+    document.getElementById('cam-code-name').textContent = data.camCode;
+    const waterPath = document.getElementById('cam-water-path');
+    if (waterPath) waterPath.setAttribute('fill', data.camWaterColor);
+
+    document.getElementById('ai-change-info').innerHTML = `Cambio de nivel: <strong>${data.aiChange}</strong>`;
+    document.getElementById('ai-confidence-info').innerHTML = `Confianza del modelo: <strong>${data.aiConfidence}</strong>`;
+
+    // Update Citizen Info
+    document.getElementById('citizen-headline').textContent = data.citizenHeadline;
+    document.getElementById('citizen-location').innerHTML = `
+      <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+      ${data.citizenLocation}
+    `;
+    document.getElementById('reports-count-label').textContent = data.citizenCount;
+
+    // Update Tab 2 (Nivel del río)
+    const hydPct = document.getElementById('hydraulic-pct');
+    const hydBar = document.getElementById('hydraulic-bar');
+    if (hydPct && hydBar) {
+      hydPct.textContent = data.hydraulicPct;
+      hydBar.style.width = data.hydraulicPct;
+      hydBar.className = `${data.hydraulicBarClass} h-3 rounded-full transition-all duration-500`;
+    }
+
+    // Update Tab 5 (Histórico)
+    const histFlow = document.getElementById('historical-current-flow');
+    const histBar = document.getElementById('historical-current-bar');
+    if (histFlow && histBar) {
+      histFlow.textContent = data.flowM3;
+      histBar.style.width = data.flowPct;
+    }
+
+    // Highlight Polyline on Map
+    Object.keys(riverPolylines).forEach(k => {
+      if (k === key) {
+        riverPolylines[k].setStyle({ weight: 6, opacity: 1 });
+      } else {
+        riverPolylines[k].setStyle({ weight: 4, opacity: 0.6 });
+      }
+    });
+
+    // Fly to position on map
+    if (doFly && map) {
+      map.flyTo(data.latLng, data.zoom, { duration: 1.2 });
+      if (riverMarkers[key]) {
+        setTimeout(() => {
+          riverMarkers[key].openPopup();
+        }, 1200);
+      }
+    }
+  }
+
+  // Recenter map on Lima Metropolitana
+  function recenterLima() {
+    if (map) {
+      map.flyTo([-12.0464, -77.0428], 11, { duration: 1.0 });
+    }
+  }
+
+  // Switch Sub-tabs (Resumen, Nivel del río, Imágenes, Reportes, Histórico)
+  function switchTab(tabKey) {
+    const tabs = ['resumen', 'nivel', 'imagenes', 'reportes', 'historico'];
+    tabs.forEach(t => {
+      const panel = document.getElementById(`tab-panel-${t}`);
+      const btn = document.getElementById(`tab-btn-${t}`);
+      if (panel && btn) {
+        if (t === tabKey) {
+          panel.classList.remove('hidden');
+          btn.className = 'tab-button py-2 border-b-2 border-sky-600 text-sky-600 font-semibold whitespace-nowrap transition-colors';
+        } else {
+          panel.classList.add('hidden');
+          btn.className = 'tab-button py-2 border-b-2 border-transparent hover:text-slate-900 text-slate-500 whitespace-nowrap transition-colors';
+        }
+      }
+    });
+  }
+
+  // Map Filter Modes ('risk', 'level', 'reports')
+  function setMapMode(mode) {
+    currentMapMode = mode;
+    const modes = ['risk', 'level', 'reports'];
+    modes.forEach(m => {
+      const btn = document.getElementById(`mode-${m}`);
+      if (btn) {
+        if (m === mode) {
+          btn.className = 'px-3 py-1.5 rounded-lg bg-sky-600 text-white font-medium shadow-xs transition-colors';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors';
+        }
+      }
+    });
+
+    // Clear extra temporary reports markers
+    reportMarkers.forEach(m => map.removeLayer(m));
+    reportMarkers = [];
+
+    if (mode === 'risk') {
+      // Restore risk colors
+      Object.keys(riverPolylines).forEach(k => {
+        riverPolylines[k].setStyle({ color: RIVERS_DATA[k].color, opacity: 0.85 });
+      });
+    } else if (mode === 'level') {
+      // Highlight water flow styling (Cyan/Blue shades)
+      Object.keys(riverPolylines).forEach(k => {
+        riverPolylines[k].setStyle({ color: '#0284c7', opacity: 0.95 });
+      });
+    } else if (mode === 'reports') {
+      // Add citizen report markers
+      const reports = [
+        { latLng: [-11.938, -77.050], title: 'Reporte Comas', text: 'Vecinos alertan turbidez y aumento de caudal' },
+        { latLng: [-11.945, -76.715], title: 'Reporte Chosica', text: 'Desprendimiento de rocas menores en ribera' },
+        { latLng: [-12.040, -77.030], title: 'Reporte Cercado', text: 'Nivel estable bajo Puente Trujillo' }
+      ];
+
+      reports.forEach(r => {
+        const citizenIcon = L.divIcon({
+          className: 'citizen-marker',
+          html: `<div class="bg-amber-500 border-2 border-white rounded-full w-5 h-5 flex items-center justify-center text-white text-[9px] font-bold shadow-md cursor-pointer">💬</div>`,
+          iconSize: [20, 20],
+          iconAnchor: [10, 10]
+        });
+        const rm = L.marker(r.latLng, { icon: citizenIcon }).addTo(map);
+        rm.bindPopup(`<div class="p-2 text-xs font-sans"><strong>${r.title}</strong><p class="text-slate-600 mt-1">${r.text}</p></div>`);
+        reportMarkers.push(rm);
+      });
+    }
+  }
+
+  // Search filter
+  document.getElementById('global-search')?.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase().trim();
+    if (!term) return;
+    Object.keys(RIVERS_DATA).forEach(key => {
+      const r = RIVERS_DATA[key];
+      if (r.name.toLowerCase().includes(term) || r.location.toLowerCase().includes(term) || r.stretch.toLowerCase().includes(term)) {
+        selectRiver(key);
+      }
+    });
+  });
+
+  // Shortcut key
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      const searchInput = document.getElementById('global-search');
+      if (searchInput) searchInput.focus();
+    }
+  });
+
+  // Window onload trigger Leaflet initialization
+  window.addEventListener('DOMContentLoaded', () => {
+    initMap();
+  });
+</script>
+</body></html>
