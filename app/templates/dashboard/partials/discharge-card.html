@@ -1,0 +1,29 @@
+<section class="bg-white border border-slate-200/80 rounded-xl p-3.5 flex flex-col gap-2" data-discharge-station="{{ station.id }}" aria-label="Caudal de {{ station.name }}" aria-busy="true">
+  <div class="flex items-center justify-between gap-2">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Caudal publicado</h4>
+    <span class="text-[10px] font-semibold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full">Río Chillón</span>
+  </div>
+  <div>
+    <p class="text-sm font-bold text-slate-900">{{ station.name }}</p>
+    <p class="text-[11px] text-slate-500">Estación {{ station.code }} · SENAMHI</p>
+  </div>
+  <p class="text-2xl font-extrabold text-slate-900" data-field="value">—</p>
+  <p class="text-xs text-slate-600" data-field="observed-at"></p>
+  <div data-field="chart" hidden>
+    <p class="text-[10px] text-slate-500 mb-1">Lecturas publicadas · hasta 72 horas</p>
+    <svg class="w-full h-20" viewBox="0 0 280 80" role="img" aria-label="Caudales de {{ station.name }} en metros cúbicos por segundo">
+      <title data-field="chart-title">Serie de caudal</title>
+      <path data-field="chart-path" fill="none" stroke="#0284c7" stroke-width="2" stroke-linejoin="round"></path>
+      <g data-field="chart-points"></g>
+    </svg>
+    <div class="flex justify-between gap-2 text-[10px] text-slate-500 mt-1">
+      <span data-field="start-date"></span><span data-field="end-date"></span>
+    </div>
+  </div>
+  <p class="text-[11px] text-slate-600" data-field="status" role="status">Cargando caudal publicado…</p>
+  <p class="text-[10px] text-slate-500" data-field="checked-at"></p>
+  <div class="mt-auto pt-1 flex flex-wrap items-center gap-3 text-[11px]">
+    <a href="{{ station.source_url }}" class="text-sky-700 underline" data-field="source" target="_blank" rel="noopener noreferrer">Fuente: SENAMHI</a>
+    <button class="text-sky-700 underline" data-field="retry" type="button" hidden>Volver a consultar</button>
+  </div>
+</section>
