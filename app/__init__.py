@@ -1,0 +1,2 @@
+"""Arquitectura base de WAKI."""
+
