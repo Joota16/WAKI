@@ -1,0 +1,11 @@
+<div class="tab-panel hidden flex flex-col gap-3" id="tab-panel-reportes">
+  <div class="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-slate-100">
+    <div>
+      <h4 class="text-sm font-bold text-slate-800">Reportes ciudadanos guardados</h4>
+      <p class="text-xs text-slate-500 mt-1">Últimos registros de Chillón y Rímac. Pendientes de verificación.</p>
+    </div>
+    <button type="button" id="refresh-saved-reports" class="text-xs font-semibold text-sky-600 hover:underline">Actualizar</button>
+  </div>
+  <div id="dashboard-saved-reports" aria-live="polite" aria-busy="true" class="flex flex-col gap-3 text-sm">Cargando reportes guardados…</div>
+  <a href="{{ url_for('reports_list').path }}" class="text-sm font-semibold text-sky-600 hover:underline">Ver todos los reportes →</a>
+</div>

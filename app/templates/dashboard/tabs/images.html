@@ -1,0 +1,37 @@
+<!-- 3. IMÁGENES PANEL -->
+<div class="tab-panel hidden flex flex-col gap-3" id="tab-panel-imagenes">
+  <div class="flex items-center justify-between">
+    <h4 class="font-bold text-xs uppercase tracking-wider text-slate-500">Capturas Telemétricas en Directo</h4>
+    <span class="text-xs text-slate-400">Actualizado hace 2 min</span>
+  </div>
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+    <div class="group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 aspect-video cursor-pointer">
+      <svg class="w-full h-full object-cover" viewBox="0 0 160 90">
+        <rect fill="#1e293b" height="90" width="160"></rect>
+        <path d="M 0,40 Q 60,30 160,35 L 160,90 Z" fill="#0f172a"></path>
+        <path d="M 30,90 L 60,40 Q 90,38 120,40 L 140,90 Z" fill="#3b82f6" opacity="0.4"></path>
+      </svg>
+      <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">Ver HD</div>
+      <span class="absolute top-1.5 left-1.5 bg-black/60 backdrop-blur-xs text-white text-[9px] px-1.5 py-0.5 rounded font-mono">CAM-01 • Frontal</span>
+    </div>
+    <div class="group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 aspect-video cursor-pointer">
+      <svg class="w-full h-full object-cover" viewBox="0 0 160 90">
+        <rect fill="#334155" height="90" width="160"></rect>
+        <path d="M 20,90 L 40,30 L 130,30 L 150,90 Z" fill="#0369a1" opacity="0.6"></path>
+        <circle cx="80" cy="50" fill="#38bdf8" opacity="0.25" r="15"></circle>
+      </svg>
+      <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">Ver HD</div>
+      <span class="absolute top-1.5 left-1.5 bg-black/60 backdrop-blur-xs text-white text-[9px] px-1.5 py-0.5 rounded font-mono">CAM-02 • Pila Central</span>
+    </div>
+    <div class="group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 aspect-video cursor-pointer">
+      <svg class="w-full h-full object-cover" viewBox="0 0 160 90">
+        <rect fill="#020617" height="90" width="160"></rect>
+        <path d="M 0,30 L 160,50 L 160,90 Z" fill="#1e293b"></path>
+        <line stroke="#22c55e" stroke-dasharray="2,2" stroke-width="1.5" x1="10" x2="150" y1="20" y2="80"></line>
+      </svg>
+      <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">Ver HD</div>
+      <span class="absolute top-1.5 left-1.5 bg-emerald-950/80 text-emerald-300 text-[9px] px-1.5 py-0.5 rounded font-mono">Infrarrojo / Nocturna</span>
+    </div>
+  </div>
+  <p class="text-[11px] text-slate-500 italic text-center">Ejemplo visual de segmentación. No hay un modelo de IA activado.</p>
+</div>

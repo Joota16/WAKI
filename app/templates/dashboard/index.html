@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}WAKI · Tablero de monitoreo{% endblock %}
+{% block html_class %}h-full bg-slate-50{% endblock %}
+{% block body_class %}h-full flex flex-col font-sans text-slate-800 antialiased selection:bg-sky-500 selection:text-white{% endblock %}
+
+{% block head %}
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="{{ url_for('static', path='js/config/tailwind-dashboard.js').path }}"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css').path }}">
+{% endblock %}
+
+{% block content %}
+  {% include "dashboard/partials/header.html" %}
+  <main class="flex-1 p-3 sm:p-4 lg:p-5 max-w-[1920px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 lg:overflow-hidden">
+    {% include "dashboard/partials/map.html" %}
+    <section aria-label="Datos de monitoreo y detalle del tramo" class="lg:col-span-6 xl:col-span-6 flex flex-col gap-4 lg:overflow-y-auto pr-0.5">
+      {% include "dashboard/partials/priority-table.html" %}
+      {% include "dashboard/partials/detail.html" %}
+    </section>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+  <script type="module" src="{{ url_for('static', path='js/dashboard/index.js').path }}"></script>
+{% endblock %}
+
