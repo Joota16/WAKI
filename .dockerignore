@@ -1,0 +1,10 @@
+# Solo se envían las dependencias y el código de la aplicación al build.
+**
+!requirements.txt
+!app/
+!app/**
+app/**/__pycache__/
+app/**/*.py[cod]
+**/.env
+**/.env.*
+

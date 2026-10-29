@@ -1,0 +1,35 @@
+name: waki
+
+services:
+  waki:
+    build: .
+    ports:
+      - "${WAKI_BIND_ADDRESS:-127.0.0.1}:${WAKI_PORT:-8000}:8000"
+    environment:
+      APP_NAME: ${APP_NAME:-WAKI}
+      DATA_DIR: /app/data
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-8}
+      MAX_PHOTOS: ${MAX_PHOTOS:-5}
+      MAX_IMAGE_PIXELS: ${MAX_IMAGE_PIXELS:-20000000}
+      NORMALIZED_MAX_SIDE: ${NORMALIZED_MAX_SIDE:-1920}
+      SENAMHI_ENABLED: ${SENAMHI_ENABLED:-true}
+      SENAMHI_POLL_SECONDS: ${SENAMHI_POLL_SECONDS:-3600}
+      IOT_KEY: ${IOT_KEY:-}
+      IOT_RETENTION_IMAGES: ${IOT_RETENTION_IMAGES:-100}
+    volumes:
+      - waki_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3).close()"
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+volumes:
+  waki_data:
+
