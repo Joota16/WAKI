@@ -1,0 +1,59 @@
+<!-- Gráfico meteorológico público de Obrajillo, consultado 2026-10-29. -->
+<script>
+
+        function onCaptchaSuccess(token) {
+            document.getElementById("cf-turnstile-response").value = token;
+
+            $('#captcha-section').hide();
+            $('#data-section').show();
+
+            document.getElementById("frmData").submit();
+        }
+
+        $(function () {
+            var titulo = "ESTACIÓN: OBRAJILLO";
+            var subtitulo = "Dep.: LIMA, Prov.: CANTA, Dist.: SAN BUENAVENTURA\u003Cbr\u003ELat.: 11°27\u00279.5\u0027\u0027 S Long.: 76°37\u002719.4\u0027\u0027 W Alt.: 2696 msnm.\u003Cbr\u003ETipo: Convencional - Meteorológica\u003Cbr\u003ECódigo: 156133";
+            var categorias = ["2026-08-31","2026-09-01","2026-09-02","2026-09-03","2026-09-04","2026-09-05","2026-09-06","2026-09-07","2026-09-08","2026-09-09","2026-09-10","2026-09-11","2026-09-12","2026-09-13","2026-09-14","2026-09-15","2026-09-16","2026-09-17","2026-09-18","2026-09-19","2026-09-20","2026-09-21","2026-09-22","2026-09-23","2026-09-24","2026-09-25","2026-09-26","2026-09-27","2026-09-28","2026-09-29","2026-09-30"];
+
+                        $('#container').highcharts({
+                chart: { zoomType: 'xy' },
+                title: { text: titulo },
+                subtitle: { text: subtitulo },
+                credits: { enabled: false },
+                xAxis: [{ categories: categorias, crosshair: true }],
+                yAxis: [{
+                    labels: { format: '{value}', style: { color: Highcharts.getOptions().colors[1] } },
+                    title: { text: '<b>Temperatura</b> (°C)', style: { color: Highcharts.getOptions().colors[1] } }
+                }, {
+                    title: { text: '<b>Precipitación</b> (mm/día)', style: { color: Highcharts.getOptions().colors[0] }, rotation: 270 },
+                    labels: { format: '{value}', style: { color: Highcharts.getOptions().colors[0] } },
+                    opposite: true
+                }],
+                tooltip: { shared: true },
+                series: [{
+                    name: 'Precipitación',
+                    type: 'column',
+                    yAxis: 1,
+                    data: [0,0,0,0,0,0,0,0,0,0.10000000000000001,0,0,0,0,0,1.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    tooltip: { valueSuffix: ' mm' }
+                }, {
+                    name: 'Temp. max',
+                    lineWidth: 1,
+                    type: 'spline',
+                    marker: { radius: 2, fillColor: 'white', lineWidth: 2, lineColor: 'red' },
+                    color: 'rgba(247,10,08, .9)',
+                    data: [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+                    tooltip: { valueSuffix: '°C' }
+                }, {
+                    name: 'Temp. min',
+                    lineWidth: 1,
+                    type: 'spline',
+                    marker: { radius: 2, fillColor: 'white', lineWidth: 2, lineColor: 'blue' },
+                    color: 'rgba(48,69,232,.9)',
+                    data: [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+                    tooltip: { valueSuffix: '°C' }
+                }]
+            });
+                    });
+    
+</script>

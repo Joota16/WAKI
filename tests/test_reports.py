@@ -1,0 +1,224 @@
+from datetime import datetime
+import io
+import json
+from uuid import uuid4
+
+from fastapi.testclient import TestClient
+from PIL import Image
+import pytest
+
+from app.config import Settings
+from app.main import create_app
+
+
+@pytest.fixture
+def client(tmp_path):
+    with TestClient(create_app(Settings(_env_file=None, senamhi_enabled=False, data_dir=tmp_path))) as instance:
+        yield instance
+
+
+def image_bytes(color="blue", exif=False):
+    output = io.BytesIO()
+    image = Image.new("RGB", (80, 40), color)
+    metadata = Image.Exif()
+    if exif:
+        metadata[274] = 6
+        metadata[315] = "Dato privado de prueba"
+    image.save(output, "JPEG", exif=metadata)
+    return output.getvalue()
+
+
+def payload(**changes):
+    return {"river_section": "Río Chillón", "district": "Comas", "reference": "Puente de prueba",
+            "observed_condition": "normal", "latitude": -11.8924, "longitude": -77.0682,
+            "accuracy_m": 15, **changes}
+
+
+def send(client, values=None, photos=None, headers=None):
+    return client.post("/api/reports", data={"metadata": json.dumps(values if values is not None else payload())},
+                       files=photos or [("files", ("foto.jpg", image_bytes(), "image/jpeg"))], headers=headers or {})
+
+
+def test_save_retrieve_photos_and_privacy(client):
+    response = send(client, payload(contact_name="Contacto privado", contact_phone="999888777"),
+                    [("files", ("../../original.jpg", image_bytes(exif=True), "text/plain")),
+                     ("files", ("segunda.jpg", image_bytes("green"), "image/jpeg"))])
+    assert response.status_code == 201, response.text
+    report = response.json()
+    assert datetime.fromisoformat(report["created_at"]).utcoffset().total_seconds() == 0
+    assert report["analysis_status"] == "not_configured"
+    assert len(report["photos"]) == 2
+    assert "contact_name" not in report and "999888777" not in response.text
+    assert client.get(f"/api/reports/{report['id']}").json() == report
+    assert client.get("/api/reports").json()["total"] == 1
+    photo = client.get(report["photos"][0]["url"])
+    assert photo.status_code == 200 and photo.headers["content-type"] == "image/jpeg"
+    with Image.open(io.BytesIO(photo.content)) as normalized:
+        assert normalized.size == (40, 80), "Se debe respetar la orientación EXIF."
+        assert not normalized.getexif(), "No deben publicarse metadatos EXIF."
+    detail = client.get(report["detail_url"])
+    assert detail.status_code == 200
+    assert "Puente de prueba" in detail.text and "Contacto privado" not in detail.text
+    assert not (client.app.state.settings.data_dir / "original.jpg").exists()
+
+
+def test_without_coordinates_and_anonymous_drops_contact(client):
+    response = send(client, payload(latitude=None, longitude=None, accuracy_m=None, anonymous=True,
+                                    contact_name="Nombre reservado", contact_phone="999111222", neighborhood="Barrio reservado"))
+    assert response.status_code == 201
+    report = response.json()
+    assert report["latitude"] is None and report["anonymous"]
+    row = client.app.state.reports.repository.get(report["id"])
+    assert row["contact_name"] == row["contact_phone"] == row["neighborhood"] == ""
+
+
+@pytest.mark.parametrize("changes", [
+    {"river_section": "Río no habilitado"},
+    {"latitude": 91}, {"longitude": -181}, {"latitude": None}, {"longitude": float("inf")},
+    {"district": "   "}, {"reference": "x" * 301}, {"observations": "x" * 2001},
+    {"observed_condition": "inventado"}, {"situations": ["inventado"]},
+])
+def test_invalid_metadata_has_no_side_effects(client, changes):
+    response = send(client, payload(**changes))
+    assert response.status_code == 422
+    assert client.get("/api/reports").json()["total"] == 0
+    assert not list(client.app.state.reports.images.directory.iterdir())
+
+
+@pytest.mark.parametrize("content,mime", [(b"", "image/jpeg"), (b"<svg></svg>", "image/png"), (b"not an image", "image/jpeg")])
+def test_real_file_content_is_validated(client, content, mime):
+    response = send(client, photos=[("files", ("fake.jpg", content, mime))])
+    assert response.status_code == 422
+    assert client.get("/api/reports").json()["total"] == 0
+
+
+def test_invalid_second_photo_cleans_first(client):
+    response = send(client, photos=[("files", ("good.jpg", image_bytes(), "image/jpeg")),
+                                   ("files", ("bad.jpg", b"broken", "image/jpeg"))])
+    assert response.status_code == 422
+    assert not list(client.app.state.reports.images.directory.iterdir())
+
+
+def test_database_failure_cleans_files(client, monkeypatch):
+    def fail(*args):
+        raise RuntimeError("Simulated storage failure")
+    monkeypatch.setattr(client.app.state.reports.repository, "create", fail)
+    with pytest.raises(RuntimeError, match="Simulated storage failure"):
+        send(client)
+    assert not list(client.app.state.reports.images.directory.iterdir())
+
+
+def test_limits_on_count_bytes_and_pixels(tmp_path):
+    settings = Settings(_env_file=None, senamhi_enabled=False, data_dir=tmp_path, max_photos=1, max_upload_mb=1, max_image_pixels=100)
+    with TestClient(create_app(settings)) as client:
+        photo = ("files", ("small.jpg", image_bytes(), "image/jpeg"))
+        assert send(client, photos=[photo, photo]).status_code == 422
+        assert send(client, photos=[("files", ("large.jpg", b"x" * (1024 * 1024 + 1), "image/jpeg"))]).status_code == 413
+        assert send(client).status_code == 413  # 80 x 40 excede los 100 píxeles configurados.
+        assert client.post("/api/reports", content=b"x", headers={"Content-Length": str(3 * 1024 * 1024)}).status_code == 413
+
+
+def test_missing_file_and_malformed_metadata(client):
+    assert client.post("/api/reports", data={"metadata": json.dumps(payload())}).status_code == 422
+    assert client.post("/api/reports", data={"metadata": "{"},
+                       files=[("files", ("photo.jpg", image_bytes(), "image/jpeg"))]).status_code == 422
+
+
+def test_request_limit_without_content_length(tmp_path):
+    with TestClient(create_app(Settings(_env_file=None, senamhi_enabled=False, data_dir=tmp_path, max_photos=1, max_upload_mb=1))) as client:
+        def chunks():
+            yield b'--boundary\r\nContent-Disposition: form-data; name="files"; filename="large.jpg"\r\n\r\n'
+            yield b'x' * (3 * 1024 * 1024)
+        response = client.post('/api/reports', content=chunks(),
+                               headers={'Content-Type': 'multipart/form-data; boundary=boundary'})
+        assert response.status_code == 413
+        assert client.get('/api/reports').json()['total'] == 0
+
+
+def test_idempotent_retries_and_conflict(client):
+    headers = {"Idempotency-Key": str(uuid4())}
+    first = send(client, headers=headers)
+    second = send(client, headers=headers)
+    assert first.status_code == second.status_code == 201
+    assert first.json()["id"] == second.json()["id"]
+    assert client.get("/api/reports").json()["total"] == 1
+    assert len(list(client.app.state.reports.images.directory.iterdir())) == 1
+    assert send(client, payload(observations="Otro contenido"), headers=headers).status_code == 409
+
+
+def test_persistence_and_public_html_escaping(tmp_path):
+    settings = Settings(_env_file=None, senamhi_enabled=False, data_dir=tmp_path)
+    with TestClient(create_app(settings)) as client:
+        report = send(client, payload(observations="<script>alert('x')</script>")).json()
+    with TestClient(create_app(settings)) as client:
+        assert client.get(f"/api/reports/{report['id']}").status_code == 200
+        assert client.get(report["photos"][0]["url"]).status_code == 200
+        assert "&lt;script&gt;" in client.get(report["detail_url"]).text
+        assert client.get("/api/reports?limit=1&offset=1").json()["items"] == []
+        assert client.get("/api/reports?limit=0").status_code == 422
+        assert client.get(f"/api/reports/{uuid4()}").status_code == 404
+        assert client.get(f"/api/reports/{uuid4()}/photos/{report['photos'][0]['id']}").status_code == 404
+
+
+def test_real_html_listing_contains_saved_photos_and_no_contacts(client):
+    first = send(client, payload(reference="Primera referencia real", contact_name="Contacto confidencial")).json()
+    second = send(client, payload(river_section="Río Rímac", reference="<script>alert('listado')</script>", district="Otro distrito")).json()
+    response = client.get('/reportes')
+    assert response.status_code == 200
+    assert '2 reportes registrados' in response.text
+    assert response.text.index(second['detail_url']) < response.text.index(first['detail_url'])
+    assert first['photos'][0]['url'] in response.text
+    assert 'Primera referencia real' in response.text
+    assert '&lt;script&gt;' in response.text
+    assert "<script>alert('listado')</script>" not in response.text
+    assert 'Contacto confidencial' not in response.text
+    assert 'Pendiente de verificación' in response.text
+    detail = client.get(first['detail_url'])
+    assert 'Todos los reportes' in detail.text
+    assert 'href="/reportes"' in client.get('/').text
+
+
+def test_html_listing_pagination(client):
+    identifiers = [send(client, payload(reference=f'Referencia {index}')).json()['id'] for index in range(13)]
+    first_page = client.get('/reportes')
+    assert '13 reportes registrados' in first_page.text
+    assert 'Mostrando 1–12 de 13' in first_page.text
+    assert identifiers[-1] in first_page.text and identifiers[0] not in first_page.text
+    assert 'rel="next"' in first_page.text
+    second_page = client.get('/reportes?page=2')
+    assert 'Mostrando 13–13 de 13' in second_page.text
+    assert identifiers[0] in second_page.text and identifiers[-1] not in second_page.text
+    assert 'rel="prev"' in second_page.text
+    assert 'rel="next"' not in second_page.text
+    overflow = client.get('/reportes?page=100')
+    assert overflow.history[0].status_code == 303
+    assert str(overflow.url).endswith('/reportes?page=2')
+    assert client.get('/reportes?page=0').status_code == 422
+
+
+def test_html_listing_database_error(client, monkeypatch):
+    import sqlite3
+
+    def fail(*args):
+        raise sqlite3.OperationalError('Detalle interno que no debe publicarse')
+    monkeypatch.setattr(client.app.state.reports, 'list', fail)
+    response = client.get('/reportes')
+    assert response.status_code == 503
+    assert 'No se pudieron consultar los reportes' in response.text
+    assert 'Volver a intentar' in response.text
+    assert 'Detalle interno' not in response.text
+
+
+@pytest.mark.parametrize('accuracy,warning', [(15, False), (18726, True)])
+def test_report_location_accuracy_is_not_presented_as_exact_gps(client, accuracy, warning):
+    report = send(client, payload(accuracy_m=accuracy)).json()
+    detail = client.get(report['detail_url'])
+    assert 'Radio de precisión indicado por el navegador' in detail.text
+    assert 'Precisión GPS' not in detail.text
+    assert ('Ubicación aproximada de baja precisión' in detail.text) == warning
+    if warning:
+        assert '18.7 km' in detail.text
+    persisted = client.get(f"/api/reports/{report['id']}").json()
+    assert persisted['accuracy_m'] == accuracy
+    assert persisted['latitude'] == report['latitude']
+    assert persisted['longitude'] == report['longitude']
