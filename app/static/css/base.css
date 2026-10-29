@@ -1,0 +1,15 @@
+/* Solo reglas compartidas por las dos pantallas. */
+:focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: 3px;
+}
+
+.map-unavailable {
+  display: grid;
+  align-content: center;
+  padding: 6rem 2rem;
+  min-height: 560px;
+  color: #e2e8f0;
+  text-align: center;
+}
+

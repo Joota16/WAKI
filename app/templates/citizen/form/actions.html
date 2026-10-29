@@ -1,0 +1,11 @@
+<!-- ACCIONES DE ENVÍO -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+  <a class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors flex items-center justify-center gap-2 border border-outline-variant/30" href="{{ url_for('dashboard').path }}">
+    <span class="material-symbols-outlined text-[20px]">close</span>
+    <span>Cancelar</span>
+  </a>
+  <button class="w-full sm:w-auto px-8 py-4 rounded-xl bg-error hover:bg-red-700 text-on-error font-title-md text-title-md font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-3 group" id="btnSubmitCitizen" type="submit">
+    <span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">send</span>
+    <span data-submit-label>Enviar reporte</span>
+  </button>
+</div>

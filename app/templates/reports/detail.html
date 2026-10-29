@@ -1,0 +1,49 @@
+{% extends "citizen/base.html" %}
+{% block title %}WAKI · Reporte guardado{% endblock %}
+{% block content %}
+  {% include "citizen/partials/header.html" %}
+  <main class="max-w-4xl mx-auto p-4 sm:p-8 flex flex-col gap-6">
+    <div>
+      <a href="{{ url_for('reports_list').path }}" class="inline-block text-primary underline text-sm mb-3">← Todos los reportes</a>
+      <h1 class="text-2xl font-bold">{{ report.river_section }} · {{ report.district }}</h1>
+      <p class="text-sm text-on-surface-variant break-all">Reporte {{ report.id }}</p>
+      <p class="text-sm">Registrado el {{ registered_local }} (Lima)</p>
+    </div>
+    <section class="bg-white rounded-2xl p-6 flex flex-col gap-3 border border-outline-variant/30">
+      <h2 class="text-lg font-bold">Observación registrada</h2>
+      <p><strong>Referencia:</strong> {{ report.reference }}</p>
+      <p><strong>Condición indicada por el ciudadano:</strong>
+        {{ {'critico': 'Peligro inminente / desborde', 'muy-alto': 'Nivel muy alto', 'alto': 'Nivel alto / crecida', 'normal': 'Normal'}[report.observed_condition] }}
+      </p>
+      {% if report.observations %}<p class="report-observations">{{ report.observations }}</p>{% endif %}
+      {% if report.situations %}
+        <ul class="list-disc pl-5">{% for situation in report.situations %}<li>{{ situation }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% if report.latitude is not none %}
+        <p><strong>Coordenadas:</strong> {{ report.latitude }}, {{ report.longitude }}</p>
+        {% if report.accuracy_m %}
+          <p class="text-sm">Radio de precisión indicado por el navegador:
+            {% if report.accuracy_m >= 1000 %}{{ (report.accuracy_m / 1000) | round(1) }} km{% else %}{{ report.accuracy_m | round | int }} metros{% endif %}.
+          </p>
+          {% if report.accuracy_m > 500 %}
+            <p class="location-warning">Ubicación aproximada de baja precisión. El punto guardado puede señalar otro barrio y no debe interpretarse como una dirección exacta.</p>
+          {% endif %}
+        {% endif %}
+        <a class="text-primary underline" href="https://www.openstreetmap.org/?mlat={{ report.latitude }}&amp;mlon={{ report.longitude }}#map=16/{{ report.latitude }}/{{ report.longitude }}" target="_blank" rel="noopener noreferrer">Ver ubicación en el mapa</a>
+      {% else %}<p>Sin coordenadas GPS; consulta la referencia del lugar.</p>{% endif %}
+      <p class="text-xs text-on-surface-variant">La condición es una observación ciudadana, pendiente de verificación. No se ha realizado análisis de IA ni se han enviado avisos a autoridades.</p>
+    </section>
+    <section aria-labelledby="saved-photos-title">
+      <h2 id="saved-photos-title" class="text-lg font-bold mb-3">Fotografías guardadas ({{ report.photos | length }})</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {% for photo in report.photos %}
+          <a href="{{ photo.url }}" target="_blank" rel="noopener noreferrer" class="block bg-white rounded-xl overflow-hidden border border-outline-variant/30">
+            <img src="{{ photo.url }}" alt="Fotografía {{ loop.index }} del reporte" class="saved-photo" loading="lazy">
+            <span class="block p-3 text-sm text-primary">Abrir fotografía {{ loop.index }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+    <a href="{{ url_for('citizen_report').path }}" class="text-primary underline">Registrar otra observación</a>
+  </main>
+{% endblock %}

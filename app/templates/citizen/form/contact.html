@@ -1,0 +1,37 @@
+<!-- SECCIÓN 7: TUS DATOS DE CONTACTO (VERIFICACIÓN) -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4">
+  <div class="flex items-center justify-between flex-wrap gap-2">
+    <div class="flex items-center gap-3">
+      <span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">7</span>
+      <div>
+        <h2 class="font-headline-sm text-headline-sm text-on-surface">Tus datos de contacto (para verificar el reporte)</h2>
+        <p class="text-xs text-on-surface-variant">Datos opcionales para contactar contigo sobre el reporte. No se muestran en la consulta pública.</p>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="contactFields">
+    <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface font-medium" for="nombreVecino">
+        Tu nombre o apodo
+      </label>
+      <input class="w-full h-11 px-3.5 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary border border-transparent focus:border-primary" id="nombreVecino" maxlength="80" placeholder="Ej: Carlos Quispe" type="text"/>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface font-medium" for="telefonoVecino">
+        Teléfono o WhatsApp
+      </label>
+      <input class="w-full h-11 px-3.5 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary border border-transparent focus:border-primary" id="telefonoVecino" maxlength="30" placeholder="Ej: 998 765 432" type="tel"/>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface font-medium" for="barrioVecino">
+        Barrio / Asentamiento Humano
+      </label>
+      <input class="w-full h-11 px-3.5 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary border border-transparent focus:border-primary" id="barrioVecino" maxlength="120" placeholder="Ej: A.H. Los Álamos, Sector 3" type="text"/>
+    </div>
+  </div>
+  <p class="text-xs text-on-surface-variant">La referencia, las coordenadas y las fotografías podrán consultarse en el enlace del reporte. Los datos de contacto no se publican.</p>
+  <label class="flex items-center gap-2.5 pt-1 cursor-pointer">
+    <input class="w-4 h-4 rounded text-primary focus:ring-primary" id="checkAnonimo" type="checkbox"/>
+    <span class="text-xs text-on-surface-variant font-medium">Enviar sin datos de contacto (no se guardarán nombre, teléfono ni barrio)</span>
+  </label>
+</div>

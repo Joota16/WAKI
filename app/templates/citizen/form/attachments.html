@@ -1,0 +1,28 @@
+<section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4" aria-labelledby="photos-title">
+  <div class="flex items-center gap-3">
+    <span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">5</span>
+    <div>
+      <h2 id="photos-title" class="font-headline-sm text-headline-sm text-on-surface">Fotografías del río</h2>
+      <p class="text-xs text-on-surface-variant">Adjunta fotografías del lugar que estás reportando.</p>
+    </div>
+  </div>
+  <div class="p-3.5 rounded-xl bg-error-container/40 border border-error/30 text-xs">
+    <strong>Por tu seguridad:</strong> toma las fotos desde una zona segura. No te acerques al borde del agua ni a taludes inestables.
+  </div>
+  <label id="photoDropzone" class="photo-dropzone" for="citizenPhotoInput">
+    <span class="material-symbols-outlined text-[32px] text-primary" aria-hidden="true">add_photo_alternate</span>
+    <span class="font-semibold">Selecciona fotografías o arrástralas aquí</span>
+    <span class="text-xs">JPEG, PNG o WebP. Hasta {{ limits.max_photos }} fotos de {{ limits.max_upload_mb }} MB cada una.</span>
+    <input id="citizenPhotoInput" type="file" accept="image/jpeg,image/png,image/webp" multiple class="photo-file-input" aria-describedby="photoCount photoError">
+  </label>
+  <label class="photo-camera-button" for="citizenCameraInput">
+    <span class="material-symbols-outlined" aria-hidden="true">photo_camera</span>
+    <span>Tomar una foto</span>
+    <input id="citizenCameraInput" type="file" accept="image/*" capture="environment" class="photo-file-input">
+  </label>
+  <p class="text-xs text-on-surface-variant">En un celular compatible, «Tomar una foto» abre la cámara. Por ahora se admiten fotografías; no videos ni archivos HEIC.</p>
+  <p id="photoValidationStatus" role="status" class="text-xs text-primary"></p>
+  <p id="photoError" role="alert" class="form-error" hidden></p>
+  <p id="photoCount" aria-live="polite" class="text-xs font-semibold">Aún no has seleccionado fotografías.</p>
+  <div id="photoPreviewList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+</section>

@@ -1,0 +1,27 @@
+/* Estilos específicos de la captura y consulta de reportes ciudadanos. */
+html, body { margin: 0; padding: 0; }
+body { overscroll-behavior: none; }
+main > :first-child { margin-top: 0 !important; }
+main > :last-child { margin-bottom: 0 !important; }
+[hidden] { display: none !important; }
+.report-fields { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; margin: 0; padding: 0; border: 0; }
+.report-fields:disabled { opacity: 0.65; }
+.form-error { padding: 0.8rem 1rem; border: 1px solid #fecaca; border-radius: 0.75rem; background: #fef2f2; color: #991b1b; font-size: 0.875rem; }
+.location-warning { padding: 0.8rem 1rem; border: 1px solid #fcd34d; border-radius: 0.75rem; background: #fffbeb; color: #78350f; font-size: 0.875rem; }
+.photo-dropzone { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.7rem; padding: 2rem 1rem; text-align: center; background: #eff4ff; border: 2px dashed #707881; border-radius: 1rem; cursor: pointer; }
+.photo-dropzone:hover, .photo-dropzone.is-dragging { border-color: #006194; background: #e5eeff; }
+.photo-dropzone:focus-within, .photo-camera-button:focus-within { outline: 2px solid #006194; outline-offset: 3px; }
+.photo-file-input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.photo-camera-button { position: relative; align-self: flex-start; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1rem; border: 1px solid #006194; border-radius: 0.75rem; color: #006194; font-weight: 600; cursor: pointer; }
+.photo-preview { display: flex; align-items: center; gap: 0.7rem; padding: 0.75rem; border: 1px solid #bfc7d2; border-radius: 0.75rem; min-width: 0; }
+.photo-preview img { width: 4rem; height: 4rem; object-fit: cover; border-radius: 0.5rem; flex-shrink: 0; }
+.photo-preview-description { min-width: 0; flex: 1; display: flex; flex-direction: column; font-size: 0.85rem; }
+.photo-preview-description span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.photo-preview button { color: #006194; padding: 0.5rem; font-size: 0.8rem; font-weight: 600; }
+.saved-photo { width: 100%; max-height: 28rem; object-fit: contain; background: #e5eeff; }
+.report-observations { white-space: pre-wrap; overflow-wrap: anywhere; }
+#summaryCoords, #summaryCuenca { overflow-wrap: anywhere; text-align: right; max-width: 65%; }
+#modalTicket { min-width: 0; max-width: 65%; overflow-wrap: anywhere; text-align: right; }
+.report-list-photo { width: 100%; height: 13rem; object-fit: cover; background: #e5eeff; }
+.report-card-text { overflow-wrap: anywhere; }
+.report-list-card a:hover h2 { color: #006194; }
