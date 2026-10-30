@@ -142,7 +142,7 @@ def test_retention_and_restart_preserve_other_cameras_and_citizen_reports(tmp_pa
     settings = Settings(_env_file=None, data_dir=tmp_path, senamhi_enabled=False, iot_key=KEY, iot_retention_images=2)
     with TestClient(create_app(settings)) as client:
         report = client.post('/api/reports', data={'metadata': json.dumps({
-            'river_section': 'Río Chillón', 'district': 'Comas', 'reference': 'Puente de prueba', 'observed_condition': 'normal',
+            'observed_condition': 'normal',
         })}, files=[('files', ('citizen.jpg', photograph(), 'image/jpeg'))]).json()
         first = upload(client).json()
         rimac = upload(client, camera='rimac-01').json()

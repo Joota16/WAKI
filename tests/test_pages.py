@@ -48,6 +48,8 @@ def test_pages_and_assets(client, path, expected_id, link):
         assert '2 fotos de muestra' not in response.text
     elif path == '/':
         assert 'Estado del prototipo' not in response.text
+        assert [attrs['data-river'] for _, attrs in page.elements if 'data-river' in attrs] == ['chillon']
+        assert 'Rímac' not in response.text
     for tag, attrs in page.elements:
         assert not any(attr.startswith('on') or attr == 'style' for attr in attrs)
         assert tag != 'style'

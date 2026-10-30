@@ -29,8 +29,8 @@ def image_bytes(color="blue", exif=False):
 
 
 def payload(**changes):
-    return {"river_section": "Río Chillón", "district": "Comas", "reference": "Puente de prueba",
-            "observed_condition": "normal", "latitude": -11.8924, "longitude": -77.0682,
+    return {"observations": "Observación de prueba", "observed_condition": "normal",
+            "latitude": -11.8924, "longitude": -77.0682,
             "accuracy_m": 15, **changes}
 
 
@@ -40,7 +40,7 @@ def send(client, values=None, photos=None, headers=None):
 
 
 def test_save_retrieve_photos_and_privacy(client):
-    response = send(client, payload(contact_name="Contacto privado", contact_phone="999888777"),
+    response = send(client, payload(),
                     [("files", ("../../original.jpg", image_bytes(exif=True), "text/plain")),
                      ("files", ("segunda.jpg", image_bytes("green"), "image/jpeg"))])
     assert response.status_code == 201, response.text
@@ -48,7 +48,8 @@ def test_save_retrieve_photos_and_privacy(client):
     assert datetime.fromisoformat(report["created_at"]).utcoffset().total_seconds() == 0
     assert report["analysis_status"] == "not_configured"
     assert len(report["photos"]) == 2
-    assert "contact_name" not in report and "999888777" not in response.text
+    assert all(key not in report for key in ("river_section", "district", "reference", "anonymous",
+                                           "contact_name", "contact_phone", "neighborhood"))
     assert client.get(f"/api/reports/{report['id']}").json() == report
     assert client.get("/api/reports").json()["total"] == 1
     photo = client.get(report["photos"][0]["url"])
@@ -58,24 +59,37 @@ def test_save_retrieve_photos_and_privacy(client):
         assert not normalized.getexif(), "No deben publicarse metadatos EXIF."
     detail = client.get(report["detail_url"])
     assert detail.status_code == 200
-    assert "Puente de prueba" in detail.text and "Contacto privado" not in detail.text
+    assert "Observación de prueba" in detail.text
     assert not (client.app.state.settings.data_dir / "original.jpg").exists()
 
 
-def test_without_coordinates_and_anonymous_drops_contact(client):
-    response = send(client, payload(latitude=None, longitude=None, accuracy_m=None, anonymous=True,
-                                    contact_name="Nombre reservado", contact_phone="999111222", neighborhood="Barrio reservado"))
+def test_minimal_report_without_coordinates_or_removed_blocks(client):
+    response = send(client, {"observed_condition": "normal"})
     assert response.status_code == 201
     report = response.json()
-    assert report["latitude"] is None and report["anonymous"]
+    assert report["latitude"] is None and report["longitude"] is None
+    assert report["observations"] == ""
     row = client.app.state.reports.repository.get(report["id"])
-    assert row["contact_name"] == row["contact_phone"] == row["neighborhood"] == ""
+    assert all(key not in row for key in ("river_section", "district", "reference", "anonymous",
+                                        "contact_name", "contact_phone", "neighborhood"))
+    assert "Sin coordenadas." in client.get(report["detail_url"]).text
+
+
+@pytest.mark.parametrize("field,value", [
+    ("river_section", "Río Chillón"), ("district", "Comas"), ("reference", "Puente de prueba"),
+    ("anonymous", True), ("contact_name", "Nombre de prueba"), ("contact_phone", "999111222"),
+    ("neighborhood", "Barrio de prueba"),
+])
+def test_removed_fields_are_rejected_and_not_saved(client, field, value):
+    response = send(client, payload(**{field: value}))
+    assert response.status_code == 422
+    assert client.get("/api/reports").json()["total"] == 0
+    assert not list(client.app.state.reports.images.directory.iterdir())
 
 
 @pytest.mark.parametrize("changes", [
-    {"river_section": "Río no habilitado"},
     {"latitude": 91}, {"longitude": -181}, {"latitude": None}, {"longitude": float("inf")},
-    {"district": "   "}, {"reference": "x" * 301}, {"observations": "x" * 2001},
+    {"observations": "x" * 2001},
     {"observed_condition": "inventado"}, {"situations": ["inventado"]},
 ])
 def test_invalid_metadata_has_no_side_effects(client, changes):
@@ -160,18 +174,17 @@ def test_persistence_and_public_html_escaping(tmp_path):
         assert client.get(f"/api/reports/{uuid4()}/photos/{report['photos'][0]['id']}").status_code == 404
 
 
-def test_real_html_listing_contains_saved_photos_and_no_contacts(client):
-    first = send(client, payload(reference="Primera referencia real", contact_name="Contacto confidencial")).json()
-    second = send(client, payload(river_section="Río Rímac", reference="<script>alert('listado')</script>", district="Otro distrito")).json()
+def test_real_html_listing_contains_saved_photos_and_escaped_observations(client):
+    first = send(client, payload(observations="Primera observación real")).json()
+    second = send(client, payload(observations="<script>alert('listado')</script>")).json()
     response = client.get('/reportes')
     assert response.status_code == 200
     assert '2 reportes registrados' in response.text
     assert response.text.index(second['detail_url']) < response.text.index(first['detail_url'])
     assert first['photos'][0]['url'] in response.text
-    assert 'Primera referencia real' in response.text
+    assert 'Primera observación real' in response.text
     assert '&lt;script&gt;' in response.text
     assert "<script>alert('listado')</script>" not in response.text
-    assert 'Contacto confidencial' not in response.text
     assert 'Pendiente de verificación' in response.text
     detail = client.get(first['detail_url'])
     assert 'Todos los reportes' in detail.text
@@ -179,7 +192,7 @@ def test_real_html_listing_contains_saved_photos_and_no_contacts(client):
 
 
 def test_html_listing_pagination(client):
-    identifiers = [send(client, payload(reference=f'Referencia {index}')).json()['id'] for index in range(13)]
+    identifiers = [send(client, payload(observations=f'Observación {index}')).json()['id'] for index in range(13)]
     first_page = client.get('/reportes')
     assert '13 reportes registrados' in first_page.text
     assert 'Mostrando 1–12 de 13' in first_page.text

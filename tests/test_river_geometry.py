@@ -17,6 +17,7 @@ def test_local_river_courses_preserve_detailed_separate_segments():
     assert collection['license']['name'] == 'Open Database License (ODbL) 1.0'
     assert len(collection['source_sha256']) == 64
     features = collection['features']
+    assert {item['properties']['id'] for item in features} == {'chillon'}
     assert {item['properties']['osm_relation_id'] for item in features} == set(RIVERS)
     for feature in features:
         properties = feature['properties']
