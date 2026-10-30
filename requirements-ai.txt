@@ -1,2 +1,9 @@
-# Reservado para una etapa posterior. No se incluyen dependencias de IA.
-
+# Preservar la instalación PyTorch CUDA 12.8 que ya reconoce tu RTX 4060.
+# Instala en tu mismo .venv: python -m pip install -r requirements.txt
+numpy>=1.24,<3
+Pillow>=10
+transformers>=4.46,<6
+safetensors>=0.4
+accelerate>=0.28
+opencv-python>=4.8
+ultralytics>=8.4.0,<9

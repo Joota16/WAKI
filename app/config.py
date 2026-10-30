@@ -1,6 +1,7 @@
 from pathlib import Path
+from typing import Literal
 
-from pydantic import Field, SecretStr
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -17,6 +18,20 @@ class Settings(BaseSettings):
     senamhi_poll_seconds: int = Field(default=3600, ge=300, le=86400)
     iot_key: SecretStr = SecretStr("")
     iot_retention_images: int = Field(default=100, ge=1, le=1000)
+    model_provider: Literal['none', 'waki'] = 'none'
+    ai_water_checkpoint: Path = Path('weights/segformer_chillon_finetuned')
+    ai_dino_checkpoint: Path | None = None
+    ai_yoloe_checkpoint: Path | None = None
+    ai_yoloe_prompts: Path | None = None
+    ai_device: str = Field(default='cpu', pattern=r'^(cpu|cuda(:[0-9]+)?)$')
+    ai_rivers: str = 'chillon'
+    ai_retention_images: int = Field(default=100, ge=1, le=1000)
+    ai_max_pending: int = Field(default=4, ge=1, le=32)
+
+    @field_validator('ai_dino_checkpoint', 'ai_yoloe_checkpoint', 'ai_yoloe_prompts', mode='before')
+    @classmethod
+    def optional_checkpoint(cls, value):
+        return None if value in ('', None) else value
 
     @property
     def upload_limit(self) -> int:
