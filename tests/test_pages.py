@@ -70,6 +70,7 @@ def test_javascript_imports_are_served(client):
 def test_health_and_reserved_api_are_preserved(client):
     response = client.get('/api/health')
     assert response.status_code == 200
-    assert response.json() == {'status': 'ok', 'database': 'connected'}
+    assert response.json() == {'status': 'ok', 'database': 'connected',
+                               'vision': {'provider': 'none', 'device': 'cpu', 'objects_configured': False}}
     assert client.get('/api/reports').json()['items'] == []
     assert client.post('/api/iot/upload?camera_id=chillon-01').status_code == 503

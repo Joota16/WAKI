@@ -14,8 +14,10 @@ cartografiados en OpenStreetMap y los promedios diarios de nivel de la estación
 Puente Magdalena y los caudales de Obrajillo y Puente Magdalena publicados por
 SENAMHI, además de la serie meteorológica disponible de Obrajillo. Las otras
 métricas conservan datos de demostración. La cámara del resumen recibe JPEGs
-de dispositivos autenticados y muestra la última captura real. La revisión humana,
-las notificaciones y la IA siguen pendientes.
+de dispositivos autenticados y muestra la última captura real. La pestaña Imágenes
+vincula cada captura a su informe de IA en una ventana emergente, con original, segmentación y zonas
+candidatas cuando se configura el detector. La revisión humana y las
+notificaciones siguen pendientes.
 
 Los únicos ríos habilitados son **Chillón y Rímac**. La tabla, el mapa, la búsqueda,
 el formulario y la validación de nuevos reportes usan estos dos ríos.
@@ -51,7 +53,7 @@ app/
 │   ├── discharge.py         # Sincronización independiente de caudales
 │   ├── weather.py           # Sincronización de meteorología y fechas por variable
 │   ├── cameras.py           # Guardado, consulta y retención de capturas IoT
-│   ├── processing.py        # Coordinación futura de tareas
+│   ├── processing.py        # Cola acotada de IA, estados, resultados y retención
 │   └── images.py            # Validación, normalización y almacenamiento
 ├── repositories/
 │   ├── reports.py           # Consultas SQL de reportes y fotografías
@@ -66,9 +68,12 @@ app/
 │   ├── senamhi_discharge.py # Catálogo OGC e hidrogramas de caudal
 │   └── senamhi_weather.py   # Gráfico meteorológico público de Obrajillo
 ├── vision/
-│   ├── service.py           # Reservado, sin implementación
+│   ├── service.py           # Contrato y selección de proveedor sin cargar modelos
+│   ├── waki_ia/             # Motor IA 4.1 importado sin modificar
 │   └── providers/
-│       └── yolo.py          # Reservado, sin implementación
+│       ├── waki.py          # Adaptador del motor y checkpoint local de agua
+│       ├── local_dino.py    # Grounding DINO con pesos locales
+│       └── local_yoloe.py   # YOLOE multiescala con pesos y prompts locales
 ├── templates/
 │   ├── base.html            # Documento HTML y bloques comunes
 │   ├── reports/             # Listado paginado, tarjetas y detalle con fotografías
@@ -91,6 +96,8 @@ app/
         ├── dashboard/       # index.js, data.js, map.js y view.js
         └── citizen/         # Resumen, GPS, fotos, envío y confirmación
 docs/prototypes/            # Los dos HTML originales de referencia
+docs/ia/                    # Documentación original del motor, sin modificaciones
+weights/                    # Checkpoint local de SegFormer; excluido de Git
 tests/                      # Pruebas de páginas, recursos y conexión
 scripts/                    # Actualización de cauces y envío de prueba IoT
 .env.example
@@ -100,7 +107,7 @@ compose.yaml                # Servicio web y volumen SQLite
 .dockerignore               # Limita los archivos enviados al build
 requirements.txt
 requirements-dev.txt        # Dependencias para ejecutar las pruebas
-requirements-ai.txt         # Reservado; no instala dependencias
+requirements-ai.txt         # Copia exacta de las dependencias originales del motor
 ```
 
 Los paquetes Python incluyen sus archivos `__init__.py`.
@@ -114,13 +121,13 @@ Los paquetes Python incluyen sus archivos `__init__.py`.
 - `services/` coordina casos de uso sin depender de `Request` ni `Response`.
 - `repositories/` concentra SQL y utiliza `db/` para conectarse.
 - `db/` administra conexiones y la inicialización del esquema.
-- `vision/` queda reservado para encapsular proveedores futuros.
+- `vision/waki_ia/` conserva el motor original; `vision/providers/` lo conecta a los servicios.
 - `templates/` compone el HTML mediante herencia e inclusiones con
   [Jinja2Templates de FastAPI](https://fastapi.tiangolo.com/advanced/templates/).
 - `static/css/` define estilos y `static/js/` contiene el comportamiento del navegador.
 
-Flujo previsto: `api → services → repositories → db`. Los servicios podrán
-utilizar el módulo de visión cuando se desarrolle esa etapa.
+Flujo: `api → services → repositories → db`. El coordinador de procesamiento
+llama a `vision/` en segundo plano y conserva resultados por captura.
 
 ## Organización de la interfaz
 
@@ -155,6 +162,44 @@ las plantillas no contienen JavaScript, CSS ni manejadores de eventos embebidos.
 Los módulos JavaScript usan `import`/`export`. Abrir las páginas a través de
 FastAPI para que las plantillas se compongan y los recursos se sirvan correctamente.
 
+## Capturas e informes de IA
+
+La pestaña **Imágenes** muestra capturas reales del ESP32 con fecha, estado,
+original y resultado visual. El botón **Ver informe IA** abre una ventana emergente
+en el tablero con el informe asociado a esa captura, separado de los reportes ciudadanos, con candidatos por zona y
+descarga JSON. Las imágenes de ejemplo de esta pestaña se eliminaron.
+
+El motor `app/vision/waki_ia/`, sus documentos, `requirements-ai.txt` y los pesos
+copiados se mantienen sin cambios. La integración usa adaptadores nuevos y
+`BackgroundTasks`, con cola acotada, estados persistidos y retención de originales
+y resultados. Las tareas no son durables: al reiniciar, los trabajos interrumpidos
+se marcan como error. Ejecutar una sola instancia con un worker.
+
+`MODEL_PROVIDER=none` permite ejecutar sin IA. `MODEL_PROVIDER=waki` activa la
+segmentación usando `weights/segformer_chillon_finetuned/` y las dependencias
+opcionales. Los pesos están excluidos de Git. **Grounding DINO y YOLOE multiescala ya están
+conectados**, usando los archivos locales de `weights/grounding-dino-tiny/`,
+`weights/yoloe-26s-seg.pt` y `weights/waki_yoloe_prompts.npz`. Configura sus rutas
+en `.env` para habilitarlos; si falta o falla un módulo, se muestra el resultado
+parcial disponible. No se descargan pesos ni se usan resultados guardados
+como si fueran detecciones nuevas.
+
+Consulta la [guía de integración, instalación CPU/CUDA, Docker, configuración,
+endpoints, reintentos y limitaciones](docs/ai-integration.md).
+
+### Probar una fotografía sin el ESP32
+
+Abre **Imágenes → Probar con una imagen de tu equipo**, selecciona una fotografía
+JPEG, PNG o WebP, introduce el valor de `IOT_KEY` de tu `.env` y pulsa
+**Analizar imagen**. El resultado se abre en la ventana emergente y se actualiza
+cuando termina la inferencia. La clave no se guarda en el navegador.
+
+Las subidas se identifican como **Prueba manual** y aparecen en la galería
+**Pruebas manuales** del río seleccionado. Ejecutan el mismo proveedor de IA,
+pero no sustituyen la imagen del ESP32 ni crean reportes ciudadanos. Con el
+configuración local actual se puede probar la segmentación de agua y los
+candidatos de objetos de Grounding DINO y YOLOE. El límite de archivo es `MAX_UPLOAD_MB`.
+
 ## Cámara ESP32 lista para recibir fotografías
 
 La cámara del resumen muestra **Esperando la primera captura del ESP32** hasta
@@ -172,7 +217,8 @@ predeterminada de 100 fotos por cámara y persistencia en el volumen Docker.
 
 Consulta el [contrato HTTP, configuración de red, script de prueba y ejemplo
 ESP32](docs/esp32-camera.md). La validación se hizo con envíos simulados; queda
-conectar el módulo físico de cámara y su firmware. La recepción no aplica IA.
+conectar el módulo físico de cámara y su firmware. Cada nueva captura genera un
+informe de análisis o un estado explícito de IA sin configurar.
 
 ## Nivel de río publicado por SENAMHI
 
