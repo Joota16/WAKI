@@ -1,4 +1,4 @@
-"""Descarga explícita de los ejes cartografiados de Chillón y Rímac desde OSM.
+"""Descarga explícita del eje cartografiado del río Chillón desde OSM.
 
 No se ejecuta al arrancar WAKI. También acepta una respuesta Overpass local.
 Las geometrías se conservan por vía, sin unir extremos ni suavizar el cauce.
@@ -17,9 +17,8 @@ ROOT = Path(__file__).resolve().parent.parent
 ENDPOINT = "https://overpass-api.de/api/interpreter"
 RIVERS = {
     11643078: ("chillon", "Río Chillón", (-11.932, -77.065)),
-    4637139: ("rimac", "Río Rímac", (-11.940, -76.705)),
 }
-QUERY = "[out:json][timeout:60]; relation(id:11643078,4637139); out body geom;"
+QUERY = "[out:json][timeout:60]; relation(id:11643078); out body geom;"
 
 
 def normalized(value: str) -> str:

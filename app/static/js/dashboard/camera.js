@@ -129,7 +129,7 @@ export function initCamera() {
       controller?.abort(); clearTimeout(timer); sequence++;
       cameraId = cameras[key];
       clear();
-      element('camera-name').textContent = key === 'chillon' ? 'Cámara del río Chillón' : 'Cámara del río Rímac';
+      element('camera-name').textContent = 'Cámara del río Chillón';
       refresh();
     },
   };

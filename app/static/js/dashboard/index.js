@@ -8,6 +8,7 @@ import { initDischarge } from './discharge.js';
 import { initWeather } from './weather.js';
 import { initCamera } from './camera.js';
 import { initAnalyses } from './analyses.js';
+import { initAttention } from './attention.js';
 
 const waterLevel = initWaterLevel();
 const discharge = initDischarge();
@@ -15,6 +16,7 @@ const weather = initWeather();
 const camera = initCamera();
 const analyses = initAnalyses();
 const riverMap = createRiverMap(selectRiver);
+initAttention(riverMap);
 
 function selectRiver(key, fly = true) {
   if (!RIVERS_DATA[key]) return;
@@ -79,13 +81,7 @@ search.addEventListener('input', () => {
   const station = HYDROLOGICAL_STATIONS.find(item => normalize(item.name).includes(term));
   if (station) riverMap?.focusStation(station.id);
 });
-document.addEventListener('keydown', event => {
-  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-    event.preventDefault();
-    search.focus();
-  }
-});
-
 selectRiver('chillon', false);
 switchTab(location.hash === '#imagenes' ? 'imagenes' : 'resumen');
 initRecentReports(riverMap);
+if (search.value.trim()) search.dispatchEvent(new Event('input'));

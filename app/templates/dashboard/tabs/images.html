@@ -1,7 +1,6 @@
 <div class="tab-panel hidden flex flex-col gap-4" id="tab-panel-imagenes" data-cameras='{{ camera_ids | tojson }}'>
   <div>
     <h4 class="font-bold text-sm text-slate-800">Capturas y análisis de IA</h4>
-    <p class="text-xs text-slate-500 mt-1">Cada imagen tiene su propio informe. Puedes recibir capturas del ESP32 o subir una fotografía para probar el análisis.</p>
   </div>
   {% include "dashboard/partials/analysis-upload.html" %}
   <div class="flex flex-wrap gap-2" role="group" aria-label="Origen de las imágenes">
@@ -15,7 +14,6 @@
     <span id="analyses-page" class="text-slate-500"></span>
     <button id="analyses-next" type="button" disabled class="px-3 py-2 rounded-lg border border-slate-200 disabled:opacity-40">Siguientes</button>
   </nav>
-  <p class="text-xs text-slate-500">La segmentación mide píxeles de agua visibles. No representa profundidad, caudal ni riesgo de inundación.</p>
   <template id="analysis-card-template">
     <article class="rounded-xl border border-slate-200 bg-white overflow-hidden flex flex-col">
       <div class="aspect-video bg-slate-950 flex items-center justify-center relative">

@@ -82,7 +82,7 @@ export function initAnalysisUpload({ onCreated }) {
   return {
     selectRiver(value) {
       river = value;
-      document.getElementById('analysis-test-river').textContent = value === 'chillon' ? 'río Chillón' : 'río Rímac';
+      document.getElementById('analysis-test-river').textContent = 'río Chillón';
     },
   };
 }

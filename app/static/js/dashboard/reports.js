@@ -7,7 +7,7 @@ export function initRecentReports(riverMap) {
   const dateFormat = new Intl.DateTimeFormat('es-PE', {
     timeZone: 'America/Lima', dateStyle: 'short', timeStyle: 'short',
   });
-  let loading = false;
+  let loading = false, pending = false;
 
   function element(tag, className, text) {
     const node = document.createElement(tag);
@@ -22,29 +22,30 @@ export function initRecentReports(riverMap) {
     if (report.photos.length) {
       const photo = element('img', 'w-16 h-16 object-cover rounded-lg shrink-0');
       photo.src = report.photos[0].url;
-      photo.alt = `Fotografía de ${report.river_section}`;
+      photo.alt = 'Fotografía del reporte ciudadano';
       photo.loading = 'lazy';
       link.append(photo);
     }
     const info = element('div', 'flex-1 min-w-0 text-xs flex flex-col gap-1');
-    info.append(element('p', 'font-bold text-slate-800 break-words', `${report.river_section} · ${report.district}`));
-    if (!compact) info.append(element('p', 'text-slate-600 break-words', report.reference));
+    info.append(element('p', 'font-bold text-slate-800 break-words', `Reporte ${report.id.slice(0, 8)}`));
+    if (!compact && report.observations) info.append(element('p', 'text-slate-600 break-words', report.observations.slice(0, 160)));
     const date = element('time', 'text-slate-500', `${dateFormat.format(new Date(report.created_at))} (Lima)`);
     date.dateTime = report.created_at;
     info.append(date);
-    info.append(element('p', 'text-slate-500', `${report.photos.length} ${report.photos.length === 1 ? 'foto' : 'fotos'} · Pendiente de verificación`));
+    info.append(element('p', 'text-slate-500', `${report.photos.length} ${report.photos.length === 1 ? 'foto' : 'fotos'} · ${report.review_label}`));
     info.append(element('span', 'text-sky-600 font-semibold', 'Ver reporte y fotos →'));
     link.append(info);
     return link;
   }
 
   async function load() {
-    if (loading) return;
+    if (loading) { pending = true; return; }
     loading = true;
     refresh.disabled = true;
     list.setAttribute('aria-busy', 'true');
     list.textContent = 'Cargando reportes guardados…';
     latest.textContent = 'Cargando reportes guardados…';
+    riverMap?.setReports([]);
     try {
       const response = await fetch('/api/reports?limit=6&offset=0', { cache: 'no-store' });
       if (!response.ok) throw new Error('No se pudo consultar el listado.');
@@ -60,7 +61,7 @@ export function initRecentReports(riverMap) {
         list.append(create);
         latest.textContent = 'Todavía no hay reportes registrados.';
       } else {
-        list.append(element('p', 'text-xs text-slate-500', `Mostrando los ${result.items.length} más recientes de ${result.total}, de Chillón y Rímac.`));
+        list.append(element('p', 'text-xs text-slate-500', `Mostrando los ${result.items.length} más recientes de ${result.total}.`));
         result.items.forEach(report => list.append(reportLink(report)));
         latest.append(reportLink(result.items[0], true));
       }
@@ -74,10 +75,12 @@ export function initRecentReports(riverMap) {
       loading = false;
       refresh.disabled = false;
       list.setAttribute('aria-busy', 'false');
+      if (pending) { pending = false; load(); }
     }
   }
 
   refresh.addEventListener('click', load);
+  document.addEventListener('reports-changed', load);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
   load();
 }

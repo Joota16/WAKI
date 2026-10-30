@@ -1,4 +1,4 @@
-import { RIVERS_DATA } from './data.js';
+import { attentionStyle, RIVERS_DATA } from './data.js';
 
 /** Cauce cartografiado local: no se inventan segmentos si falta la geometría. */
 export function addRiverGeometry(L, map, onSelect, onLoaded) {
@@ -12,7 +12,7 @@ export function addRiverGeometry(L, map, onSelect, onLoaded) {
 
   function style(id) {
     const active = selected === id;
-    return { color: RIVERS_DATA[id].color, weight: active ? 6 : 4,
+    return { color: attentionStyle(RIVERS_DATA[id].attentionLevel).color, weight: active ? 6 : 4,
       opacity: mode === 'reports' ? 0.2 : active ? 1 : 0.6,
       lineCap: 'round', lineJoin: 'round', smoothFactor: 0,
       className: `river-course river-course-${id}` };
@@ -23,7 +23,7 @@ export function addRiverGeometry(L, map, onSelect, onLoaded) {
   }
 
   function validate(collection) {
-    if (collection.type !== 'FeatureCollection' || collection.features?.length !== 2) throw new Error('Datos de cauces incompletos.');
+    if (collection.type !== 'FeatureCollection' || collection.features?.length !== Object.keys(RIVERS_DATA).length) throw new Error('Datos de cauces incompletos.');
     const ids = new Set();
     for (const feature of collection.features) {
       const id = feature.properties?.id;
@@ -83,5 +83,6 @@ export function addRiverGeometry(L, map, onSelect, onLoaded) {
     select(id) { selected = id; updateStyles(); },
     setMode(value) { mode = value; updateStyles(); },
     center(id) { return centers.get(id); },
+    refresh: updateStyles,
   };
 }

@@ -1,3 +1,5 @@
+import { attentionStyle } from './data.js';
+
 export function renderRiver(key, data) {
   // Highlight row in table
   document.querySelectorAll('.river-row').forEach(row => {
@@ -8,9 +10,8 @@ export function renderRiver(key, data) {
 
   // Update Detail Card Headers
   document.getElementById('card-river-title').textContent = data.title;
-  document.getElementById('card-river-station').textContent = data.station;
-  document.getElementById('card-river-badge-text').textContent = data.badgeText;
-  document.getElementById('card-river-badge').className = `inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold ${data.badgeClass} shadow-sm shrink-0`;
+  document.getElementById('card-river-badge-text').textContent = data.attentionLabel;
+  document.getElementById('card-river-badge').className = `inline-flex items-center px-3 py-1.5 rounded-lg border text-xs font-semibold ${attentionStyle(data.attentionLevel).badgeClass}`;
 
 
 }
