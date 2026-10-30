@@ -9,18 +9,31 @@ coordenadas del navegador o introducidas manualmente. Los datos se guardan en
 SQLite y las imágenes se conservan en archivos locales. Cada registro tiene un
 identificador y una página de consulta con sus fotografías.
 
-El tablero muestra reportes ciudadanos reales, los cauces de Chillón y Rímac
-cartografiados en OpenStreetMap y los promedios diarios de nivel de la estación
+El tablero muestra reportes ciudadanos reales, el cauce del Chillón
+cartografiado en OpenStreetMap y los promedios diarios de nivel de la estación
 Puente Magdalena y los caudales de Obrajillo y Puente Magdalena publicados por
-SENAMHI, además de la serie meteorológica disponible de Obrajillo. Las otras
-métricas conservan datos de demostración. La cámara del resumen recibe JPEGs
+SENAMHI, además de la serie meteorológica disponible de Obrajillo. El nivel de
+atención del tramo utiliza la evaluación más reciente de un reporte validado,
+confirmada por un administrador. La cámara del resumen recibe JPEGs
 de dispositivos autenticados y muestra la última captura real. La pestaña Imágenes
 vincula cada captura a su informe de IA en una ventana emergente, con original, segmentación y zonas
-candidatas cuando se configura el detector. La revisión humana y las
-notificaciones siguen pendientes.
+candidatas cuando se configura el detector. El acceso con usuario y contraseña
+es opcional: el tablero y el formulario siguen siendo públicos. Los
+administradores pueden validar o archivar reportes y publicar avisos de peligro
+que aparecen como un popup destacado en las páginas abiertas de WAKI.
+El ingreso (`/ingresar`), registro (`/registro`), revisión (`/admin/reportes`)
+y publicación de avisos (`/admin/avisos`) tienen páginas propias. El menú de
+cuenta enlaza directamente a estas herramientas y a **Administrar**
+(`/administrar`), donde se puede cambiar la contraseña.
+Todas las pantallas comparten la misma cabecera, con navegación, buscador,
+campana y menú de cuenta. El buscador abre el dashboard si se utiliza desde
+otra pantalla.
 
-Los únicos ríos habilitados son **Chillón y Rímac**. La tabla, el mapa, la búsqueda,
-el formulario y la validación de nuevos reportes usan estos dos ríos.
+La configuración de cuentas, el administrador inicial y el funcionamiento de
+los avisos se explican en [Cuentas y avisos importantes](docs/accounts-and-alerts.md).
+
+La tabla, el mapa y la búsqueda muestran únicamente el **río Chillón**.
+Los reportes ciudadanos no solicitan río, distrito, referencia ni datos de contacto.
 
 Las pantallas proceden de `code.html` y `code3.html`. Los originales se conservan
 sin modificar en `docs/prototypes/`; la aplicación utiliza las versiones
@@ -38,6 +51,9 @@ app/
 ├── api/
 │   ├── health.py            # Comprobación de conexión SQLite
 │   ├── reports.py           # Creación, consulta y fotografías de reportes
+│   ├── auth.py              # Registro, sesión JWT y cierre de sesión
+│   ├── dependencies.py      # Autorización por rol y protección CSRF
+│   ├── alerts.py            # Avisos públicos y eventos SSE
 │   ├── hydrology.py         # Consulta de la caché de niveles por río
 │   ├── middleware.py        # Límite del cuerpo de solicitudes
 │   ├── iot.py               # Recepción binaria de imágenes con X-IoT-Key
@@ -49,6 +65,8 @@ app/
 │   └── cameras.py           # Contratos de cámaras y capturas con fechas UTC
 ├── services/
 │   ├── reports.py           # Guardado, consultas y reintentos idempotentes
+│   ├── auth.py              # Contraseñas, JWT y administrador inicial
+│   ├── alerts.py            # Publicación y finalización de avisos
 │   ├── hydrology.py         # Sincronización periódica de niveles diarios
 │   ├── discharge.py         # Sincronización independiente de caudales
 │   ├── weather.py           # Sincronización de meteorología y fechas por variable
@@ -57,6 +75,8 @@ app/
 │   └── images.py            # Validación, normalización y almacenamiento
 ├── repositories/
 │   ├── reports.py           # Consultas SQL de reportes y fotografías
+│   ├── users.py             # Cuentas, sesiones y límite de intentos
+│   ├── alerts.py            # Avisos y registro persistente de eventos
 │   ├── hydrology.py         # Lecturas diarias y estado de sincronización
 │   ├── discharge.py         # Caudales por estación y fecha/hora
 │   ├── weather.py           # Series meteorológicas diarias y estado de consulta
@@ -76,6 +96,9 @@ app/
 │       └── local_yoloe.py   # YOLOE multiescala con pesos y prompts locales
 ├── templates/
 │   ├── base.html            # Documento HTML y bloques comunes
+│   ├── shared/              # Cabecera única, menú de cuenta y popup global de avisos
+│   ├── account/             # Ingreso, registro y cambio de contraseña
+│   ├── admin/               # Publicación de avisos y revisión de reportes
 │   ├── reports/             # Listado paginado, tarjetas y detalle con fotografías
 │   ├── dashboard/
 │   │   ├── index.html       # Compone la página del tablero
@@ -94,6 +117,7 @@ app/
     └── js/
         ├── config/          # Configuración visual de Tailwind por pantalla
         ├── dashboard/       # index.js, data.js, map.js y view.js
+        ├── site/            # Sesión, moderación y avisos en todas las páginas
         └── citizen/         # Resumen, GPS, fotos, envío y confirmación
 docs/prototypes/            # Los dos HTML originales de referencia
 docs/ia/                    # Documentación original del motor, sin modificaciones
@@ -142,7 +166,7 @@ llama a `vision/` en segundo plano y conserva resultados por captura.
 | `js/dashboard/discharge.js` | Dos tarjetas de caudal, hora de Lima, series recientes y estados por estación. |
 | `js/dashboard/water-level.js` | Tarjeta del último promedio diario y gráfica de la serie publicada. |
 | `js/dashboard/river-geometry.js` | Carga, validación y representación de los cauces GeoJSON. |
-| `data/rivers.geojson` | Geometrías y procedencia de los cauces de Chillón y Rímac. |
+| `data/rivers.geojson` | Geometría y procedencia del cauce del río Chillón. |
 | `js/dashboard/stations-data.js` | Nombres y coordenadas de las tres estaciones proporcionadas por el equipo. |
 | `js/dashboard/stations.js` | Capa de estaciones, etiquetas, fichas y encuadre de sus puntos. |
 | `js/dashboard/view.js` | Actualización de métricas, detalle y pestañas del tablero. |
@@ -382,7 +406,6 @@ cartografiados en OpenStreetMap. Sustituye las líneas ilustrativas del prototip
 | Río | Fuente OSM | Tramos | Puntos |
 | --- | --- | --- | --- |
 | Chillón | [Relación 11643078](https://www.openstreetmap.org/relation/11643078) | 7 | 3196 |
-| Rímac | [Relación 4637139](https://www.openstreetmap.org/relation/4637139) | 21 | 3321 |
 
 Fecha de la base consultada: **2026-10-29T07:56:02Z**. Se conservan las coordenadas
 de las vías del cauce principal, en un `MultiLineString` por río, sin unir extremos
@@ -399,7 +422,7 @@ python scripts/update_river_geometry.py
 python scripts/update_river_geometry.py --input /ruta/a/respuesta-overpass.json
 ```
 
-El script usa solo la biblioteca estándar, valida las dos relaciones y escribe
+El script usa solo la biblioteca estándar, valida la relación del Chillón y escribe
 el archivo de forma atómica. Conserva identificadores de origen, fecha de la
 fuente y hash SHA-256 de la respuesta para trazabilidad. Al cambiar este archivo,
 reconstruye el contenedor si utilizas Docker.
@@ -500,14 +523,15 @@ Uvicorn sin recarga automática. La configuración usa el formato de la
 
 ## Reportar con fotografías y ubicación
 
-En `/reportar`, selecciona el río, escribe distrito y referencia, e indica la
-condición que observaste. Los campos no vienen rellenados con datos de muestra.
+En `/reportar`, indica la condición que observaste, marca las situaciones que
+correspondan y adjunta tus fotografías. Puedes añadir una descripción y
+coordenadas opcionales. No se solicitan datos de zona ni de contacto.
 
 «Usar mi ubicación actual» solicita permiso al navegador. Muestra las coordenadas
 y su precisión aproximada; no supone que tu ubicación sea el lugar fotografiado.
 Comprueba el enlace al mapa antes de enviarla. Si se deniega el permiso, no hay
 señal o se agota el tiempo, puedes volver a intentarlo, introducir coordenadas
-manualmente o enviar únicamente la referencia del lugar.
+manualmente o enviar el reporte sin coordenadas.
 
 El navegador no indica qué tecnología utilizó para obtener la posición. Pedir
 alta precisión no garantiza una lectura de GPS ni una dirección exacta. WAKI
@@ -536,14 +560,16 @@ validación, los datos y fotos permanecen en el formulario para reintentar.
 Los reintentos del mismo envío usan una clave de idempotencia para evitar
 duplicados. El enlace `/reportes/{id}` permite comprobar las fotos guardadas.
 
-La referencia, fotografías y coordenadas son consultables públicamente.
-Los contactos nunca se incluyen en respuestas públicas. Al marcar envío sin
-datos de contacto, el servidor descarta nombre, teléfono y barrio.
+Las fotografías, observaciones y coordenadas de los reportes disponibles son
+consultables públicamente. No se recogen datos de contacto. Al arrancar sobre
+una base anterior se retiran las columnas de río, distrito, referencia,
+anonimato, nombre, teléfono y barrio. Se conservan identificadores, fechas,
+fotografías, coordenadas, observaciones y revisiones.
 
 ## Consultar los reportes guardados
 
 El enlace **Reportes** de la cabecera abre `/reportes`. Muestra los registros de
-los ríos Chillón y Rímac, con miniatura, distrito, referencia, fecha en hora de Lima y
+ciudadanos con miniatura, identificador, observación, fecha en hora de Lima y
 enlace a los datos y fotografías. El orden es del más reciente al más antiguo,
 con 12 registros por página. La navegación «Anterior» y «Siguiente» recorre el
 listado completo; también puedes usar `/reportes?page=2`.
@@ -564,7 +590,7 @@ estados de carga, vacío y error, sin sustituir los registros por datos ficticio
 - `POST /api/reports`: formulario multipart con `metadata` JSON y uno o más campos
   `files`. Responde HTTP 201 con el registro guardado. Acepta opcionalmente
   `Idempotency-Key` con un UUID; reutilizarlo con otro contenido devuelve HTTP 409.
-- `GET /api/reports?limit=12&offset=0`: listado paginado sin contactos.
+- `GET /api/reports?limit=12&offset=0`: listado paginado.
 - `GET /api/reports/{id}`: consulta del registro.
 - `GET /api/reports/{id}/photos/{photo_id}`: fotografía normalizada.
 
@@ -572,7 +598,7 @@ Ejemplo de envío:
 
 ```bash
 curl http://localhost:8000/api/reports \
-  -F 'metadata={"river_section":"Río Chillón","district":"Comas","reference":"Puente del tramo","observed_condition":"normal","latitude":-11.8924,"longitude":-77.0682}' \
+  -F 'metadata={"observed_condition":"normal","observations":"Agua visible en el cauce","latitude":-11.8924,"longitude":-77.0682}' \
   -F 'files=@/ruta/a/foto.jpg'
 ```
 
@@ -610,6 +636,11 @@ temperaturas negativas, unidades, códigos de la ficha y del catálogo, datos
 antiguos, fallos, persistencia y ausencia de una tarjeta duplicada de Magdalena.
 Las capturas IoT prueban autenticación, JPEG real, fechas, EXIF, tamaño,
 retención, reinicios y aislamiento respecto a los reportes ciudadanos.
+Las cuentas comprueban registro, contraseñas, JWT inválidos y vencidos,
+revocación al cerrar sesión, roles, CSRF y límite de intentos. La moderación
+verifica que el archivo conserve registros y fotografías y los oculte al público,
+así como la restauración, el historial y los conflictos entre revisores. Los
+avisos comprueban permisos, persistencia y eventos públicos sin datos privados.
 Las pruebas no consultan servicios externos.
 
 ## Límites de las pantallas
@@ -619,8 +650,8 @@ La tarjeta del último nivel utiliza promedios diarios publicados por SENAMHI
 y las dos tarjetas de caudal utilizan sus hidrogramas horarios publicados.
 La tarjeta meteorológica muestra precipitación y, cuando existan, temperaturas
 máximas/mínimas de la fuente de Obrajillo, con fechas y ausencia de datos explícitas.
-Los demás niveles, caudales, riesgos y resultados de análisis mostrados son
-ejemplos del diseño, no mediciones ni inferencias. La segmentación de agua no determina
+El nivel de atención es una evaluación preventiva asignada por el administrador,
+con fecha y reporte de respaldo. Sin evaluación aparece en gris. La segmentación de agua no determina
 profundidad, caudal ni riesgo de inundación.
 
 El formulario, el listado, las miniaturas y la capa de reportes utilizan datos
