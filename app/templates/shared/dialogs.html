@@ -1,0 +1,11 @@
+<p id="site-message" class="site-message" role="status" aria-live="polite" hidden></p>
+<aside id="active-alert-banner" class="site-alert-banner" hidden>
+  <strong>Aviso importante activo</strong>
+  <button type="button" data-open-notices>Ver avisos</button>
+</aside>
+
+<dialog id="important-notice-dialog" class="site-dialog site-notice-dialog" role="alertdialog" aria-labelledby="important-notice-title" aria-describedby="important-notice-description">
+  <header class="site-notice-header"><span aria-hidden="true">⚠</span><div><p>AVISO IMPORTANTE</p><h2 id="important-notice-title">Evento peligroso informado</h2></div></header>
+  <div class="site-dialog-body"><p id="important-notice-description">Avisos publicados por la administración de WAKI.</p><div id="important-notice-list" class="site-stack"></div></div>
+  <footer class="site-notice-footer"><button id="acknowledge-notices" type="button" class="site-danger" autofocus>Entendido</button></footer>
+</dialog>

@@ -1,0 +1,78 @@
+[hidden] { display: none !important; }
+.site-account { position: relative; font-size: 13px; }
+.site-account-button, .site-alert-button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 8px 10px; border-radius: 9px; border: 1px solid #cbd5e1; background: white; color: #0369a1; cursor: pointer; white-space: nowrap; }
+.site-account-menu summary { list-style: none; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+.site-account-menu summary::-webkit-details-marker { display: none; }
+.site-account-options { position: absolute; right: 0; top: calc(100% + 8px); z-index: 80; width: 210px; display: flex; flex-direction: column; gap: 8px; padding: 12px; background: white; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 10px 30px #0f172a26; }
+.site-account-options button, .site-account-options a { text-align: left; padding: 8px; border-radius: 6px; color: #0369a1; text-decoration: none; }
+.site-account-options button:hover, .site-account-options a:hover { background: #f0f9ff; }
+.site-account-options button { border: 0; background: white; font: inherit; cursor: pointer; }
+.site-alert-button { position: relative; padding: 8px; color: #475569; }
+.site-alert-button [data-alert-count] { position: absolute; top: -5px; right: -5px; min-width: 17px; border-radius: 99px; background: #dc2626; color: white; font-size: 10px; padding: 1px 4px; }
+.site-dialog { padding: 0; border: 1px solid #cbd5e1; border-radius: 16px; width: min(820px, calc(100vw - 24px)); max-width: none; max-height: calc(100dvh - 24px); margin: auto; background: #f8fafc; color: #0f172a; box-shadow: 0 20px 70px #02061766; font-size: 14px; }
+.site-dialog:not([open]) { display: none; }
+.site-dialog[open] { display: flex; flex-direction: column; }
+.site-dialog::backdrop { background: #0f172a99; }
+.site-dialog-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; background: white; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
+.site-dialog-header h2 { font-size: 19px; font-weight: 700; }
+.site-dialog-header button, .site-filter-row button { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; white-space: nowrap; background: white; cursor: pointer; }
+.site-dialog-body { overflow-y: auto; overscroll-behavior: contain; min-height: 0; padding: 20px; }
+.site-dialog-body h3 { font-weight: 700; font-size: 16px; }
+.site-muted { font-size: 12px; color: #475569; margin: 6px 0; }
+.site-form { display: flex; flex-direction: column; gap: 9px; margin-top: 14px; }
+.site-form label { font-weight: 600; }
+.site-form input, .site-form textarea, .site-form select, .site-filter-row select, .site-review-card textarea { width: 100%; min-width: 0; padding: 9px 12px; border: 1px solid #94a3b8; border-radius: 8px; background: white; color: #0f172a; font: inherit; }
+.site-review-card select { width: 100%; padding: 9px 12px; border: 1px solid #94a3b8; border-radius: 8px; background: white; color: #0f172a; font: inherit; }
+.site-review-card label { display: block; margin: 12px 0 6px; font-weight: 600; }
+.site-primary, .site-danger { padding: 11px 16px; border-radius: 9px; font-weight: 600; color: white; background: #0284c7; cursor: pointer; }
+.site-danger { background: #b91c1c; }
+.site-dialog button:disabled, .site-page button:disabled { opacity: .5; cursor: not-allowed; }
+.site-error { color: #b91c1c; font-size: 13px; white-space: pre-line; }
+.site-message { position: fixed; left: 16px; bottom: 16px; max-width: min(420px, calc(100vw - 32px)); padding: 12px 16px; border-radius: 10px; background: #0f172a; color: white; font-size: 13px; z-index: 100; box-shadow: 0 5px 25px #0f172a40; }
+.site-admin-review-button { display: inline-block; background: white; border: 1px solid #7dd3fc; padding: 8px 12px; border-radius: 8px; color: #0369a1; font-weight: 600; cursor: pointer; }
+.site-stack { display: flex; flex-direction: column; gap: 12px; }
+.site-section-title { margin: 24px 0 12px; }
+.site-filter-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+.site-filter-row select { width: auto; max-width: 100%; }
+.site-review-card, .site-admin-alert { background: white; border: 1px solid #cbd5e1; border-radius: 12px; padding: 16px; min-width: 0; }
+.site-review-card p, .site-admin-alert p { overflow-wrap: anywhere; white-space: pre-line; margin: 5px 0; }
+.site-review-card img { width: 100%; max-height: 230px; object-fit: contain; background: #0f172a; border-radius: 8px; margin: 12px 0; }
+.site-review-card a { color: #0369a1; text-decoration: underline; }
+.site-review-card .site-review-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.site-review-actions button, .site-admin-alert button { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; }
+.site-review-actions [data-decision="validated"] { background: #dcfce7; color: #166534; }
+.site-review-actions [data-decision="discarded"] { background: #fee2e2; color: #991b1b; }
+.site-review-badge { display: inline-block; width: fit-content; border-radius: 8px; padding: 5px 8px; background: #f1f5f9; color: #334155; font-size: 12px; }
+.site-notice-dialog { border: 2px solid #b91c1c; width: min(680px, calc(100vw - 24px)); }
+.site-notice-dialog::backdrop { background: #450a0acc; }
+.site-notice-header { display: flex; align-items: center; gap: 14px; padding: 22px; background: #b91c1c; color: white; flex-shrink: 0; }
+.site-notice-header > span { font-size: 38px; }
+.site-notice-header p { font-weight: 800; letter-spacing: .08em; font-size: 12px; }
+.site-notice-header h2 { font-weight: 700; font-size: 22px; margin-top: 4px; }
+.site-notice-card { background: white; border: 1px solid #fecaca; border-radius: 12px; padding: 16px; }
+.site-notice-card h3 { font-weight: 700; font-size: 20px; }
+.site-notice-card p { white-space: pre-line; overflow-wrap: anywhere; margin-top: 8px; }
+.site-notice-kind { color: #b91c1c; font-weight: 700; font-size: 12px; text-transform: uppercase; }
+.site-notice-footer { padding: 16px 20px; border-top: 1px solid #fecaca; background: white; flex-shrink: 0; }
+.site-notice-footer button { width: 100%; font-size: 16px; }
+.site-alert-banner { position: fixed; bottom: 12px; right: 12px; z-index: 90; background: #b91c1c; color: white; border-radius: 10px; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; box-shadow: 0 5px 20px #450a0a40; max-width: calc(100vw - 24px); }
+.site-alert-banner button { text-decoration: underline; font: inherit; font-weight: 700; background: transparent; border: 0; color: inherit; cursor: pointer; }
+.site-page { margin: 0; min-height: 100dvh; background: #f7f9fc; color: #0f172a; font: 14px/1.5 system-ui, sans-serif; }
+.site-page * { box-sizing: border-box; }
+.site-page a { color: #0369a1; }
+.site-page-main { width: min(100%, 1024px); margin: 32px auto; padding: 0 16px 100px; }
+.site-page-narrow { max-width: 520px; }
+.site-page-card { padding: clamp(20px, 4vw, 32px); background: white; border: 1px solid #e2e8f0; border-radius: 16px; min-width: 0; }
+.site-page h1 { margin: 0 0 16px; font-size: 24px; line-height: 1.3; font-weight: 750; }
+.site-page h2, .site-page h3 { font-weight: 650; }
+.site-page button { font: inherit; }
+.site-page .site-review-card h3 { margin: 0 0 8px; }
+:is(.site-page, .site-account) :is(a, button, input, select, textarea):focus-visible { outline: 3px solid #38bdf8; outline-offset: 3px; }
+@media (max-width: 640px) {
+  .site-dialog-header, .site-dialog-body { padding: 16px; }
+  .site-account-button { padding: 8px; font-size: 12px; }
+  .site-account-menu summary { max-width: 100px; }
+  .site-notice-header { padding: 18px; }
+  .site-notice-header h2 { font-size: 20px; }
+  .site-page-main { margin-top: 20px; }
+}

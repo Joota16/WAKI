@@ -1,0 +1,32 @@
+{% extends "account/base.html" %}
+{% block title %}WAKI · {{ 'Crear cuenta' if mode == 'register' else 'Iniciar sesión' }}{% endblock %}
+{% block main_class %}site-page-narrow{% endblock %}
+{% block page_content %}
+  <section class="site-page-card">
+    <h1>{{ 'Crear cuenta' if mode == 'register' else 'Iniciar sesión' }}</h1>
+    <p class="site-muted">Puedes consultar el tablero y reportar sin tener una cuenta.</p>
+    {% if request.query_params.get('password_changed') == '1' %}
+      <p role="status">Contraseña actualizada. Inicia sesión con tu nueva contraseña.</p>
+    {% endif %}
+    <form id="auth-form" class="site-form" data-mode="{{ mode }}" data-destination="{{ destination }}">
+      <label for="auth-username">Usuario</label>
+      <input id="auth-username" name="username" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9_.\-]+" required>
+      <p class="site-muted">Entre 3 y 32 caracteres: letras, números, punto, guion o guion bajo.</p>
+      <label for="auth-password">Contraseña</label>
+      <input id="auth-password" name="password" type="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" minlength="8" maxlength="128" required>
+      {% if mode == 'register' %}
+        <label for="auth-password-confirmation">Repetir contraseña</label>
+        <input id="auth-password-confirmation" name="password_confirmation" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+      {% endif %}
+      <p id="auth-error" role="alert" class="site-error"></p>
+      <button id="auth-submit" type="submit" class="site-primary">{{ 'Registrarme' if mode == 'register' else 'Entrar' }}</button>
+    </form>
+    <p class="site-section-title">
+      {% if mode == 'register' %}
+        ¿Ya tienes cuenta? <a href="{{ url_for('login_page').path }}?next={{ destination | urlencode }}">Iniciar sesión</a>
+      {% else %}
+        ¿No tienes cuenta? <a href="{{ url_for('register_page').path }}?next={{ destination | urlencode }}">Crear cuenta</a>
+      {% endif %}
+    </p>
+  </section>
+{% endblock %}

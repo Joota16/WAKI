@@ -1,0 +1,20 @@
+{% extends "account/protected.html" %}
+{% block title %}WAKI · Administrar cuenta{% endblock %}
+{% block main_class %}site-page-narrow{% endblock %}
+{% block protected_content %}
+  <section class="site-page-card">
+    <h1>Administrar cuenta</h1>
+    <h2 class="site-section-title">Cambiar contraseña</h2>
+    <form id="password-form" class="site-form">
+      <label for="current-password">Contraseña actual</label>
+      <input id="current-password" name="current_password" type="password" autocomplete="current-password" minlength="8" maxlength="128" required>
+      <label for="new-password">Nueva contraseña</label>
+      <input id="new-password" name="new_password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+      <label for="password-confirmation">Repetir nueva contraseña</label>
+      <input id="password-confirmation" name="password_confirmation" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+      <p class="site-muted">Entre 8 y 128 caracteres. Al guardar se cerrarán todas las sesiones de tu cuenta.</p>
+      <p id="password-error" role="alert" class="site-error"></p>
+      <button type="submit" class="site-primary">Guardar contraseña</button>
+    </form>
+  </section>
+{% endblock %}

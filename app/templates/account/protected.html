@@ -1,0 +1,12 @@
+{% extends "account/base.html" %}
+{% block page_content %}
+  <section id="page-access-gate" class="site-page-card" hidden>
+    <h1>Sesión no disponible</h1>
+    <p>Inicia sesión con una cuenta autorizada para continuar.</p>
+    <a href="{{ url_for('login_page').path }}?next={{ request.url.path | urlencode }}">Iniciar sesión</a>
+    <a href="{{ url_for('dashboard').path }}">Volver al dashboard</a>
+  </section>
+  <div data-protected-page="{% block required_role %}user{% endblock %}">
+    {% block protected_content %}{% endblock %}
+  </div>
+{% endblock %}

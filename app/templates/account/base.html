@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block body_class %}site-page{% endblock %}
+{% block content %}
+  <main class="site-page-main {% block main_class %}{% endblock %}">
+    {% block page_content %}{% endblock %}
+  </main>
+{% endblock %}

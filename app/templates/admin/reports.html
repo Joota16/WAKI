@@ -1,0 +1,18 @@
+{% extends "account/protected.html" %}
+{% block title %}WAKI · Revisar reportes{% endblock %}
+{% block required_role %}admin{% endblock %}
+{% block protected_content %}
+  <div class="site-page-card" data-admin-page="reports">
+    <h1>Revisar reportes</h1>
+    <p id="admin-status" class="site-muted" role="status" aria-live="polite"></p>
+    <section id="admin-reports-panel" data-report-id="{{ report_id }}">
+      {% if report_id %}<a href="{{ url_for('admin_reports').path }}">Ver todos los reportes para revisar</a>{% endif %}
+      <div class="site-filter-row"><label for="admin-review-filter">Mostrar reportes</label>
+        <select id="admin-review-filter"><option value="pending">Pendientes de verificación</option><option value="validated">Validados</option><option value="discarded">Descartados / archivados</option></select>
+        <button id="admin-refresh-reports" type="button">Actualizar</button>
+      </div>
+      <div id="admin-review-list" class="site-stack" aria-live="polite"></div>
+      <nav class="site-filter-row" aria-label="Páginas de reportes para revisar"><button id="admin-reports-previous" type="button" disabled>Anterior</button><span id="admin-reports-page"></span><button id="admin-reports-next" type="button" disabled>Siguiente</button></nav>
+    </section>
+  </div>
+{% endblock %}

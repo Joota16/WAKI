@@ -1,0 +1,21 @@
+{% extends "account/protected.html" %}
+{% block title %}WAKI · Publicar aviso{% endblock %}
+{% block required_role %}admin{% endblock %}
+{% block protected_content %}
+  <div class="site-page-card" data-admin-page="alerts">
+    <h1>Publicar aviso</h1>
+    <p id="admin-status" class="site-muted" role="status" aria-live="polite"></p>
+    <section id="admin-alerts-panel">
+      <h3>Publicar un aviso importante</h3>
+      <form id="admin-alert-form" class="site-form">
+        <label for="admin-alert-kind">Tipo de evento</label>
+        <select id="admin-alert-kind" required><option value="inundacion">Inundación</option><option value="derrumbe">Derrumbe</option><option value="huaico">Huaico</option><option value="otro">Otro evento peligroso</option></select>
+        <label for="admin-alert-title">Título del aviso</label><input id="admin-alert-title" minlength="3" maxlength="120" required>
+        <label for="admin-alert-location">Lugar afectado</label><input id="admin-alert-location" minlength="2" maxlength="200" required>
+        <label for="admin-alert-message">Mensaje para la población</label><textarea id="admin-alert-message" rows="4" minlength="5" maxlength="2000" required></textarea>
+        <button id="admin-publish-alert" type="submit" class="site-danger">Publicar aviso para todos</button>
+      </form>
+      <h3 class="site-section-title">Avisos activos</h3><div id="admin-active-alerts" class="site-stack"></div>
+    </section>
+  </div>
+{% endblock %}

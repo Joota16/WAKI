@@ -1,0 +1,36 @@
+/* Cabecera única: mismos tamaños y colores en todas las páginas, sin depender de Tailwind. */
+.waki-header { position: sticky; top: 0; z-index: 60; flex: none; width: 100%; background: #fff; border-bottom: 1px solid #e2e8f0; color: #0f172a; font: 400 13px/1.5 system-ui, sans-serif; }
+.waki-header *, .waki-header *::before, .waki-header *::after { box-sizing: border-box; }
+.waki-header-inner { display: grid; grid-template-columns: auto minmax(140px, 1fr) auto auto; align-items: center; gap: 20px; width: 100%; max-width: 1920px; min-height: 64px; margin: 0 auto; padding: 10px 24px; }
+.waki-header .waki-brand { display: inline-flex; align-items: center; gap: 9px; color: #0f172a; font-size: 16px; font-weight: 750; line-height: 1; text-decoration: none; white-space: nowrap; }
+.waki-brand-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: #0284c7; color: #fff; }
+.waki-header-search { display: flex; align-items: center; gap: 8px; min-width: 0; max-width: 430px; height: 36px; margin: 0; padding: 0 10px; border: 1px solid transparent; border-radius: 10px; background: #f1f5f9; color: #64748b; }
+.waki-header-search > svg, .waki-header-search kbd { flex: none; }
+.waki-header-search:focus-within { border-color: #0284c7; background: #fff; box-shadow: 0 0 0 2px #e0f2fe; }
+.waki-header .waki-header-search input { display: block; width: 100%; min-width: 0; height: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: #334155; font: inherit; outline: none; box-shadow: none; }
+.waki-header-search input::placeholder { color: #64748b; opacity: 1; }
+.waki-header-search kbd { padding: 1px 4px; border: 1px solid #e2e8f0; border-radius: 4px; background: #fff; color: #64748b; font: 10px/1.5 system-ui, sans-serif; white-space: nowrap; }
+.waki-header-nav, .waki-header-tools { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.waki-header .waki-header-nav a { display: inline-flex; align-items: center; gap: 4px; min-height: 36px; padding: 8px 11px; border: 1px solid transparent; border-radius: 10px; color: #0369a1; background: transparent; font-size: 12px; font-weight: 600; line-height: 18px; text-decoration: none; white-space: nowrap; }
+.waki-header .waki-header-nav a:hover, .waki-header .waki-header-nav a[aria-current="page"] { background: #f0f9ff; }
+.waki-header .waki-header-nav .waki-report-link { background: #0284c7; color: #fff; }
+.waki-header .waki-header-nav .waki-report-link:hover, .waki-header .waki-header-nav .waki-report-link[aria-current="page"] { background: #0369a1; }
+.waki-header .site-account { font: inherit; }
+.waki-header :is(.site-account-button, .site-alert-button) { min-height: 36px; padding: 7px 10px; font: inherit; line-height: 20px; text-decoration: none; }
+.waki-header .site-alert-button { padding: 7px; color: #475569; }
+.waki-header .site-account-options { font: inherit; }
+.waki-header .site-account-options p { margin: 0; padding: 0 8px; color: #64748b; font-size: 12px; }
+.waki-header .site-account-options a, .waki-header .site-account-options button { margin: 0; font: inherit; text-decoration: none; }
+.waki-header :is(a, button, summary):focus-visible { outline: 2px solid #0284c7; outline-offset: 3px; }
+@media (max-width: 1100px) {
+  .waki-header-inner { gap: 12px; padding-right: 16px; padding-left: 16px; }
+  .waki-report-link span, .waki-header-search kbd { display: none; }
+}
+@media (max-width: 760px) {
+  .waki-header-inner { grid-template-columns: 1fr auto; grid-template-areas: "brand tools" "search search" "nav nav"; gap: 8px; padding: 10px 12px; }
+  .waki-brand { grid-area: brand; }
+  .waki-header-tools { grid-area: tools; justify-self: end; }
+  .waki-header-search { grid-area: search; max-width: none; }
+  .waki-header-nav { grid-area: nav; justify-content: center; }
+  .waki-header .waki-header-nav a { min-height: 32px; padding: 6px 12px; }
+}
