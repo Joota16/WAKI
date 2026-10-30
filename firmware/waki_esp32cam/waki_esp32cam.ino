@@ -4,6 +4,9 @@
 #include "esp_camera.h"
 #include "esp_system.h"
 #include "secrets.h"
+#include <WiFiClientSecure.h>
+#include <time.h>
+#include "tls_ca.h"
 
 constexpr uint32_t INTERVALO_FOTO_MS = 60000;
 constexpr uint32_t REINTENTO_WIFI_MS = 30000;
@@ -132,6 +135,16 @@ void registrarFalloCaptura() {
 }
 
 void enviarFotoAWaki() {
+  if (!String(WAKI_URL).startsWith("https://")) {
+    Serial.println("WAKI: configurar una URL HTTPS en secrets.h.");
+    return;
+  }
+
+  if (time(nullptr) < 1735689600) {
+    Serial.println("WAKI: esperando sincronizacion de hora.");
+    return;
+  }
+  
   camera_fb_t *anterior = esp_camera_fb_get();
 
   if (anterior != nullptr) {
@@ -153,7 +166,9 @@ void enviarFotoAWaki() {
 
   fallosCaptura = 0;
 
-  WiFiClient cliente;
+  WiFiClientSecure cliente;
+  cliente.setCACert(WAKI_ROOT_CA);
+  cliente.setHandshakeTimeout(15);
   HTTPClient http;
 
   http.setConnectTimeout(5000);
@@ -253,6 +268,8 @@ void loop() {
   bool conectado = WiFi.status() == WL_CONNECTED;
 
   if (conectado && !wifiConectadoAntes) {
+    configTime(0, 0, "time.google.com", "pool.ntp.org");
+    Serial.println("WAKI: sincronizando hora para HTTPS.");
     Serial.print("WAKI: WiFi conectado. IP: ");
     Serial.println(WiFi.localIP());
   } else if (!conectado && wifiConectadoAntes) {
