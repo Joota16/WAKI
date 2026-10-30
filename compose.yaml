@@ -2,7 +2,10 @@ name: waki
 
 services:
   waki:
-    build: .
+    build:
+      context: .
+      args:
+        INSTALL_AI: ${WAKI_INSTALL_AI:-false}
     ports:
       - "${WAKI_BIND_ADDRESS:-127.0.0.1}:${WAKI_PORT:-8000}:8000"
     environment:
@@ -16,8 +19,18 @@ services:
       SENAMHI_POLL_SECONDS: ${SENAMHI_POLL_SECONDS:-3600}
       IOT_KEY: ${IOT_KEY:-}
       IOT_RETENTION_IMAGES: ${IOT_RETENTION_IMAGES:-100}
+      MODEL_PROVIDER: ${MODEL_PROVIDER:-none}
+      AI_WATER_CHECKPOINT: ${AI_WATER_CHECKPOINT:-/app/weights/segformer_chillon_finetuned}
+      AI_DINO_CHECKPOINT: ${AI_DINO_CHECKPOINT:-}
+      AI_YOLOE_CHECKPOINT: ${AI_YOLOE_CHECKPOINT:-}
+      AI_YOLOE_PROMPTS: ${AI_YOLOE_PROMPTS:-}
+      AI_DEVICE: ${AI_DEVICE:-cpu}
+      AI_RIVERS: ${AI_RIVERS:-chillon}
+      AI_RETENTION_IMAGES: ${AI_RETENTION_IMAGES:-100}
+      AI_MAX_PENDING: ${AI_MAX_PENDING:-4}
     volumes:
       - waki_data:/app/data
+      - ./weights:/app/weights:ro
     restart: unless-stopped
     healthcheck:
       test:

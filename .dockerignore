@@ -1,6 +1,7 @@
 # Solo se envían las dependencias y el código de la aplicación al build.
 **
 !requirements.txt
+!requirements-ai-runtime.txt
 !app/
 !app/**
 app/**/__pycache__/
