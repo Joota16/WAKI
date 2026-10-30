@@ -1,0 +1,16 @@
+<details id="analysis-test-upload" class="analysis-test-upload">
+  <summary>Probar con una imagen de tu equipo</summary>
+  <form id="analysis-test-form" data-limit-mb="{{ upload_limit_mb }}" class="analysis-test-form">
+    <p class="text-xs text-slate-600">Sube una foto del <strong id="analysis-test-river">río seleccionado</strong>. Se ejecutarán los módulos de IA configurados y se abrirá su informe.</p>
+    <label for="analysis-test-file" class="text-sm font-semibold">Fotografía</label>
+    <input id="analysis-test-file" type="file" accept="image/jpeg,image/png,image/webp" required>
+    <p class="text-xs text-slate-500">JPEG, PNG o WebP. Una imagen de hasta {{ upload_limit_mb }} MB. La prueba se guardará en esta galería.</p>
+    <img id="analysis-test-preview" alt="Vista previa de la imagen seleccionada para probar" hidden>
+    <label for="analysis-test-key" class="text-sm font-semibold">Clave de subida</label>
+    <input id="analysis-test-key" type="password" autocomplete="off" required aria-describedby="analysis-test-key-help">
+    <p id="analysis-test-key-help" class="text-xs text-slate-500">Usa el valor de IOT_KEY de tu archivo .env. La clave no se guarda en el navegador.</p>
+    <p class="text-xs text-slate-500">Se registrará como prueba manual. No cambiará la cámara del ESP32 ni creará un reporte ciudadano.</p>
+    <button id="analysis-test-submit" type="submit">Analizar imagen</button>
+    <p id="analysis-test-status" class="text-sm text-slate-600" role="status" aria-live="polite"></p>
+  </form>
+</details>

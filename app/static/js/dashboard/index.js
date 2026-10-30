@@ -7,11 +7,13 @@ import { initWaterLevel } from './water-level.js';
 import { initDischarge } from './discharge.js';
 import { initWeather } from './weather.js';
 import { initCamera } from './camera.js';
+import { initAnalyses } from './analyses.js';
 
 const waterLevel = initWaterLevel();
 const discharge = initDischarge();
 const weather = initWeather();
 const camera = initCamera();
+const analyses = initAnalyses();
 const riverMap = createRiverMap(selectRiver);
 
 function selectRiver(key, fly = true) {
@@ -21,6 +23,7 @@ function selectRiver(key, fly = true) {
   discharge.selectRiver(key);
   weather.selectRiver(key);
   camera.selectRiver(key);
+  analyses.selectRiver(key);
   riverMap?.selectRiver(key, fly);
 }
 
@@ -84,5 +87,5 @@ document.addEventListener('keydown', event => {
 });
 
 selectRiver('chillon', false);
-switchTab('resumen');
+switchTab(location.hash === '#imagenes' ? 'imagenes' : 'resumen');
 initRecentReports(riverMap);

@@ -91,3 +91,34 @@
 .camera-dialog::backdrop { background: #020617; }
 .camera-dialog-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 12px; }
 .camera-dialog img { width: 100%; height: calc(100% - 48px); object-fit: contain; margin-top: 12px; }
+
+.analysis-dialog-open { overflow: hidden; }
+.analysis-report-dialog { width: min(1000px, calc(100vw - 32px)); max-width: none; max-height: calc(100dvh - 32px); padding: 0; margin: auto; border: 1px solid #e2e8f0; border-radius: 16px; background: #f8fafc; color: #0f172a; box-shadow: 0 24px 80px #02061766; }
+.analysis-report-dialog::backdrop { background: #02061799; }
+.analysis-report-dialog[open] { display: flex; flex-direction: column; }
+.analysis-report-dialog [hidden] { display: none !important; }
+.analysis-dialog-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 1px solid #e2e8f0; background: white; flex-shrink: 0; }
+.analysis-dialog-header h2 { font-size: 18px; font-weight: 700; }
+.analysis-dialog-header button, #analysis-dialog-retry { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; background: white; font-size: 14px; white-space: nowrap; cursor: pointer; }
+.analysis-dialog-body { padding: 20px; overflow-y: auto; min-height: 0; overscroll-behavior: contain; }
+#analysis-dialog-status { font-size: 14px; color: #475569; }
+#analysis-dialog-retry { margin-top: 12px; }
+.analysis-report-dialog #analysis-preview { max-height: 50dvh; }
+.analysis-report-dialog a, .analysis-report-dialog [data-analysis-preview] { color: #0369a1; }
+.analysis-report-dialog [aria-pressed="true"] { font-weight: 700; }
+.analysis-test-upload { border: 1px solid #bae6fd; border-radius: 12px; background: #f0f9ff; padding: 12px; }
+.analysis-test-upload summary { color: #0369a1; font-size: 14px; font-weight: 600; cursor: pointer; }
+.analysis-test-form { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.analysis-test-form [hidden] { display: none !important; }
+.analysis-test-form input { max-width: 100%; font-size: 14px; }
+.analysis-test-form input[type="password"] { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; background: white; }
+#analysis-test-preview { max-height: 180px; width: 100%; object-fit: contain; border-radius: 8px; background: #0f172a; }
+#analysis-test-submit { align-self: start; padding: 10px 16px; border-radius: 8px; background: #0284c7; color: white; font-size: 14px; font-weight: 600; }
+#analysis-test-submit:disabled { opacity: .6; cursor: wait; }
+.analysis-source-option { padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 12px; }
+.analysis-source-option[aria-pressed="true"] { border-color: #0284c7; background: #e0f2fe; color: #0369a1; font-weight: 600; }
+@media (max-width: 640px) {
+  .analysis-report-dialog { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); border-radius: 12px; }
+  .analysis-dialog-header, .analysis-dialog-body { padding: 16px; }
+  .analysis-dialog-header h2 { font-size: 16px; }
+}
