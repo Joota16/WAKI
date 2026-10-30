@@ -11,10 +11,6 @@
     </div>
     <div class="flex flex-col gap-2.5 text-xs">
       <div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low">
-        <span class="text-on-surface-variant">Río / Zona:</span>
-        <span class="font-semibold text-on-surface" id="summaryCuenca">Selecciona el río</span>
-      </div>
-      <div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low">
         <span class="text-on-surface-variant">Nivel de Peligro:</span>
         <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-error-container text-on-error-container" id="summaryRiesgoBadge">
           Sin seleccionar
@@ -30,17 +26,7 @@
       </div>
     </div>
   </div>
-  <!-- TARJETA 2: TU REPORTE SALVA VIDAS -->
-  <div class="bg-gradient-to-br from-primary/10 via-surface-container-lowest to-surface-container-low rounded-2xl p-5 border border-primary/20 shadow-sm flex flex-col gap-3">
-    <div class="flex items-center gap-2.5 text-primary">
-      <span class="material-symbols-outlined text-[24px]">favorite</span>
-      <h3 class="font-title-md text-title-md font-bold text-on-surface">Tu observación queda registrada</h3>
-    </div>
-    <p class="text-xs text-on-surface-variant leading-relaxed">
-      Guardamos tus fotografías y la información del lugar en WAKI. Al terminar recibirás un enlace para consultar el reporte. El registro no notifica automáticamente a las autoridades.
-    </p>
-  </div>
-  <!-- TARJETA 3: RECOMENDACIONES DE SEGURIDAD INMEDIATA -->
+  <!-- TARJETA 2: RECOMENDACIONES DE SEGURIDAD INMEDIATA -->
   <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline-variant/20 flex flex-col gap-3.5">
     <div class="flex items-center gap-2 text-secondary pb-1">
       <span class="material-symbols-outlined text-[24px]">health_and_safety</span>
@@ -70,7 +56,7 @@
       </div>
     </div>
   </div>
-  <!-- TARJETA 4: NÚMEROS DE AUXILIO RÁPIDO -->
+  <!-- TARJETA 3: NÚMEROS DE AUXILIO RÁPIDO -->
   <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline-variant/20 flex flex-col gap-3">
     <div class="flex items-center gap-2 text-on-surface pb-1">
       <span class="material-symbols-outlined text-error text-[22px]">phone_in_talk</span>
@@ -84,7 +70,6 @@
           </div>
           <div class="flex flex-col">
             <span class="font-label-md text-label-md text-on-surface font-bold">INDECI / COEN Nacional</span>
-            <span class="text-xs text-on-surface-variant">Emergencias por desastres</span>
           </div>
         </div>
         <span class="font-telemetry-data text-xl text-error font-extrabold group-hover:scale-105 transition-transform">115</span>
@@ -96,7 +81,6 @@
           </div>
           <div class="flex flex-col">
             <span class="font-label-md text-label-md text-on-surface font-semibold">Bomberos del Perú</span>
-            <span class="text-xs text-on-surface-variant">Rescate y primeros auxilios</span>
           </div>
         </div>
         <span class="font-telemetry-data text-lg text-on-surface font-bold group-hover:text-error transition-colors">116</span>
@@ -108,7 +92,6 @@
           </div>
           <div class="flex flex-col">
             <span class="font-label-md text-label-md text-on-surface font-semibold">Policía Nacional (PNP)</span>
-            <span class="text-xs text-on-surface-variant">Central 105 / Rescate</span>
           </div>
         </div>
         <span class="font-telemetry-data text-lg text-on-surface font-bold group-hover:text-primary transition-colors">105</span>

@@ -15,16 +15,9 @@ export function initSubmission({ photos, location, modal }) {
   let key = requestKey();
   let submitting = false;
   const value = id => document.getElementById(id).value.trim();
-  const anonymous = document.getElementById('checkAnonimo');
-  function updatePrivacy() {
-    document.querySelectorAll('#contactFields input').forEach(input => { input.disabled = anonymous.checked; });
-  }
-  anonymous.addEventListener('change', updatePrivacy);
   for (const event of ['input', 'change']) {
     form.addEventListener(event, () => { if (!submitting) key = requestKey(); });
   }
-  form.addEventListener('reset', () => queueMicrotask(updatePrivacy));
-  updatePrivacy();
   form.addEventListener('submit', async event => {
     event.preventDefault();
     if (submitting) return;
@@ -35,14 +28,10 @@ export function initSubmission({ photos, location, modal }) {
       if (!selected.length) throw new Error('Adjunta al menos una fotografía del río.');
       if (!form.reportValidity()) return;
       const metadata = {
-        river_section: value('cuencaSelect'), district: value('distritoInput'), reference: value('referenciaVecinal'),
         observations: value('descripcionCiudadana'),
         observed_condition: form.querySelector('[name="nivelPeligro"]:checked').value,
         situations: [...form.querySelectorAll('[name="situacion"]:checked')].map(input => input.value),
-        ...location.values(), anonymous: anonymous.checked,
-        contact_name: anonymous.checked ? '' : value('nombreVecino'),
-        contact_phone: anonymous.checked ? '' : value('telefonoVecino'),
-        neighborhood: anonymous.checked ? '' : value('barrioVecino'),
+        ...location.values(),
       };
       const data = new FormData();
       data.append('metadata', JSON.stringify(metadata));

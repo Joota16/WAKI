@@ -1,17 +1,18 @@
 {% extends "citizen/base.html" %}
 {% block title %}WAKI · Reporte guardado{% endblock %}
 {% block content %}
-  {% include "citizen/partials/header.html" %}
-  <main class="max-w-4xl mx-auto p-4 sm:p-8 flex flex-col gap-6">
+  <main id="report-content" data-report-detail-id="{{ report.id }}" class="max-w-4xl mx-auto p-4 sm:p-8 flex flex-col gap-6">
     <div>
       <a href="{{ url_for('reports_list').path }}" class="inline-block text-primary underline text-sm mb-3">← Todos los reportes</a>
-      <h1 class="text-2xl font-bold">{{ report.river_section }} · {{ report.district }}</h1>
+      <h1 class="text-2xl font-bold">Reporte ciudadano</h1>
       <p class="text-sm text-on-surface-variant break-all">Reporte {{ report.id }}</p>
       <p class="text-sm">Registrado el {{ registered_local }} (Lima)</p>
+      <p class="site-review-badge" data-report-review-label>{{ report.review_label }}</p>
+      {% if report.attention_label %}<p class="text-sm">Nivel de atención asignado: {{ report.attention_label }}</p>{% endif %}
+      <a href="{{ url_for('admin_reports').path }}?report_id={{ report.id }}" class="site-admin-review-button" data-admin-only hidden>Revisar este reporte</a>
     </div>
     <section class="bg-white rounded-2xl p-6 flex flex-col gap-3 border border-outline-variant/30">
       <h2 class="text-lg font-bold">Observación registrada</h2>
-      <p><strong>Referencia:</strong> {{ report.reference }}</p>
       <p><strong>Condición indicada por el ciudadano:</strong>
         {{ {'critico': 'Peligro inminente / desborde', 'muy-alto': 'Nivel muy alto', 'alto': 'Nivel alto / crecida', 'normal': 'Normal'}[report.observed_condition] }}
       </p>
@@ -30,8 +31,8 @@
           {% endif %}
         {% endif %}
         <a class="text-primary underline" href="https://www.openstreetmap.org/?mlat={{ report.latitude }}&amp;mlon={{ report.longitude }}#map=16/{{ report.latitude }}/{{ report.longitude }}" target="_blank" rel="noopener noreferrer">Ver ubicación en el mapa</a>
-      {% else %}<p>Sin coordenadas GPS; consulta la referencia del lugar.</p>{% endif %}
-      <p class="text-xs text-on-surface-variant">La condición es una observación ciudadana, pendiente de verificación. No se ha realizado análisis de IA ni se han enviado avisos a autoridades.</p>
+      {% else %}<p>Sin coordenadas.</p>{% endif %}
+      <p class="text-xs text-on-surface-variant">{{ report.review_label }}. La condición descrita pertenece a la observación ciudadana. Este registro no genera avisos automáticos a autoridades.</p>
     </section>
     <section aria-labelledby="saved-photos-title">
       <h2 id="saved-photos-title" class="text-lg font-bold mb-3">Fotografías guardadas ({{ report.photos | length }})</h2>

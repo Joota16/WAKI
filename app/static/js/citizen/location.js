@@ -25,7 +25,7 @@ export function initLocation() {
     const precision = browserLocation ? ` · radio de precisión aproximado: ${formatAccuracy(meters)}` : '';
     document.getElementById('gpsCoordsText').textContent = valid
       ? `${lat.toFixed(6)}, ${lon.toFixed(6)}${precision}`
-      : 'Sin coordenadas. Puedes enviar el reporte usando la referencia del lugar.';
+      : 'Sin coordenadas.';
     document.getElementById('summaryCoords').textContent = valid ? `${lat.toFixed(6)}, ${lon.toFixed(6)}` : 'Sin coordenadas';
     badge.textContent = valid
       ? (browserLocation ? (lowAccuracy ? 'Ubicación aproximada · Baja precisión' : 'Ubicación del navegador') : 'Ubicación manual')
@@ -51,7 +51,7 @@ export function initLocation() {
       return;
     }
     if (!navigator.geolocation) {
-      showError('Este navegador no permite obtener la ubicación. Usa la referencia o las coordenadas manuales.');
+      showError('Este navegador no permite obtener la ubicación. Puedes introducir las coordenadas manualmente.');
       return;
     }
     pending = true;

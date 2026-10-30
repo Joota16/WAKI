@@ -1,18 +1,16 @@
 /** Resumen visual del formulario; no persiste ni transmite información. */
 export function initSummary() {
-  const river = document.getElementById('cuencaSelect');
-  const district = document.getElementById('distritoInput');
   const cards = document.querySelectorAll('.citizen-risk-card');
   const riskConfig = {
     critico: {
       badge: '🔴 Peligro Inminente Seleccionado',
       badgeClass: 'bg-error-container text-on-error-container',
-      summary: '🚨 Peligro Inminente', border: 'border-error bg-error-container/20',
+      summary: 'Peligro Inminente', border: 'border-error bg-error-container/20',
     },
     'muy-alto': {
       badge: '🟠 Nivel Muy Alto Seleccionado',
       badgeClass: 'bg-secondary-fixed text-on-secondary-container',
-      summary: '⚠️ Nivel Muy Alto', border: 'border-secondary bg-secondary-fixed/20',
+      summary: 'Nivel Muy Alto', border: 'border-secondary bg-secondary-fixed/20',
     },
     alto: {
       badge: '🟡 Nivel Alto Seleccionado',
@@ -20,16 +18,11 @@ export function initSummary() {
       summary: '🌊 Crecida / Nivel Alto', border: 'border-tertiary bg-tertiary-fixed/20',
     },
     normal: {
-      badge: '🟢 Nivel Normal Seleccionado',
+      badge: 'Nivel Normal Seleccionado',
       badgeClass: 'bg-primary-fixed text-on-primary-fixed-variant',
-      summary: '✅ Normal / Sin Peligro', border: 'border-primary bg-primary-fixed/20',
+      summary: 'Normal / Sin Peligro', border: 'border-primary bg-primary-fixed/20',
     },
   };
-
-  function updateZone() {
-    const suffix = district.value ? ` (${district.value})` : '';
-    document.getElementById('summaryCuenca').textContent = `${river.value || 'Selecciona el río'}${suffix}`;
-  }
 
   function updateRisk() {
     if (!document.querySelector('[name="nivelPeligro"]:checked')) {
@@ -58,13 +51,10 @@ export function initSummary() {
     });
   }
 
-  river.addEventListener('change', updateZone);
-  district.addEventListener('input', updateZone);
   cards.forEach(card => card.querySelector('input').addEventListener('change', updateRisk));
   document.getElementById('citizenReportForm').addEventListener('reset', () => {
-    queueMicrotask(() => { updateZone(); updateRisk(); updateClock(); });
+    queueMicrotask(() => { updateRisk(); updateClock(); });
   });
-  updateZone();
   updateRisk();
   updateClock();
 }

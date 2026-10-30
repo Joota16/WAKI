@@ -1,11 +1,10 @@
-<!-- SECCIÓN 2: ¿QUÉ NIVEL DE PELIGRO VES? -->
+<!-- SECCIÓN 1: ¿QUÉ NIVEL DE PELIGRO VES? -->
 <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4">
   <div class="flex items-center justify-between flex-wrap gap-2">
     <div class="flex items-center gap-3">
-      <span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">2</span>
+      <span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">1</span>
       <div>
         <h2 class="font-headline-sm text-headline-sm text-on-surface">¿Qué nivel de peligro ves en este momento?</h2>
-        <p class="text-xs text-on-surface-variant">Elige la opción que mejor describa la situación con tus propios ojos.</p>
       </div>
     </div>
     <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-error-container text-on-error-container" id="badgeActiveRisk">
@@ -21,12 +20,8 @@
           <span class="w-3 h-3 rounded-full bg-error ring-4 ring-error-container"></span>
           Nivel Crítico
         </span>
-        <span class="text-xl">🚨</span>
       </div>
       <span class="font-title-md text-title-md font-bold text-on-surface">Peligro Inminente / Desborde</span>
-      <p class="text-xs text-on-surface-variant leading-relaxed">
-        El agua ya se está saliendo del cauce, inundando calles, viviendas o la orilla se está desplomando ahora mismo.
-      </p>
     </label>
     <!-- TARJETA NARANJA: MUY ALTO -->
     <label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl border-2 transition-all flex flex-col gap-2 border-transparent bg-surface-container-low hover:bg-surface-container opacity-85" data-color="secondary" data-label="Nivel Muy Alto" data-risk="muy-alto">
@@ -36,12 +31,8 @@
           <span class="w-3 h-3 rounded-full bg-secondary ring-4 ring-secondary-fixed"></span>
           Nivel Severo
         </span>
-        <span class="text-xl">⚠️</span>
       </div>
       <span class="font-title-md text-title-md font-bold text-on-surface">Nivel Muy Alto</span>
-      <p class="text-xs text-on-surface-variant leading-relaxed">
-        El agua está a punto de desbordar (al borde de la pista) o arrastra grandes troncos y piedras con fuerza.
-      </p>
     </label>
     <!-- TARJETA AMARILLA: ALTO / CRECIDA -->
     <label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl border-2 transition-all flex flex-col gap-2 border-transparent bg-surface-container-low hover:bg-surface-container opacity-85" data-color="tertiary" data-label="Nivel Alto / Crecida" data-risk="alto">
@@ -54,9 +45,6 @@
         <span class="text-xl">🌊</span>
       </div>
       <span class="font-title-md text-title-md font-bold text-on-surface">Nivel Alto / Crecida</span>
-      <p class="text-xs text-on-surface-variant leading-relaxed">
-        El río ruge, está turbio (marrón) y lleva notablemente más caudal de lo habitual, pero aún dentro del cauce.
-      </p>
     </label>
     <!-- TARJETA VERDE: NORMAL -->
     <label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl border-2 transition-all flex flex-col gap-2 border-transparent bg-surface-container-low hover:bg-surface-container opacity-85" data-color="primary" data-label="Normal / Sin Peligro" data-risk="normal">
@@ -66,12 +54,8 @@
           <span class="w-3 h-3 rounded-full bg-primary ring-4 ring-primary-fixed"></span>
           Tranquilo
         </span>
-        <span class="text-xl">✅</span>
       </div>
       <span class="font-title-md text-title-md font-bold text-on-surface">Normal / Sin Peligro</span>
-      <p class="text-xs text-on-surface-variant leading-relaxed">
-        El río fluye a nivel regular, no hay aumento alarmante y no se percibe riesgo para las personas de la zona.
-      </p>
     </label>
   </div>
 </div>
