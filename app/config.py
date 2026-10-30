@@ -27,6 +27,18 @@ class Settings(BaseSettings):
     ai_rivers: str = 'chillon'
     ai_retention_images: int = Field(default=100, ge=1, le=1000)
     ai_max_pending: int = Field(default=4, ge=1, le=32)
+    jwt_secret: SecretStr = SecretStr('')
+    jwt_expire_minutes: int = Field(default=60, ge=5, le=1440)
+    auth_cookie_secure: bool = False
+    admin_username: str = ''
+    admin_password: SecretStr = SecretStr('')
+
+    @field_validator('jwt_secret')
+    @classmethod
+    def valid_jwt_secret(cls, value):
+        if value.get_secret_value() and len(value.get_secret_value()) < 32:
+            raise ValueError('JWT_SECRET debe tener al menos 32 caracteres.')
+        return value
 
     @field_validator('ai_dino_checkpoint', 'ai_yoloe_checkpoint', 'ai_yoloe_prompts', mode='before')
     @classmethod
