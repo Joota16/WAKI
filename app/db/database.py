@@ -108,5 +108,24 @@ class Database:
                     size_bytes INTEGER NOT NULL
                 );
                 CREATE INDEX IF NOT EXISTS camera_latest ON camera_frames(camera_id, sequence DESC);
+                CREATE TABLE IF NOT EXISTS image_analyses (
+                    sequence INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id TEXT NOT NULL UNIQUE,
+                    camera_id TEXT NOT NULL,
+                    river_id TEXT NOT NULL,
+                    source TEXT NOT NULL DEFAULT 'iot' CHECK(source IN ('iot','test')),
+                    received_at TEXT NOT NULL,
+                    captured_at TEXT,
+                    created_at TEXT NOT NULL,
+                    completed_at TEXT,
+                    status TEXT NOT NULL CHECK(status IN ('queued','processing','analyzed','partial','not_configured','error')),
+                    message TEXT NOT NULL DEFAULT '',
+                    result_json TEXT,
+                    artifacts_json TEXT NOT NULL DEFAULT '{}'
+                );
+                CREATE INDEX IF NOT EXISTS analyses_camera ON image_analyses(camera_id, sequence DESC);
             """)
+            columns = {row['name'] for row in connection.execute('PRAGMA table_info(image_analyses)')}
+            if 'source' not in columns:
+                connection.execute("ALTER TABLE image_analyses ADD COLUMN source TEXT NOT NULL DEFAULT 'iot' CHECK(source IN ('iot','test'))")
 

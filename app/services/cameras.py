@@ -6,6 +6,7 @@ from app.config import Settings
 from app.repositories.cameras import CamerasRepository
 from app.schemas.cameras import CameraDefinition, CameraFrame, CameraUpload, LatestCameraFrame
 from app.services.images import ImagesService
+from app.services.processing import ProcessingService
 
 logger = logging.getLogger(__name__)
 CAMERAS = {
@@ -25,8 +26,10 @@ class CameraFrameNotFound(LookupError):
 
 
 class CamerasService:
-    def __init__(self, repository: CamerasRepository, images: ImagesService, settings: Settings):
+    def __init__(self, repository: CamerasRepository, images: ImagesService, settings: Settings,
+                 processing: ProcessingService | None = None):
         self.repository, self.images, self.settings = repository, images, settings
+        self.processing = processing
 
     def camera(self, camera_id: str) -> CameraDefinition:
         if camera_id not in CAMERAS:
@@ -50,10 +53,16 @@ class CamerasService:
         values = {**photo, "camera_id": metadata.camera_id, "received_at": datetime.now(timezone.utc).isoformat(),
                   "captured_at": metadata.captured_at.isoformat() if metadata.captured_at else None}
         try:
+            normalized = self.images.path(photo).read_bytes() if self.processing else None
             expired = self.repository.add(values, self.settings.iot_retention_images)
         except Exception:
             self.images.delete(photo)
             raise
+        if self.processing:
+            try:
+                self.processing.enqueue(values, self.camera(metadata.camera_id).river_id, normalized)
+            except Exception:
+                logger.exception('No se pudo registrar el análisis de la captura %s', photo['id'])
         for row in expired:
             try:
                 self.images.delete(row)

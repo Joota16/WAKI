@@ -18,5 +18,8 @@ def health(request: Request, response: Response):
     return {
         "status": "ok" if connected else "error",
         "database": "connected" if connected else "unavailable",
+        "vision": {"provider": request.app.state.settings.model_provider,
+                   "device": request.app.state.settings.ai_device,
+                   "objects_configured": bool(request.app.state.settings.ai_dino_checkpoint or request.app.state.settings.ai_yoloe_checkpoint)},
     }
 

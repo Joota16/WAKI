@@ -1,0 +1,9 @@
+{% extends "citizen/base.html" %}
+{% block title %}WAKI · Informe de IA de una captura{% endblock %}
+{% block content %}
+  <main class="max-w-5xl mx-auto p-4 sm:p-8 flex flex-col gap-6">
+    <a href="{{ url_for('dashboard').path }}#imagenes" class="text-primary underline">← Volver a las imágenes del tablero</a>
+    {% include "analyses/content.html" %}
+  </main>
+{% endblock %}
+{% block scripts %}<script type="module" src="{{ url_for('static', path='js/analyses/detail.js').path }}"></script>{% endblock %}

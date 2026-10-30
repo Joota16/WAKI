@@ -21,6 +21,7 @@ templates.env.filters["lima_datetime"] = lambda value: value.astimezone(ZoneInfo
 def dashboard(request: Request):
     return templates.TemplateResponse(request=request, name="dashboard/index.html",
                                       context={"discharge_stations": DISCHARGE_STATIONS, "weather_station": OBRAJILLO_WEATHER,
+                                               "upload_limit_mb": request.app.state.settings.max_upload_mb,
                                                "camera_ids": {item.river_id: item.id for item in CAMERAS.values()}})
 
 
@@ -58,4 +59,18 @@ def report_detail(report_id: UUID, request: Request):
         "report": report,
         "registered_local": report.created_at.astimezone(ZoneInfo("America/Lima")).strftime("%d/%m/%Y a las %H:%M"),
     })
+
+
+@router.get('/informes-ia/{analysis_id}', response_class=HTMLResponse, name='analysis_detail')
+def analysis_detail(analysis_id: UUID, request: Request):
+    analysis = request.app.state.processing.get(analysis_id)
+    return templates.TemplateResponse(request=request, name='analyses/detail.html', context={'analysis': analysis})
+
+
+@router.get('/informes-ia/{analysis_id}/contenido', response_class=HTMLResponse, name='analysis_content')
+def analysis_content(analysis_id: UUID, request: Request):
+    analysis = request.app.state.processing.get(analysis_id)
+    return templates.TemplateResponse(request=request, name='analyses/content.html',
+                                      context={'analysis': analysis, 'embedded': True},
+                                      headers={'Cache-Control': 'no-store'})
 

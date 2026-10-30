@@ -2,7 +2,7 @@
 import secrets
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, Request
 from pydantic import AwareDatetime, ValidationError
 from starlette.concurrency import run_in_threadpool
 
@@ -25,7 +25,7 @@ def require_iot_key(request: Request, x_iot_key: Annotated[str | None, Header()]
                  kind: {"schema": {"type": "string", "format": "binary"}}
                  for kind in ("image/jpeg", "image/png", "image/webp")
              }}})
-async def upload(request: Request, camera_id: CameraId,
+async def upload(request: Request, background_tasks: BackgroundTasks, camera_id: CameraId,
                  x_captured_at: Annotated[AwareDatetime | None, Header()] = None):
     """Cuerpo: imagen binaria, sin multipart ni base64. Fecha de captura opcional."""
     try:
@@ -41,5 +41,7 @@ async def upload(request: Request, camera_id: CameraId,
         if len(content) + len(chunk) > request.app.state.settings.upload_limit:
             raise ImageTooLarge("La captura supera el tamaño máximo permitido.")
         content.extend(chunk)
-    return await run_in_threadpool(request.app.state.cameras.receive, metadata, bytes(content))
+    frame = await run_in_threadpool(request.app.state.cameras.receive, metadata, bytes(content))
+    background_tasks.add_task(request.app.state.processing.process, frame.id.hex)
+    return frame
 

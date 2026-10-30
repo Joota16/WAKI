@@ -24,7 +24,7 @@ class ImagesService:
     def initialize(self) -> None:
         self.directory.mkdir(parents=True, exist_ok=True)
 
-    def store(self, content: bytes) -> dict:
+    def normalize(self, content: bytes) -> Image.Image:
         if len(content) > self.settings.upload_limit:
             raise ImageTooLarge(f"Cada foto debe pesar como máximo {self.settings.max_upload_mb} MB.")
         if not content:
@@ -53,6 +53,15 @@ class ImagesService:
                 raise
             raise InvalidImage("El archivo no es una fotografía válida o está dañado.") from exc
 
+        return normalized
+
+    def normalized_bytes(self, content: bytes) -> bytes:
+        output = io.BytesIO()
+        self.normalize(content).save(output, format='JPEG', quality=90)
+        return output.getvalue()
+
+    def store(self, content: bytes) -> dict:
+        normalized = self.normalize(content)
         photo_id = uuid4().hex
         filename = f"{photo_id}.jpg"
         target = self.directory / filename
