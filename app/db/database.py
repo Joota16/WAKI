@@ -20,7 +20,7 @@ class Database:
             connection.close()
 
     def initialize(self) -> None:
-        """Crea el esquema de reportes sin eliminar datos existentes."""
+        """Inicializa el esquema y migra las columnas de formularios anteriores."""
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.connect() as connection:
             connection.execute("PRAGMA journal_mode=WAL")
@@ -30,19 +30,12 @@ class Database:
                     request_key TEXT UNIQUE,
                     fingerprint TEXT NOT NULL,
                     created_at TEXT NOT NULL,
-                    river_section TEXT NOT NULL,
-                    district TEXT NOT NULL,
-                    reference TEXT NOT NULL,
                     observations TEXT NOT NULL,
                     observed_condition TEXT NOT NULL,
                     situations_json TEXT NOT NULL,
                     latitude REAL,
                     longitude REAL,
                     accuracy_m REAL,
-                    anonymous INTEGER NOT NULL,
-                    contact_name TEXT NOT NULL,
-                    contact_phone TEXT NOT NULL,
-                    neighborhood TEXT NOT NULL,
                     CHECK ((latitude IS NULL AND longitude IS NULL) OR
                         (latitude IS NOT NULL AND longitude IS NOT NULL AND
                          latitude BETWEEN -90 AND 90 AND longitude BETWEEN -180 AND 180))
@@ -124,8 +117,56 @@ class Database:
                     artifacts_json TEXT NOT NULL DEFAULT '{}'
                 );
                 CREATE INDEX IF NOT EXISTS analyses_camera ON image_analyses(camera_id, sequence DESC);
+                CREATE TABLE IF NOT EXISTS users (
+                    id TEXT PRIMARY KEY, username TEXT NOT NULL, username_key TEXT NOT NULL UNIQUE,
+                    password_hash TEXT NOT NULL, role TEXT NOT NULL CHECK(role IN ('user','admin')),
+                    created_at TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS auth_sessions (
+                    id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id),
+                    expires_at INTEGER NOT NULL, revoked INTEGER NOT NULL DEFAULT 0
+                );
+                CREATE INDEX IF NOT EXISTS sessions_expiry ON auth_sessions(expires_at);
+                CREATE TABLE IF NOT EXISTS auth_throttles (
+                    bucket TEXT PRIMARY KEY, window_start INTEGER NOT NULL, attempts INTEGER NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS report_reviews (
+                    sequence INTEGER PRIMARY KEY AUTOINCREMENT,
+                    report_id TEXT NOT NULL REFERENCES reports(id), admin_id TEXT NOT NULL REFERENCES users(id),
+                    decision TEXT NOT NULL CHECK(decision IN ('pending','validated','discarded')),
+                    notes TEXT NOT NULL, created_at TEXT NOT NULL,
+                    attention_level TEXT CHECK(attention_level IN ('monitoring','preventive','priority'))
+                );
+                CREATE TABLE IF NOT EXISTS alerts (
+                    id TEXT PRIMARY KEY, kind TEXT NOT NULL, title TEXT NOT NULL, message TEXT NOT NULL,
+                    location TEXT NOT NULL, created_at TEXT NOT NULL, created_by TEXT NOT NULL REFERENCES users(id),
+                    active INTEGER NOT NULL DEFAULT 1, closed_at TEXT, closed_by TEXT REFERENCES users(id)
+                );
+                CREATE TABLE IF NOT EXISTS public_events (
+                    sequence INTEGER PRIMARY KEY AUTOINCREMENT,
+                    event_type TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL
+                );
             """)
+            connection.execute('BEGIN IMMEDIATE')
             columns = {row['name'] for row in connection.execute('PRAGMA table_info(image_analyses)')}
             if 'source' not in columns:
                 connection.execute("ALTER TABLE image_analyses ADD COLUMN source TEXT NOT NULL DEFAULT 'iot' CHECK(source IN ('iot','test'))")
+            report_columns = {row['name'] for row in connection.execute('PRAGMA table_info(reports)')}
+            additions = {
+                'review_status': "TEXT NOT NULL DEFAULT 'pending' CHECK(review_status IN ('pending','validated','discarded'))",
+                'reviewed_at': 'TEXT', 'reviewed_by': 'TEXT',
+                'review_notes': "TEXT NOT NULL DEFAULT ''", 'review_version': 'INTEGER NOT NULL DEFAULT 0',
+                'attention_level': "TEXT CHECK(attention_level IN ('monitoring','preventive','priority'))",
+            }
+            for name, definition in additions.items():
+                if name not in report_columns:
+                    connection.execute(f'ALTER TABLE reports ADD COLUMN {name} {definition}')
+            connection.execute('CREATE INDEX IF NOT EXISTS reports_review ON reports(review_status, created_at DESC)')
+            review_columns = {row['name'] for row in connection.execute('PRAGMA table_info(report_reviews)')}
+            if 'attention_level' not in review_columns:
+                connection.execute("ALTER TABLE report_reviews ADD COLUMN attention_level TEXT CHECK(attention_level IN ('monitoring','preventive','priority'))")
+            for name in ('river_section', 'district', 'reference', 'anonymous',
+                         'contact_name', 'contact_phone', 'neighborhood'):
+                if name in report_columns:
+                    connection.execute(f'ALTER TABLE reports DROP COLUMN {name}')
 

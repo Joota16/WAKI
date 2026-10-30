@@ -6,7 +6,8 @@ from uuid import uuid4
 
 from app.config import Settings
 from app.repositories.reports import ReportsRepository
-from app.schemas.reports import ReportInput, ReportOut, ReportPage
+from app.schemas.reports import ReportInput, ReportOut, ReportPage, ReportReview, REVIEW_LABELS
+from app.schemas.attention import ATTENTION_LABELS
 from app.services.images import ImagesService, InvalidImage
 
 
@@ -25,17 +26,22 @@ class ReportsService:
         self.settings = settings
 
     @staticmethod
-    def present(row: dict) -> ReportOut:
-        # Lista explícita: los contactos y datos internos nunca salen en la API pública.
+    def present(row: dict, admin=False) -> ReportOut:
+        # Solo se publican los campos del contrato de reportes.
         fields = {name: row[name] for name in (
-            "id", "created_at", "river_section", "district", "reference", "observations",
-            "observed_condition", "situations", "latitude", "longitude", "accuracy_m", "anonymous",
+            "id", "created_at", "observations",
+            "observed_condition", "situations", "latitude", "longitude", "accuracy_m",
         )}
         fields["photos"] = [
             {**{key: photo[key] for key in ("id", "width", "height", "size_bytes")},
              "url": f"/api/reports/{row['id']}/photos/{photo['id']}"}
             for photo in row["photos"]
         ]
+        fields.update(review_status=row['review_status'], review_label=REVIEW_LABELS[row['review_status']],
+                      review_version=row['review_version'], reviewed_at=row['reviewed_at'],
+                      review_notes=row['review_notes'] if admin else None)
+        level = row['attention_level'] if row['review_status'] == 'validated' else None
+        fields.update(attention_level=level, attention_label=ATTENTION_LABELS.get(level))
         return ReportOut(**fields, detail_url=f"/reportes/{row['id']}")
 
     def create(self, metadata: ReportInput, contents: list[bytes], request_key: str | None) -> ReportOut:
@@ -49,6 +55,8 @@ class ReportsService:
 
         def previous_report():
             previous = self.repository.get_by_key(request_key) if request_key else None
+            if previous and previous['review_status'] == 'discarded':
+                raise DuplicateRequest('El reporte asociado a ese envío ya no está disponible. Inicia un nuevo reporte.')
             if previous and previous["fingerprint"] != fingerprint:
                 raise DuplicateRequest("Este intento ya guardó otro contenido. Inicia un nuevo reporte.")
             return self.present(previous) if previous else None
@@ -74,19 +82,26 @@ class ReportsService:
             raise
         return self.get(row["id"])
 
-    def get(self, report_id: str) -> ReportOut:
-        row = self.repository.get(report_id)
+    def get(self, report_id: str, admin=False) -> ReportOut:
+        row = self.repository.get(report_id, include_discarded=admin)
         if row is None:
             raise ReportNotFound("No se encontró el reporte.")
-        return self.present(row)
+        return self.present(row, admin=admin)
 
-    def list(self, limit: int, offset: int) -> ReportPage:
-        rows, total = self.repository.list(limit, offset)
-        return ReportPage(items=[self.present(row) for row in rows], total=total, limit=limit, offset=offset)
+    def list(self, limit: int, offset: int, *, admin=False, include_discarded=False, review_status=None) -> ReportPage:
+        rows, total = self.repository.list(limit, offset, include_discarded=admin and include_discarded, review_status=review_status)
+        return ReportPage(items=[self.present(row, admin=admin) for row in rows], total=total, limit=limit, offset=offset)
 
-    def photo_path(self, report_id: str, photo_id: str):
-        photo = self.repository.get_photo(report_id, photo_id)
+    def photo_path(self, report_id: str, photo_id: str, admin=False):
+        photo = self.repository.get_photo(report_id, photo_id, include_discarded=admin)
         if photo is None or not self.images.path(photo).is_file():
             raise ReportNotFound("No se encontró la fotografía.")
         return self.images.path(photo)
+
+    def review(self, report_id: str, values: ReportReview, actor_id: str):
+        self.get(report_id, admin=True)
+        if not self.repository.review(report_id, actor_id, values.decision, values.notes, values.expected_version,
+                                      datetime.now(timezone.utc).isoformat(), values.attention_level):
+            raise DuplicateRequest('Otro administrador cambió este reporte. Actualiza antes de revisarlo.')
+        return self.get(report_id, admin=True)
 

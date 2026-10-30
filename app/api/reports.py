@@ -1,12 +1,14 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, File, Form, Header, HTTPException, Query, Request, UploadFile
+from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, Request, Response, UploadFile
 from fastapi.responses import FileResponse
 from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 
-from app.schemas.reports import ReportInput, ReportOut, ReportPage
+from app.schemas.reports import ReportInput, ReportOut, ReportPage, ReportReview, ReviewStatus
+from app.api.dependencies import admin_write, optional_session
+from app.services.auth import AuthContext
 from app.services.images import ImageTooLarge
 
 router = APIRouter(prefix="/api/reports", tags=["Reportes"])
@@ -38,18 +40,30 @@ async def create_report(request: Request, metadata: Annotated[str, Form(max_leng
 
 
 @router.get("", response_model=ReportPage)
-def list_reports(request: Request, limit: Annotated[int, Query(ge=1, le=100)] = 12,
-                 offset: Annotated[int, Query(ge=0)] = 0):
-    return request.app.state.reports.list(limit, offset)
+def list_reports(request: Request, response: Response, limit: Annotated[int, Query(ge=1, le=100)] = 12,
+                 offset: Annotated[int, Query(ge=0)] = 0, review_status: ReviewStatus | None = None,
+                 include_discarded: bool = False, context: AuthContext | None = Depends(optional_session)):
+    admin = bool(context and context.is_admin)
+    if (include_discarded or review_status == 'discarded') and not admin:
+        raise HTTPException(status_code=403, detail='Los reportes descartados solo están disponibles para administradores.')
+    response.headers['Cache-Control'] = 'no-store'
+    return request.app.state.reports.list(limit, offset, admin=admin,
+                                         include_discarded=include_discarded or review_status == 'discarded', review_status=review_status)
 
 
 @router.get("/{report_id}", response_model=ReportOut)
-def get_report(report_id: UUID, request: Request):
-    return request.app.state.reports.get(str(report_id))
+def get_report(report_id: UUID, request: Request, response: Response, context: AuthContext | None = Depends(optional_session)):
+    response.headers['Cache-Control'] = 'no-store'
+    return request.app.state.reports.get(str(report_id), admin=bool(context and context.is_admin))
 
 
 @router.get("/{report_id}/photos/{photo_id}")
-def get_photo(report_id: UUID, photo_id: UUID, request: Request):
-    path = request.app.state.reports.photo_path(str(report_id), photo_id.hex)
-    return FileResponse(path, media_type="image/jpeg", headers={"X-Content-Type-Options": "nosniff"})
+def get_photo(report_id: UUID, photo_id: UUID, request: Request, context: AuthContext | None = Depends(optional_session)):
+    path = request.app.state.reports.photo_path(str(report_id), photo_id.hex, admin=bool(context and context.is_admin))
+    return FileResponse(path, media_type="image/jpeg", headers={"X-Content-Type-Options": "nosniff", 'Cache-Control': 'no-store, private'})
+
+
+@router.post('/{report_id}/review', response_model=ReportOut)
+def review(report_id: UUID, values: ReportReview, request: Request, context: AuthContext = Depends(admin_write)):
+    return request.app.state.reports.review(str(report_id), values, str(context.user.id))
 

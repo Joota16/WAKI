@@ -3,6 +3,8 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from app.schemas.attention import AttentionLevel
+
 Situation = Literal[
     "Desborde de agua hacia pistas o casas",
     "El agua está carcomiendo la orilla",
@@ -11,34 +13,46 @@ Situation = Literal[
     "Casas, muros o postes en peligro de caer",
     "Personas o animales atrapados en el cauce",
 ]
+ReviewStatus = Literal['pending', 'validated', 'discarded']
+REVIEW_LABELS = {'pending': 'Pendiente de verificación', 'validated': 'Validado por la administración', 'discarded': 'Descartado'}
+
+
+class ReportReview(BaseModel):
+    model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
+    decision: ReviewStatus
+    notes: str = Field(default='', max_length=1000)
+    expected_version: int = Field(ge=0)
+    attention_level: AttentionLevel | None = None
+
+    @model_validator(mode='after')
+    def validate_attention(self):
+        if self.decision == 'validated':
+            if self.attention_level is None:
+                raise ValueError('Selecciona el nivel de atención al validar el reporte.')
+            if not self.notes:
+                raise ValueError('Indica la justificación de la evaluación.')
+        elif self.attention_level is not None:
+            raise ValueError('Solo un reporte validado puede asignar un nivel de atención.')
+        return self
 
 
 class ReportInput(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
 
-    river_section: Literal["Río Chillón", "Río Rímac"]
-    district: str = Field(min_length=1, max_length=120)
-    reference: str = Field(min_length=1, max_length=300)
     observations: str = Field(default="", max_length=2000)
     observed_condition: Literal["critico", "muy-alto", "alto", "normal"]
     situations: list[Situation] = Field(default_factory=list, max_length=6)
     latitude: float | None = Field(default=None, ge=-90, le=90, allow_inf_nan=False)
     longitude: float | None = Field(default=None, ge=-180, le=180, allow_inf_nan=False)
     accuracy_m: float | None = Field(default=None, gt=0, le=20_000_000, allow_inf_nan=False)
-    anonymous: bool = False
-    contact_name: str = Field(default="", max_length=80)
-    contact_phone: str = Field(default="", max_length=30, pattern=r"^[+0-9 ()-]*$")
-    neighborhood: str = Field(default="", max_length=120)
 
     @model_validator(mode="after")
-    def validate_location_and_privacy(self):
+    def validate_location(self):
         if (self.latitude is None) != (self.longitude is None):
             raise ValueError("Latitud y longitud deben enviarse juntas.")
         if self.accuracy_m is not None and self.latitude is None:
             raise ValueError("La precisión de ubicación requiere coordenadas.")
         self.situations = list(dict.fromkeys(self.situations))
-        if self.anonymous:
-            self.contact_name = self.contact_phone = self.neighborhood = ""
         return self
 
 
@@ -53,19 +67,22 @@ class PhotoOut(BaseModel):
 class ReportOut(BaseModel):
     id: str
     created_at: datetime
-    river_section: str
-    district: str
-    reference: str
     observations: str
     observed_condition: str
     situations: list[str]
     latitude: float | None
     longitude: float | None
     accuracy_m: float | None
-    anonymous: bool
     photos: list[PhotoOut]
     analysis_status: Literal["not_configured"] = "not_configured"
     detail_url: str
+    review_status: ReviewStatus = 'pending'
+    review_label: str = 'Pendiente de verificación'
+    review_version: int = 0
+    reviewed_at: datetime | None = None
+    review_notes: str | None = None
+    attention_level: AttentionLevel | None = None
+    attention_label: str | None = None
 
 
 class ReportPage(BaseModel):
