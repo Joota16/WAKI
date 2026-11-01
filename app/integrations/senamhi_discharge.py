@@ -1,12 +1,15 @@
 """Caudales del hidrograma público de SENAMHI, sin ejecutar JavaScript."""
 from datetime import datetime, timedelta, timezone
 import json
+import logging
 import re
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
 from app.integrations.senamhi import InvalidStationData, SenamhiProvider, _normalize, _variable
 from app.schemas.hydrology import DischargeBatch, DischargeReading, DischargeStation
+
+logger = logging.getLogger(__name__)
 
 MONITOR_URL = "https://www.senamhi.gob.pe/servicios/?p=monitoreo-hidrologico"
 CHART_URL = "https://www.senamhi.gob.pe/mapas/mapa-monitoreohidro/include/mnt-grafica-new.php"
@@ -73,14 +76,25 @@ def parse_discharge(html: str, station: DischargeStation, now: datetime | None =
             # Se conserva la hora que ve el usuario en el visor y se almacena en UTC real.
             local_time = datetime.fromtimestamp(stamp / 1000, timezone.utc).replace(tzinfo=ZoneInfo("America/Lima"))
             observed_at = local_time.astimezone(timezone.utc)
-            if observed_at > now + timedelta(minutes=5):
-                raise ValueError("Lectura futura")
             readings.append(DischargeReading(observed_at=observed_at, discharge_m3s=value))
             timestamps.append(stamp)
         except (ValueError, TypeError, OverflowError) as exc:
-            raise InvalidStationData("La serie contiene una lectura de caudal inválida.") from exc
+            raise InvalidStationData(f"La serie contiene una lectura de caudal inválida: {exc}") from exc
     if len(set(timestamps)) != len(timestamps) or data.get("fechaHora") != timestamps:
         raise InvalidStationData("Las fechas de caudal son duplicadas o no coinciden con la serie.")
+    # Validar primero toda la serie; una fecha adelantada no debe descartar
+    # observaciones válidas ni permitir que pasen valores o fechas corruptos.
+    cutoff = now + timedelta(minutes=5)
+    future = [item for item in readings if item.observed_at > cutoff]
+    if future:
+        logger.warning(
+            "Caudal SENAMHI %s: se omiten %s lecturas futuras; primera=%s, última=%s, consulta=%s",
+            station.code, len(future), min(item.observed_at for item in future).isoformat(),
+            max(item.observed_at for item in future).isoformat(), now.isoformat(),
+        )
+        readings = [item for item in readings if item.observed_at <= cutoff]
+        if not any(item.discharge_m3s is not None for item in readings):
+            raise InvalidStationData("La fuente no contiene caudales válidos sin fechas futuras.")
     return sorted(readings, key=lambda item: item.observed_at)
 
 

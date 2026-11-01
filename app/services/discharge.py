@@ -29,7 +29,8 @@ class DischargeService:
                     self.repository.save(station.code, batch, attempted_at, datetime.now(timezone.utc).isoformat())
                 except Exception as exc:
                     self.repository.record_error(station.code, attempted_at)
-                    logger.warning("No se pudo actualizar el caudal SENAMHI %s: %s", station.code, type(exc).__name__)
+                    logger.warning("No se pudo actualizar el caudal SENAMHI %s: %s: %s",
+                                   station.code, type(exc).__name__, exc, exc_info=True)
 
     async def run(self):
         while True:

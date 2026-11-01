@@ -63,14 +63,39 @@ def test_rejects_wrong_station_units_or_invalid_source(old, new):
         parse_discharge(html.replace(old, new), station, now=NOW)
 
 
-def test_null_is_not_zero_and_future_readings_are_rejected():
+def test_null_is_not_zero_and_an_entirely_future_series_is_rejected():
     station = DISCHARGE_STATIONS[1]
     html = chart(station).replace('2.7751000000000001', 'null')
     assert parse_discharge(html, station, now=NOW)[0].discharge_m3s is None
     html = chart(station).replace('2.7751000000000001', '0')
     assert parse_discharge(html, station, now=NOW)[0].discharge_m3s == 0
     with pytest.raises(InvalidStationData):
-        parse_discharge(chart(station), station, now=NOW - timedelta(days=1))
+        parse_discharge(chart(station), station, now=NOW - timedelta(days=4))
+
+
+@pytest.mark.parametrize('station', DISCHARGE_STATIONS)
+def test_future_points_preserve_valid_history_and_log_their_dates(station, caplog):
+    readings = parse_discharge(chart(station), station, now=NOW)
+    now = NOW - timedelta(hours=8)
+    expected = [item for item in readings if item.observed_at <= now + timedelta(minutes=5)]
+    assert 0 < len(expected) < len(readings)
+    assert parse_discharge(chart(station), station, now=now) == expected
+    assert station.code in caplog.text
+    assert 'lecturas futuras' in caplog.text
+    assert readings[-1].observed_at.isoformat() in caplog.text
+    assert now.isoformat() in caplog.text
+
+
+def test_future_points_still_validate_values_and_duplicate_dates():
+    station = DISCHARGE_STATIONS[1]
+    now = NOW - timedelta(hours=8)
+    html = chart(station)
+    # Último punto futuro: no se debe omitir antes de validar la respuesta.
+    with pytest.raises(InvalidStationData):
+        parse_discharge(html.replace('[1793268000000,2.1541999999999999]',
+                                     '[1793268000000,-1]'), station, now=now)
+    with pytest.raises(InvalidStationData, match='duplicadas'):
+        parse_discharge(html.replace('1793268000000', '1793253600000'), station, now=now)
 
 
 @pytest.mark.parametrize('station', DISCHARGE_STATIONS)
@@ -149,6 +174,25 @@ def test_independent_failures_upserts_and_persistence_preserve_daily_levels(tmp_
     database.initialize()
     restored = DischargeService(DischargeRepository(database), provider, settings)
     assert [item.model_dump() for item in restored.get('chillon')] == [item.model_dump() for item in after]
+
+
+def test_refresh_logs_underlying_failure_and_clears_error_after_recovery(tmp_path, caplog):
+    settings = Settings(_env_file=None, data_dir=tmp_path)
+    database = Database(settings.database_path)
+    database.initialize()
+    provider = FakeDischargeProvider()
+    service = DischargeService(DischargeRepository(database), provider, settings)
+    asyncio.run(service.refresh())
+    provider.failures.add('111151')
+    asyncio.run(service.refresh())
+    assert service.get('chillon')[1].source_error
+    assert '111151: TimeoutError: private error details' in caplog.text
+    assert any(record.exc_info for record in caplog.records)
+    provider.failures.clear()
+    asyncio.run(service.refresh())
+    recovered = service.get('chillon')[1]
+    assert recovered.status == 'ok'
+    assert not recovered.source_error
 
 
 def test_api_only_reads_sqlite_and_replaces_ai_block(tmp_path):
