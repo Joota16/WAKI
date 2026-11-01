@@ -2,6 +2,7 @@ from datetime import datetime
 import io
 import json
 from uuid import uuid4
+from typing import get_args
 
 from fastapi.testclient import TestClient
 from PIL import Image
@@ -9,6 +10,7 @@ import pytest
 
 from app.config import Settings
 from app.main import create_app
+from app.schemas.reports import Situation
 
 
 @pytest.fixture
@@ -73,6 +75,49 @@ def test_minimal_report_without_coordinates_or_removed_blocks(client):
     assert all(key not in row for key in ("river_section", "district", "reference", "anonymous",
                                         "contact_name", "contact_phone", "neighborhood"))
     assert "Sin coordenadas." in client.get(report["detail_url"]).text
+
+
+def test_other_situation_persists_with_all_options_and_escaped_detail(tmp_path):
+    settings = Settings(_env_file=None, senamhi_enabled=False, data_dir=tmp_path)
+    description = "Puente con grietas.\n<script>alert('otros')</script>"
+    values = payload(situations=list(get_args(Situation)), other_situation=f"  {description}  ")
+    headers = {"Idempotency-Key": str(uuid4())}
+    with TestClient(create_app(settings)) as client:
+        response = send(client, values, headers=headers)
+        assert response.status_code == 201, response.text
+        report = response.json()
+        assert report['other_situation'] == description
+        assert len(report['situations']) == 7
+        assert report['observations'] == values['observations']
+        assert send(client, values, headers=headers).json()['id'] == report['id']
+        assert send(client, {**values, 'other_situation': 'Otro detalle'}, headers=headers).status_code == 409
+
+    with TestClient(create_app(settings)) as client:
+        saved = client.get('/api/reports/' + report['id']).json()
+        assert saved['other_situation'] == description
+        assert client.get('/api/reports').json()['items'][0]['other_situation'] == description
+        detail = client.get(saved['detail_url']).text
+        assert 'Otros: Puente con grietas.' in detail
+        assert '&lt;script&gt;' in detail
+        assert "<script>alert('otros')</script>" not in detail
+        assert client.get(saved['photos'][0]['url']).status_code == 200
+
+
+@pytest.mark.parametrize('situations,description', [
+    (['Otros'], ''), (['Otros'], '   '), (['Otros'], 'x' * 501),
+    ([], 'Texto sin seleccionar Otros'),
+])
+def test_other_situation_requires_selection_and_description(client, situations, description):
+    response = send(client, payload(situations=situations, other_situation=description))
+    assert response.status_code == 422
+    assert client.get('/api/reports').json()['total'] == 0
+    assert not list(client.app.state.reports.images.directory.iterdir())
+
+
+def test_other_situation_accepts_maximum_length(client):
+    response = send(client, payload(situations=['Otros'], other_situation='x' * 500))
+    assert response.status_code == 201
+    assert response.json()['other_situation'] == 'x' * 500
 
 
 @pytest.mark.parametrize("field,value", [

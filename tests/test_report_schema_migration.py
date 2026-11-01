@@ -29,6 +29,7 @@ def test_old_zone_and_contact_columns_are_removed_without_losing_reports(tmp_pat
         'neighborhood': ('TEXT', 'Barrio de prueba anterior'),
     }
     with database.connect() as db:
+        db.execute('ALTER TABLE reports DROP COLUMN other_situation')
         if not reviewed:
             db.execute('DROP INDEX reports_review')
             for column in ('review_status', 'reviewed_at', 'reviewed_by', 'review_notes', 'review_version'):
@@ -39,7 +40,7 @@ def test_old_zone_and_contact_columns_are_removed_without_losing_reports(tmp_pat
 
     with TestClient(create_app(settings)) as client:
         migrated = client.get('/api/reports/' + report['id']).json()
-        for key in ('id', 'created_at', 'observations', 'latitude', 'longitude', 'photos', 'review_status', 'review_version'):
+        for key in ('id', 'created_at', 'observations', 'other_situation', 'latitude', 'longitude', 'photos', 'review_status', 'review_version'):
             assert migrated[key] == report[key], key
         assert not set(legacy).intersection(migrated)
         assert client.get(report['photos'][0]['url']).content == photo

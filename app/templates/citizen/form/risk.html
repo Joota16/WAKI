@@ -7,55 +7,30 @@
         <h2 class="font-headline-sm text-headline-sm text-on-surface">¿Qué nivel de peligro ves en este momento?</h2>
       </div>
     </div>
-    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-error-container text-on-error-container" id="badgeActiveRisk">
+    <span class="citizen-risk-badge px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide" id="badgeActiveRisk">
       Selecciona una condición
     </span>
   </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1" id="riskCardsGroup">
     <!-- TARJETA ROJA: CRÍTICO -->
-    <label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl border-2 transition-all flex flex-col gap-2 border-error bg-error-container/20 shadow-sm" data-color="error" data-label="Peligro Inminente / Desborde" data-risk="critico">
+    <label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl transition-all flex flex-col gap-2" data-label="Peligro Inminente / Desborde" data-risk="critico">
       <input class="sr-only" name="nivelPeligro" required type="radio" value="critico"/>
-      <div class="flex items-center justify-between">
-        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-error">
-          <span class="w-3 h-3 rounded-full bg-error ring-4 ring-error-container"></span>
-          Nivel Crítico
-        </span>
-      </div>
-      <span class="font-title-md text-title-md font-bold text-on-surface">Peligro Inminente / Desborde</span>
+      <span class="font-title-md text-label-md font-bold text-on-surface">Peligro Inminente / Desborde</span>
     </label>
     <!-- TARJETA NARANJA: MUY ALTO -->
-    <label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl border-2 transition-all flex flex-col gap-2 border-transparent bg-surface-container-low hover:bg-surface-container opacity-85" data-color="secondary" data-label="Nivel Muy Alto" data-risk="muy-alto">
+    <label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl transition-all flex flex-col gap-2" data-label="Nivel Muy Alto" data-risk="muy-alto">
       <input class="sr-only" name="nivelPeligro" required type="radio" value="muy-alto"/>
-      <div class="flex items-center justify-between">
-        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-secondary">
-          <span class="w-3 h-3 rounded-full bg-secondary ring-4 ring-secondary-fixed"></span>
-          Nivel Severo
-        </span>
-      </div>
-      <span class="font-title-md text-title-md font-bold text-on-surface">Nivel Muy Alto</span>
+      <span class="font-title-md text-label-md font-bold text-on-surface">Nivel Muy Alto</span>
     </label>
     <!-- TARJETA AMARILLA: ALTO / CRECIDA -->
-    <label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl border-2 transition-all flex flex-col gap-2 border-transparent bg-surface-container-low hover:bg-surface-container opacity-85" data-color="tertiary" data-label="Nivel Alto / Crecida" data-risk="alto">
+    <label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl transition-all flex flex-col gap-2" data-label="Nivel Alto / Crecida" data-risk="alto">
       <input class="sr-only" name="nivelPeligro" required type="radio" value="alto"/>
-      <div class="flex items-center justify-between">
-        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-tertiary">
-          <span class="w-3 h-3 rounded-full bg-tertiary ring-4 ring-tertiary-fixed"></span>
-          Alerta Amarilla
-        </span>
-        <span class="text-xl">🌊</span>
-      </div>
-      <span class="font-title-md text-title-md font-bold text-on-surface">Nivel Alto / Crecida</span>
+      <span class="font-title-md text-label-md font-bold text-on-surface">Nivel Alto / Crecida</span>
     </label>
     <!-- TARJETA VERDE: NORMAL -->
-    <label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl border-2 transition-all flex flex-col gap-2 border-transparent bg-surface-container-low hover:bg-surface-container opacity-85" data-color="primary" data-label="Normal / Sin Peligro" data-risk="normal">
+    <label class="citizen-risk-card cursor-pointer relative p-4 rounded-xl transition-all flex flex-col gap-2" data-label="Normal / Sin Peligro" data-risk="normal">
       <input class="sr-only" name="nivelPeligro" required type="radio" value="normal"/>
-      <div class="flex items-center justify-between">
-        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-primary">
-          <span class="w-3 h-3 rounded-full bg-primary ring-4 ring-primary-fixed"></span>
-          Tranquilo
-        </span>
-      </div>
-      <span class="font-title-md text-title-md font-bold text-on-surface">Normal / Sin Peligro</span>
+      <span class="font-title-md text-label-md font-bold text-on-surface">Normal / Sin Peligro</span>
     </label>
   </div>
 </div>

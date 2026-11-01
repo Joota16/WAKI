@@ -12,6 +12,7 @@ Situation = Literal[
     "Ruidos fuertes de piedras o amenaza de huaico",
     "Casas, muros o postes en peligro de caer",
     "Personas o animales atrapados en el cauce",
+    "Otros",
 ]
 ReviewStatus = Literal['pending', 'validated', 'discarded']
 REVIEW_LABELS = {'pending': 'Pendiente de verificación', 'validated': 'Validado por la administración', 'discarded': 'Descartado'}
@@ -41,7 +42,8 @@ class ReportInput(BaseModel):
 
     observations: str = Field(default="", max_length=2000)
     observed_condition: Literal["critico", "muy-alto", "alto", "normal"]
-    situations: list[Situation] = Field(default_factory=list, max_length=6)
+    situations: list[Situation] = Field(default_factory=list, max_length=7)
+    other_situation: str = Field(default="", max_length=500)
     latitude: float | None = Field(default=None, ge=-90, le=90, allow_inf_nan=False)
     longitude: float | None = Field(default=None, ge=-180, le=180, allow_inf_nan=False)
     accuracy_m: float | None = Field(default=None, gt=0, le=20_000_000, allow_inf_nan=False)
@@ -53,6 +55,10 @@ class ReportInput(BaseModel):
         if self.accuracy_m is not None and self.latitude is None:
             raise ValueError("La precisión de ubicación requiere coordenadas.")
         self.situations = list(dict.fromkeys(self.situations))
+        if "Otros" in self.situations and not self.other_situation:
+            raise ValueError("Describe la otra situación que observas.")
+        if self.other_situation and "Otros" not in self.situations:
+            raise ValueError("Selecciona Otros para incluir una descripción de otra situación.")
         return self
 
 
@@ -70,6 +76,7 @@ class ReportOut(BaseModel):
     observations: str
     observed_condition: str
     situations: list[str]
+    other_situation: str = ""
     latitude: float | None
     longitude: float | None
     accuracy_m: float | None

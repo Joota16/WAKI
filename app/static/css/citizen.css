@@ -6,6 +6,17 @@ main > :last-child { margin-bottom: 0 !important; }
 [hidden] { display: none !important; }
 .report-fields { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; margin: 0; padding: 0; border: 0; }
 .report-fields:disabled { opacity: 0.65; }
+/* Los niveles de peligro tienen colores propios, separados de la paleta azul de la interfaz. */
+:is(.citizen-risk-card, .citizen-risk-badge)[data-risk="critico"] { --risk-accent: #dc2626; --risk-text: #991b1b; --risk-surface: #fef2f2; --risk-tint: #fee2e2; }
+:is(.citizen-risk-card, .citizen-risk-badge)[data-risk="muy-alto"] { --risk-accent: #ea580c; --risk-text: #9a3412; --risk-surface: #fff7ed; --risk-tint: #ffedd5; }
+:is(.citizen-risk-card, .citizen-risk-badge)[data-risk="alto"] { --risk-accent: #eab308; --risk-text: #854d0e; --risk-surface: #fefce8; --risk-tint: #fef9c3; }
+:is(.citizen-risk-card, .citizen-risk-badge)[data-risk="normal"] { --risk-accent: #16a34a; --risk-text: #166534; --risk-surface: #f0fdf4; --risk-tint: #dcfce7; }
+.citizen-risk-card { border: 2px solid transparent; background-color: #eff4ff; }
+.citizen-risk-card:hover { background-color: #e5eeff; }
+.citizen-risk-card.is-selected { border-color: var(--risk-accent); background-color: var(--risk-surface); }
+.citizen-risk-card:focus-within { outline: 2px solid var(--risk-accent); outline-offset: 3px; }
+.citizen-risk-badge { background-color: #e5eeff; color: #0b1c30; }
+.citizen-risk-badge[data-risk] { background-color: var(--risk-tint); color: var(--risk-text); }
 .form-error { padding: 0.8rem 1rem; border: 1px solid #fecaca; border-radius: 0.75rem; background: #fef2f2; color: #991b1b; font-size: 0.875rem; }
 .location-warning { padding: 0.8rem 1rem; border: 1px solid #fcd34d; border-radius: 0.75rem; background: #fffbeb; color: #78350f; font-size: 0.875rem; }
 .photo-dropzone { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.7rem; padding: 2rem 1rem; text-align: center; background: #eff4ff; border: 2px dashed #707881; border-radius: 1rem; cursor: pointer; }

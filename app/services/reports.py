@@ -30,7 +30,7 @@ class ReportsService:
         # Solo se publican los campos del contrato de reportes.
         fields = {name: row[name] for name in (
             "id", "created_at", "observations",
-            "observed_condition", "situations", "latitude", "longitude", "accuracy_m",
+            "observed_condition", "situations", "other_situation", "latitude", "longitude", "accuracy_m",
         )}
         fields["photos"] = [
             {**{key: photo[key] for key in ("id", "width", "height", "size_bytes")},
@@ -48,7 +48,11 @@ class ReportsService:
         if not 1 <= len(contents) <= self.settings.max_photos:
             raise InvalidImage(f"Adjunta entre 1 y {self.settings.max_photos} fotografías.")
         payload = metadata.model_dump()
-        digest = hashlib.sha256(json.dumps(payload, sort_keys=True).encode())
+        fingerprint_payload = dict(payload)
+        if not fingerprint_payload['other_situation']:
+            # Conserva la huella de reintentos enviados antes de añadir el campo opcional.
+            fingerprint_payload.pop('other_situation')
+        digest = hashlib.sha256(json.dumps(fingerprint_payload, sort_keys=True).encode())
         for content in contents:
             digest.update(hashlib.sha256(content).digest())
         fingerprint = digest.hexdigest()

@@ -31,6 +31,7 @@ export function initSubmission({ photos, location, modal }) {
         observations: value('descripcionCiudadana'),
         observed_condition: form.querySelector('[name="nivelPeligro"]:checked').value,
         situations: [...form.querySelectorAll('[name="situacion"]:checked')].map(input => input.value),
+        other_situation: document.getElementById('situation-other').checked ? value('situation-other-description') : '',
         ...location.values(),
       };
       const data = new FormData();

@@ -3,24 +3,20 @@ export function initSummary() {
   const cards = document.querySelectorAll('.citizen-risk-card');
   const riskConfig = {
     critico: {
-      badge: '🔴 Peligro Inminente Seleccionado',
-      badgeClass: 'bg-error-container text-on-error-container',
-      summary: 'Peligro Inminente', border: 'border-error bg-error-container/20',
+      badge: 'Nivel crítico',
+      summary: 'Peligro Inminente',
     },
     'muy-alto': {
-      badge: '🟠 Nivel Muy Alto Seleccionado',
-      badgeClass: 'bg-secondary-fixed text-on-secondary-container',
-      summary: 'Nivel Muy Alto', border: 'border-secondary bg-secondary-fixed/20',
+      badge: 'Nivel severo',
+      summary: 'Nivel Muy Alto',
     },
     alto: {
-      badge: '🟡 Nivel Alto Seleccionado',
-      badgeClass: 'bg-tertiary-fixed text-on-tertiary-fixed-variant',
-      summary: '🌊 Crecida / Nivel Alto', border: 'border-tertiary bg-tertiary-fixed/20',
+      badge: 'Alerta amarilla',
+      summary: 'Crecida / Nivel Alto',
     },
     normal: {
-      badge: 'Nivel Normal Seleccionado',
-      badgeClass: 'bg-primary-fixed text-on-primary-fixed-variant',
-      summary: 'Normal / Sin Peligro', border: 'border-primary bg-primary-fixed/20',
+      badge: 'Tranquilo',
+      summary: 'Normal / Sin Peligro',
     },
   };
 
@@ -28,26 +24,22 @@ export function initSummary() {
     if (!document.querySelector('[name="nivelPeligro"]:checked')) {
       const badge = document.getElementById('badgeActiveRisk');
       badge.textContent = 'Selecciona una condición';
-      badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-surface-container text-on-surface';
+      delete badge.dataset.risk;
       const summary = document.getElementById('summaryRiesgoBadge');
       summary.textContent = 'Sin seleccionar';
-      summary.className = 'px-2 py-0.5 rounded-full text-xs bg-surface-container text-on-surface';
+      delete summary.dataset.risk;
     }
     cards.forEach(card => {
       const config = riskConfig[card.dataset.risk];
       const selected = card.querySelector('input').checked;
-      card.classList.remove('border-error', 'border-secondary', 'border-tertiary', 'border-primary',
-        'bg-error-container/20', 'bg-secondary-fixed/20', 'bg-tertiary-fixed/20', 'bg-primary-fixed/20');
-      card.classList.add('border-transparent', 'bg-surface-container-low', 'opacity-85');
+      card.classList.toggle('is-selected', selected);
       if (!selected) return;
-      card.classList.remove('border-transparent', 'bg-surface-container-low', 'opacity-85');
-      card.classList.add(...config.border.split(' '));
       const badge = document.getElementById('badgeActiveRisk');
       badge.textContent = config.badge;
-      badge.className = `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${config.badgeClass}`;
+      badge.dataset.risk = card.dataset.risk;
       const summary = document.getElementById('summaryRiesgoBadge');
       summary.textContent = config.summary;
-      summary.className = `px-2 py-0.5 rounded-full text-[11px] font-bold ${config.badgeClass}`;
+      summary.dataset.risk = card.dataset.risk;
     });
   }
 

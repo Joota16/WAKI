@@ -12,7 +12,7 @@
     <div class="flex flex-col gap-2.5 text-xs">
       <div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low">
         <span class="text-on-surface-variant">Nivel de Peligro:</span>
-        <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-error-container text-on-error-container" id="summaryRiesgoBadge">
+        <span class="citizen-risk-badge px-2 py-0.5 rounded-full text-[11px] font-bold" id="summaryRiesgoBadge">
           Sin seleccionar
         </span>
       </div>
@@ -26,36 +26,6 @@
       </div>
     </div>
   </div>
-  <!-- TARJETA 2: RECOMENDACIONES DE SEGURIDAD INMEDIATA -->
-  <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline-variant/20 flex flex-col gap-3.5">
-    <div class="flex items-center gap-2 text-secondary pb-1">
-      <span class="material-symbols-outlined text-[24px]">health_and_safety</span>
-      <h3 class="font-title-md text-title-md font-bold text-on-surface">Qué hacer en caso de crecida</h3>
-    </div>
-    <div class="flex flex-col gap-3 text-xs text-on-surface">
-      <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-surface-container-low">
-        <span class="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">1</span>
-        <div>
-          <strong class="font-semibold block text-on-surface">Aléjate de la ribera</strong>
-          <span class="text-on-surface-variant">El terreno bajo tus pies puede desmoronarse sin previo aviso.</span>
-        </div>
-      </div>
-      <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-surface-container-low">
-        <span class="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">2</span>
-        <div>
-          <strong class="font-semibold block text-on-surface">No cruces puentes si el agua los toca</strong>
-          <span class="text-on-surface-variant">La fuerza del agua debilita las bases y puede arrastrar vehículos.</span>
-        </div>
-      </div>
-      <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-surface-container-low">
-        <span class="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">3</span>
-        <div>
-          <strong class="font-semibold block text-on-surface">Mochila de emergencia lista</strong>
-          <span class="text-on-surface-variant">Agua, linterna, documentos y radio a pilas cerca a la puerta de salida.</span>
-        </div>
-      </div>
-    </div>
-  </div>
   <!-- TARJETA 3: NÚMEROS DE AUXILIO RÁPIDO -->
   <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline-variant/20 flex flex-col gap-3">
     <div class="flex items-center gap-2 text-on-surface pb-1">
@@ -63,6 +33,17 @@
       <h3 class="font-title-md text-title-md font-bold">Números de Auxilio Gratuito</h3>
     </div>
     <div class="flex flex-col gap-2.5">
+      <a class="flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors group border border-outline-variant/30" href="tel:106">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-error/10 text-error flex items-center justify-center">
+            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">medical_services</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-label-md text-label-md text-on-surface font-semibold">SAMU · Emergencias médicas</span>
+          </div>
+        </div>
+        <span class="font-telemetry-data text-lg text-on-surface font-bold group-hover:text-error transition-colors">106</span>
+      </a>
       <a class="flex items-center justify-between p-3 rounded-xl bg-error-container/30 hover:bg-error-container/60 transition-colors group border border-error/20" href="tel:115">
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 rounded-xl bg-error text-on-error flex items-center justify-center shadow-sm">
@@ -96,6 +77,36 @@
         </div>
         <span class="font-telemetry-data text-lg text-on-surface font-bold group-hover:text-primary transition-colors">105</span>
       </a>
+    </div>
+  </div>
+  <!-- TARJETA 2: RECOMENDACIONES DE SEGURIDAD INMEDIATA -->
+  <div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline-variant/20 flex flex-col gap-3.5">
+    <div class="flex items-center gap-2 text-secondary pb-1">
+      <span class="material-symbols-outlined text-[24px]">health_and_safety</span>
+      <h3 class="font-title-md text-title-md font-bold text-on-surface">Qué hacer en caso de crecida</h3>
+    </div>
+    <div class="flex flex-col gap-3 text-xs text-on-surface">
+      <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-surface-container-low">
+        <span class="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">1</span>
+        <div>
+          <strong class="font-semibold block text-on-surface">Aléjate de la ribera</strong>
+          <span class="text-on-surface-variant">El terreno bajo tus pies puede desmoronarse sin previo aviso.</span>
+        </div>
+      </div>
+      <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-surface-container-low">
+        <span class="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">2</span>
+        <div>
+          <strong class="font-semibold block text-on-surface">No cruces puentes si el agua los toca</strong>
+          <span class="text-on-surface-variant">La fuerza del agua debilita las bases y puede arrastrar vehículos.</span>
+        </div>
+      </div>
+      <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-surface-container-low">
+        <span class="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">3</span>
+        <div>
+          <strong class="font-semibold block text-on-surface">Mochila de emergencia lista</strong>
+          <span class="text-on-surface-variant">Agua, linterna, documentos y radio a pilas cerca a la puerta de salida.</span>
+        </div>
+      </div>
     </div>
   </div>
 </aside>

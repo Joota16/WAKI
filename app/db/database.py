@@ -33,6 +33,7 @@ class Database:
                     observations TEXT NOT NULL,
                     observed_condition TEXT NOT NULL,
                     situations_json TEXT NOT NULL,
+                    other_situation TEXT NOT NULL DEFAULT '',
                     latitude REAL,
                     longitude REAL,
                     accuracy_m REAL,
@@ -142,17 +143,32 @@ class Database:
                     location TEXT NOT NULL, created_at TEXT NOT NULL, created_by TEXT NOT NULL REFERENCES users(id),
                     active INTEGER NOT NULL DEFAULT 1, closed_at TEXT, closed_by TEXT REFERENCES users(id)
                 );
+                CREATE TABLE IF NOT EXISTS alert_monitoring_points (
+                    camera_id TEXT PRIMARY KEY, name TEXT NOT NULL,
+                    latitude REAL NOT NULL CHECK(latitude BETWEEN -90 AND 90),
+                    longitude REAL NOT NULL CHECK(longitude BETWEEN -180 AND 180),
+                    updated_at TEXT NOT NULL, updated_by TEXT NOT NULL REFERENCES users(id)
+                );
                 CREATE TABLE IF NOT EXISTS public_events (
                     sequence INTEGER PRIMARY KEY AUTOINCREMENT,
                     event_type TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL
                 );
             """)
             connection.execute('BEGIN IMMEDIATE')
+            alert_columns = {row['name'] for row in connection.execute('PRAGMA table_info(alerts)')}
+            for name, definition in {
+                'source_type': 'TEXT', 'source_id': 'TEXT', 'latitude': 'REAL',
+                'longitude': 'REAL', 'message_key': 'TEXT', 'radius_m': 'INTEGER',
+            }.items():
+                if name not in alert_columns:
+                    connection.execute(f'ALTER TABLE alerts ADD COLUMN {name} {definition}')
+            connection.execute('CREATE INDEX IF NOT EXISTS alerts_created ON alerts(created_at DESC, id DESC)')
             columns = {row['name'] for row in connection.execute('PRAGMA table_info(image_analyses)')}
             if 'source' not in columns:
                 connection.execute("ALTER TABLE image_analyses ADD COLUMN source TEXT NOT NULL DEFAULT 'iot' CHECK(source IN ('iot','test'))")
             report_columns = {row['name'] for row in connection.execute('PRAGMA table_info(reports)')}
             additions = {
+                'other_situation': "TEXT NOT NULL DEFAULT ''",
                 'review_status': "TEXT NOT NULL DEFAULT 'pending' CHECK(review_status IN ('pending','validated','discarded'))",
                 'reviewed_at': 'TEXT', 'reviewed_by': 'TEXT',
                 'review_notes': "TEXT NOT NULL DEFAULT ''", 'review_version': 'INTEGER NOT NULL DEFAULT 0',

@@ -18,7 +18,7 @@
       </p>
       {% if report.observations %}<p class="report-observations">{{ report.observations }}</p>{% endif %}
       {% if report.situations %}
-        <ul class="list-disc pl-5">{% for situation in report.situations %}<li>{{ situation }}</li>{% endfor %}</ul>
+        <ul class="list-disc pl-5">{% for situation in report.situations %}<li class="report-observations">{{ situation }}{% if situation == 'Otros' %}: {{ report.other_situation }}{% endif %}</li>{% endfor %}</ul>
       {% endif %}
       {% if report.latitude is not none %}
         <p><strong>Coordenadas:</strong> {{ report.latitude }}, {{ report.longitude }}</p>
