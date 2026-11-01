@@ -46,6 +46,7 @@ document.querySelectorAll('[data-tab]').forEach(button => {
 const mapActions = {
   recenter: () => riverMap?.recenter(),
   stations: () => riverMap?.showStations(),
+  'alert-zones': () => riverMap?.showAlertZones(),
   'zoom-in': () => riverMap?.zoomIn(),
   'zoom-out': () => riverMap?.zoomOut(),
 };

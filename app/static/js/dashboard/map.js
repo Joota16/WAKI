@@ -1,6 +1,7 @@
 import { attentionStyle, RIVERS_DATA } from './data.js';
 import { addHydrologicalStations } from './stations.js';
 import { addRiverGeometry } from './river-geometry.js';
+import { addAlertZones } from './alert-zones.js';
 
 /** Leaflet y sus capas pertenecen a este módulo, sin variables globales. */
 export function createRiverMap(onSelect) {
@@ -70,6 +71,7 @@ export function createRiverMap(onSelect) {
   });
   const stations = addHydrologicalStations(L, map);
   stations.showAll({ animate: false });
+  const alertZones = addAlertZones(L, map);
   requestAnimationFrame(() => map.invalidateSize());
 
   function drawReports() {
@@ -105,6 +107,7 @@ export function createRiverMap(onSelect) {
     },
     recenter: () => map.flyTo([-12.0464, -77.0428], 11, { duration: 1 }),
     showStations: () => stations.showAll(),
+    showAlertZones: () => alertZones.focusAll(),
     focusStation: id => stations.focus(id),
     updateAttention(key) {
       geometry.refresh();

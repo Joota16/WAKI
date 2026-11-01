@@ -67,6 +67,14 @@
 .site-page h2, .site-page h3 { font-weight: 650; }
 .site-page button { font: inherit; }
 .site-page .site-review-card h3 { margin: 0 0 8px; }
+.admin-alert-map { height: 290px; border: 1px solid #94a3b8; border-radius: 12px; z-index: 0; }
+.alert-preview { display: grid; gap: 8px; padding: 16px; border: 1px solid #fca5a5; border-radius: 12px; background: #fff7f7; }
+.alert-preview h3, .alert-preview p { margin: 0; overflow-wrap: anywhere; }
+.alert-preview h3 { font-size: 20px; }
+.alert-source-pages { margin: 0; }
+.alert-history-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 6px; }
+.alert-history-state { padding: 3px 8px; border-radius: 8px; font-size: 12px; background: #f1f5f9; color: #475569; }
+.alert-history-state.is-active { background: #fee2e2; color: #991b1b; }
 :is(.site-page, .site-account) :is(a, button, input, select, textarea):focus-visible { outline: 3px solid #38bdf8; outline-offset: 3px; }
 @media (max-width: 640px) {
   .site-dialog-header, .site-dialog-body { padding: 16px; }

@@ -1,21 +1,49 @@
 {% extends "account/protected.html" %}
 {% block title %}WAKI · Publicar aviso{% endblock %}
 {% block required_role %}admin{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+{% endblock %}
 {% block protected_content %}
   <div class="site-page-card" data-admin-page="alerts">
     <h1>Publicar aviso</h1>
     <p id="admin-status" class="site-muted" role="status" aria-live="polite"></p>
     <section id="admin-alerts-panel">
-      <h3>Publicar un aviso importante</h3>
       <form id="admin-alert-form" class="site-form">
         <label for="admin-alert-kind">Tipo de evento</label>
-        <select id="admin-alert-kind" required><option value="inundacion">Inundación</option><option value="derrumbe">Derrumbe</option><option value="huaico">Huaico</option><option value="otro">Otro evento peligroso</option></select>
-        <label for="admin-alert-title">Título del aviso</label><input id="admin-alert-title" minlength="3" maxlength="120" required>
-        <label for="admin-alert-location">Lugar afectado</label><input id="admin-alert-location" minlength="2" maxlength="200" required>
-        <label for="admin-alert-message">Mensaje para la población</label><textarea id="admin-alert-message" rows="4" minlength="5" maxlength="2000" required></textarea>
-        <button id="admin-publish-alert" type="submit" class="site-danger">Publicar aviso para todos</button>
+        <select id="admin-alert-kind" required><option value="inundacion">Inundación</option><option value="derrumbe">Derrumbe</option><option value="erosion_fluvial">Erosión fluvial</option></select>
+        <label for="admin-alert-source">Lugar afectado</label>
+        <select id="admin-alert-source" required aria-describedby="admin-alert-place-hint" disabled><option value="">Cargando lugares…</option></select>
+        <div class="site-filter-row alert-source-pages" id="admin-alert-source-pages" hidden>
+          <button type="button" id="admin-source-previous">Anteriores</button><span id="admin-source-page" class="site-muted"></span><button type="button" id="admin-source-next">Más reportes</button>
+        </div>
+        <p id="admin-alert-place-hint" class="site-muted">Elige una cámara o un reporte validado y comprueba el lugar en el mapa.</p>
+        <label for="admin-alert-radius">Radio de la zona de peligro (metros)</label>
+        <input id="admin-alert-radius" type="number" min="1" max="10000" step="1" value="30" required aria-describedby="admin-alert-radius-hint">
+        <p id="admin-alert-radius-hint" class="site-muted">Por ejemplo, 30 marca una zona de 30 metros alrededor del punto elegido.</p>
+        <div id="admin-alert-map" class="admin-alert-map" aria-label="Ubicación del aviso en el mapa"></div>
+        <p id="admin-alert-map-status" class="site-muted" role="status" hidden></p>
+        <label for="admin-alert-message-option">Mensaje para la población</label>
+        <select id="admin-alert-message-option" required disabled><option value="">Cargando mensajes…</option></select>
+        <section class="alert-preview" aria-labelledby="admin-alert-preview-label" aria-live="polite">
+          <span class="site-muted" id="admin-alert-preview-label">Así se verá el aviso</span>
+          <h3 id="admin-alert-preview-title">Inundación</h3>
+          <p id="admin-alert-preview-location">Selecciona el lugar afectado.</p>
+          <p id="admin-alert-preview-radius" hidden></p>
+          <p id="admin-alert-preview-message"></p>
+        </section>
+        <button id="admin-publish-alert" type="submit" class="site-danger" disabled>Publicar aviso para todos</button>
       </form>
       <h3 class="site-section-title">Avisos activos</h3><div id="admin-active-alerts" class="site-stack"></div>
+      <section aria-labelledby="admin-history-title">
+        <h3 class="site-section-title" id="admin-history-title">Historial de avisos</h3>
+        <div class="site-filter-row"><label for="admin-alert-history-filter">Mostrar</label><select id="admin-alert-history-filter"><option value="all">Todos</option><option value="active" selected>Activos</option><option value="closed">Finalizados</option></select><button id="admin-refresh-history" type="button">Actualizar</button></div>
+        <div id="admin-alert-history" class="site-stack" aria-live="polite"></div>
+        <nav class="site-filter-row" aria-label="Páginas del historial de avisos"><button id="admin-history-previous" type="button" disabled>Anterior</button><span id="admin-history-page"></span><button id="admin-history-next" type="button" disabled>Siguiente</button></nav>
+      </section>
     </section>
   </div>
 {% endblock %}

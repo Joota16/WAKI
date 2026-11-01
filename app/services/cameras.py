@@ -16,6 +16,16 @@ CAMERAS = {
     )
 }
 
+# Ubicación de instalación indicada por el equipo: mismo punto de Malecón Chillón
+# que utiliza el mapa de estaciones (static/js/dashboard/stations-data.js).
+DEFAULT_CAMERA_LOCATIONS = {
+    'chillon-01': {
+        'name': 'Malecón Chillón',
+        'latitude': -11.913546150295304,
+        'longitude': -77.07124450899127,
+    },
+}
+
 
 class CameraNotFound(LookupError):
     pass

@@ -21,7 +21,7 @@ from app.repositories.discharge import DischargeRepository
 from app.repositories.hydrology import HydrologyRepository
 from app.repositories.reports import ReportsRepository
 from app.repositories.users import UsersRepository
-from app.repositories.alerts import AlertsRepository
+from app.repositories.alerts import AlertsRepository, InvalidAlertSource
 from app.services.auth import AuthError, AuthService
 from app.services.alerts import AlertNotFound, AlertsService
 from app.services.attention import AttentionService
@@ -99,6 +99,10 @@ def create_app(settings: Settings | None = None, *, hydrology_provider: LevelsPr
     @application.exception_handler(AlertNotFound)
     async def alert_not_found(request: Request, exc: AlertNotFound):
         return JSONResponse({'detail': str(exc)}, status_code=404)
+
+    @application.exception_handler(InvalidAlertSource)
+    async def invalid_alert_source(request: Request, exc):
+        return JSONResponse({'detail': str(exc)}, status_code=422)
 
     @application.exception_handler(RequestValidationError)
     async def invalid_request(request: Request, exc: RequestValidationError):

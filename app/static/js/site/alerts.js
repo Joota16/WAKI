@@ -1,7 +1,20 @@
 import { element, localTime, requestJSON } from './utils.js';
+import { hasAlertZone } from './alert-zones.js';
 
-const kindLabels = { inundacion: 'Inundación', derrumbe: 'Derrumbe', huaico: 'Huaico', otro: 'Evento peligroso' };
+const kindLabels = { inundacion: 'Inundación', derrumbe: 'Derrumbe', erosion_fluvial: 'Erosión fluvial', huaico: 'Huaico', otro: 'Evento peligroso' };
 export const alertKind = value => kindLabels[value] || 'Aviso importante';
+let latestAlerts = [];
+export const getActiveAlerts = () => latestAlerts;
+
+export function alertMapLink(item) {
+  const showZone = item.active && hasAlertZone(item) && item.id;
+  const link = element('a', showZone ? 'Ver zona de peligro en el mapa' : 'Ver lugar en el mapa');
+  const lat = item.latitude.toFixed(6), lon = item.longitude.toFixed(6);
+  link.href = showZone ? `/?aviso=${encodeURIComponent(item.id)}`
+    : `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=17/${lat}/${lon}`;
+  link.target = '_blank'; link.rel = 'noopener noreferrer';
+  return link;
+}
 
 export function initAlerts() {
   const dialog = document.getElementById('important-notice-dialog');
@@ -18,14 +31,19 @@ export function initAlerts() {
     for (const item of items) {
       const card = element('article', undefined, 'site-notice-card');
       card.dataset.noticeId = item.id;
-      card.append(element('p', alertKind(item.kind), 'site-notice-kind'), element('h3', item.title),
+      if (item.title !== alertKind(item.kind)) card.append(element('p', alertKind(item.kind), 'site-notice-kind'));
+      card.append(element('h3', item.title),
         element('p', `Lugar: ${item.location}`), element('p', item.message),
         element('p', `${localTime(item.created_at)} (Lima) · Administración de WAKI`, 'site-muted'));
+      if (hasAlertZone(item)) card.append(element('p', `Zona de peligro: radio de ${item.radius_m} m`));
+      if (Number.isFinite(item.latitude) && Number.isFinite(item.longitude)) card.append(alertMapLink(item));
       list.append(card);
     }
     if (!items.length) list.append(element('p', 'No hay avisos importantes activos.'));
     document.querySelectorAll('[data-alert-count]').forEach(node => { node.textContent = items.length; node.hidden = !items.length; });
     banner.hidden = !items.length;
+    latestAlerts = items;
+    document.dispatchEvent(new CustomEvent('active-alerts-updated', { detail: items }));
   }
   function open() {
     render();

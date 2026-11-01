@@ -2,13 +2,14 @@ import asyncio
 import json
 from typing import Annotated
 from uuid import UUID
+from typing import Literal
 
 from fastapi import APIRouter, Depends, Header, Query, Request, Response
 from fastapi.responses import StreamingResponse
 from starlette.concurrency import run_in_threadpool
 
-from app.api.dependencies import admin_write
-from app.schemas.alerts import AlertInput, AlertOut, AlertsSnapshot
+from app.api.dependencies import admin_write, require_admin
+from app.schemas.alerts import AlertHistoryPage, AlertInput, AlertOut, AlertsSnapshot, GuidedAlertInput, MonitoringPointInput
 from app.services.auth import AuthContext
 
 router = APIRouter(prefix='/api', tags=['Avisos importantes'])
@@ -21,8 +22,28 @@ def alerts(request: Request, response: Response):
 
 
 @router.post('/alerts', status_code=201, response_model=AlertOut)
-def create(values: AlertInput, request: Request, context: AuthContext = Depends(admin_write)):
+def create(values: GuidedAlertInput | AlertInput, request: Request, context: AuthContext = Depends(admin_write)):
     return request.app.state.alerts.create(values, str(context.user.id))
+
+
+@router.get('/admin/alerts/options')
+def alert_options(request: Request, response: Response, limit: Annotated[int, Query(ge=1, le=50)] = 25,
+                  offset: Annotated[int, Query(ge=0)] = 0, context: AuthContext = Depends(require_admin)):
+    response.headers['Cache-Control'] = 'no-store'
+    return request.app.state.alerts.options(limit, offset)
+
+
+@router.put('/admin/alerts/points/{camera_id}')
+def save_point(camera_id: str, values: MonitoringPointInput, request: Request, context: AuthContext = Depends(admin_write)):
+    return request.app.state.alerts.save_point(camera_id, values, str(context.user.id))
+
+
+@router.get('/admin/alerts/history', response_model=AlertHistoryPage)
+def alert_history(request: Request, response: Response, limit: Annotated[int, Query(ge=1, le=50)] = 10,
+                  offset: Annotated[int, Query(ge=0)] = 0, status: Literal['all', 'active', 'closed'] = 'all',
+                  context: AuthContext = Depends(require_admin)):
+    response.headers['Cache-Control'] = 'no-store'
+    return request.app.state.alerts.history(limit, offset, status)
 
 
 @router.post('/alerts/{alert_id}/close', response_model=AlertOut)

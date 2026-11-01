@@ -1,11 +1,12 @@
 import { authenticatedJSON, getSession } from './auth.js';
-import { element, message, requestJSON } from './utils.js';
-import { alertKind } from './alerts.js';
+import { element } from './utils.js';
+import { initAdminAlerts } from './admin-alerts.js';
 
 export function initAdmin() {
   const page = document.querySelector('[data-admin-page]');
   if (!page) return;
   const tab = page.dataset.adminPage;
+  if (tab === 'alerts') { initAdminAlerts(); return; }
   const status = document.getElementById('admin-status');
   const filter = document.getElementById('admin-review-filter');
   const list = document.getElementById('admin-review-list');
@@ -14,32 +15,12 @@ export function initAdmin() {
   let offset = 0, singleId = document.getElementById('admin-reports-panel')?.dataset.reportId || null, sequence = 0, reviewing = false;
   const limit = 6;
   function isAdmin() { return getSession().user?.role === 'admin'; }
-  async function loadAlerts() {
-    if (tab !== 'alerts' || !isAdmin()) return;
-    const container = document.getElementById('admin-active-alerts');
-    try {
-      const data = await requestJSON('/api/alerts');
-      if (!isAdmin()) return;
-      container.replaceChildren();
-      for (const item of data.items) {
-        const card = element('article', undefined, 'site-admin-alert');
-        card.append(element('h3', `${alertKind(item.kind)} · ${item.title}`), element('p', item.location), element('p', item.message));
-        const close = element('button', 'Finalizar aviso'); close.type = 'button';
-        close.addEventListener('click', async () => {
-          close.disabled = true;
-          try { await authenticatedJSON(`/api/alerts/${item.id}/close`, { method: 'POST' }); status.textContent = 'Aviso finalizado.'; loadAlerts(); }
-          catch (failure) { status.textContent = failure.message; close.disabled = false; }
-        });
-        card.append(close); container.append(card);
-      }
-      if (!data.items.length) container.textContent = 'No hay avisos activos.';
-    } catch (failure) { container.textContent = failure.message; }
-  }
   function reportCard(report) {
     const card = element('article', undefined, 'site-review-card');
     card.dataset.reviewId = report.id;
     card.append(element('h3', `Reporte ${report.id.slice(0, 8)}`),
       element('p', report.review_label, 'site-review-badge'), element('p', report.observations || 'Sin observaciones adicionales.'));
+    if (report.other_situation) card.append(element('p', `Otros: ${report.other_situation}`, 'report-observations'));
     if (report.photos.length) {
       const img = element('img'); img.src = report.photos[0].url; img.alt = 'Fotografía del reporte a revisar'; img.loading = 'lazy'; card.append(img);
     }
@@ -120,33 +101,15 @@ export function initAdmin() {
     if (list?.contains(document.activeElement) && document.activeElement.matches('textarea, select')) return;
     loadReports();
   });
-  document.addEventListener('alerts-changed', () => { if (tab === 'alerts') loadAlerts(); });
-  const form = document.getElementById('admin-alert-form');
-  form?.addEventListener('submit', async event => {
-    event.preventDefault();
-    const button = document.getElementById('admin-publish-alert');
-    if (button.disabled || !isAdmin()) return;
-    button.disabled = true; status.textContent = 'Publicando aviso…';
-    try {
-      await authenticatedJSON('/api/alerts', { method: 'POST', body: JSON.stringify({
-        kind: document.getElementById('admin-alert-kind').value, title: document.getElementById('admin-alert-title').value,
-        location: document.getElementById('admin-alert-location').value, message: document.getElementById('admin-alert-message').value,
-      }) });
-      form.reset(); status.textContent = 'Aviso publicado.'; loadAlerts(); message('Aviso publicado para quienes tienen WAKI abierto.');
-    } catch (failure) { status.textContent = failure.message; }
-    finally { button.disabled = false; }
-  });
   let hadAdminSession = isAdmin();
   document.addEventListener('session-changed', () => {
     if (!isAdmin()) {
       ++sequence; notes.clear(); levels.clear();
       list?.replaceChildren();
-      form?.reset();
-      document.getElementById('admin-active-alerts')?.replaceChildren();
     } else if (!hadAdminSession) {
-      if (tab === 'alerts') loadAlerts(); else loadReports();
+      loadReports();
     }
     hadAdminSession = isAdmin();
   });
-  if (tab === 'alerts') loadAlerts(); else loadReports();
+  loadReports();
 }
