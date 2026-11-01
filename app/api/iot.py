@@ -1,4 +1,4 @@
-"""Recepción autenticada de fotografías binarias de ESP32 u otras cámaras."""
+"""Recepción autenticada de fotografías binarias de cámaras."""
 import secrets
 from typing import Annotated
 

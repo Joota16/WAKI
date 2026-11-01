@@ -39,7 +39,7 @@ def test_manual_analysis_uses_same_engine_without_changing_camera_or_citizen_rep
         assert client.get('/api/analysis-tests?river_id=chillon').json()['items'][0]['id'] == result['id']
         assert client.get('/api/analysis-tests?river_id=rimac').json()['total'] == 0
         html = client.get(result['report_url'] + '/contenido').text
-        assert 'Prueba manual' in html and 'No es una captura del ESP32' in html
+        assert 'Prueba manual' in html and 'No es una captura de la cámara' in html
         assert client.get(result['overlay_url']).status_code == 200
         assert not list((tmp_path / 'photos').iterdir())
         assert not (tmp_path / 'private-file.jpg').exists()

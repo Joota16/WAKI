@@ -148,7 +148,7 @@ class ProcessingService:
         test = row['source'] == 'test'
         return AnalysisOut(**{key: value for key, value in row.items() if key not in ('id', 'status', 'camera_id')},
                            id=analysis_id, frame_id=None if test else analysis_id,
-                           camera_id=None if test else row['camera_id'], source_label='Prueba manual' if test else 'Cámara ESP32',
+                           camera_id=None if test else row['camera_id'], source_label='Prueba manual' if test else 'Cámara',
                            status=row['status'], status_label=STATUS_LABELS[row['status']],
                            water_fraction=water.get('fraction_of_image_predicted_as_water'),
                            candidate_count=len(objects.get('candidates', [])) if available else None,

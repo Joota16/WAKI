@@ -47,7 +47,7 @@ def test_empty_camera_has_no_fabricated_image_or_date(client):
     assert data['poll_seconds'] == 5
     assert datetime.fromisoformat(data['server_time']).utcoffset().total_seconds() == 0
     html = client.get('/').text
-    assert 'Esperando la primera captura del ESP32' in html
+    assert 'Esperando la primera captura de la cámara' in html
     assert 'FPS: 30' not in html and '(En vivo)' not in html
     assert 'cam-water-path' not in html and KEY not in html
 

@@ -94,7 +94,7 @@ export function initAnalyses() {
       status.textContent = source === 'test'
         ? data.total ? 'Pruebas manuales guardadas. Consulta automática cada 5 segundos.' : 'Todavía no hay pruebas manuales para este río. Puedes subir una imagen arriba.'
         : data.total ? 'Informes de las capturas recibidas. Consulta automática cada 5 segundos.'
-          : 'Todavía no hay capturas para analizar en esta cámara. Las nuevas fotografías del ESP32 aparecerán aquí.';
+          : 'Todavía no hay capturas para analizar en esta cámara. Las nuevas fotografías de la cámara aparecerán aquí.';
       page.textContent = data.total ? `${offset + 1}–${offset + data.items.length} de ${data.total}` : 'Sin capturas';
       previous.disabled = offset === 0;
       next.disabled = offset + limit >= data.total;
