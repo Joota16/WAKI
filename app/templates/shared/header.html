@@ -3,7 +3,7 @@
   <div class="waki-header-inner">
     <a class="waki-brand" href="{{ url_for('dashboard').path }}" aria-label="WAKI · Inicio">
       <span class="waki-brand-icon" aria-hidden="true">
-        <svg width="21" height="21" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+        <img src="{{ url_for('static', path='img/waki-logo.svg').path }}" width="40" height="37" alt="">
       </span>
       <span>WAKI</span>
     </a>
@@ -14,6 +14,8 @@
     </form>
     <nav class="waki-header-nav" aria-label="Navegación principal">
       <a href="{{ url_for('dashboard').path }}"{% if current_path == '/' %} aria-current="page"{% endif %}>Dashboard</a>
+      <a href="{{ url_for('admin_alerts').path }}" data-admin-only hidden{% if current_path == '/admin/avisos' %} aria-current="page"{% endif %}>Publicar aviso</a>
+      <a href="{{ url_for('admin_reports').path }}" data-admin-only hidden{% if current_path == '/admin/reportes' %} aria-current="page"{% endif %}>Revisar reportes</a>
       <a href="{{ url_for('reports_list').path }}"{% if current_path.startswith('/reportes') %} aria-current="page"{% endif %}>Reportes</a>
       <a class="waki-report-link" href="{{ url_for('citizen_report').path }}"{% if current_path == '/reportar' %} aria-current="page"{% endif %}>Reportar <span>observación</span></a>
     </nav>
