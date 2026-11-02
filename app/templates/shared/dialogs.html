@@ -9,3 +9,19 @@
   <div class="site-dialog-body"><p id="important-notice-description">Avisos publicados por la administración de WAKI.</p><div id="important-notice-list" class="site-stack"></div></div>
   <footer class="site-notice-footer"><button id="acknowledge-notices" type="button" class="site-danger" autofocus>Entendido</button></footer>
 </dialog>
+
+<dialog id="pwa-install-dialog" class="site-dialog" aria-labelledby="pwa-install-title" aria-describedby="pwa-install-description">
+  <header class="site-dialog-header">
+    <h2 id="pwa-install-title">Instalar WAKI</h2>
+    <button type="button" data-close-dialog="pwa-install-dialog" aria-label="Cerrar instrucciones de instalación">Cerrar ×</button>
+  </header>
+  <div class="site-dialog-body">
+    <p id="pwa-install-description">Agrega WAKI a tu pantalla de inicio para abrirlo como una aplicación.</p>
+    <p id="pwa-open-safari" hidden>Abre esta página en Safari para instalar WAKI.</p>
+    <ol class="pwa-install-steps">
+      <li>En Safari, toca <strong>Compartir</strong>.</li>
+      <li>Selecciona <strong>Agregar a Inicio</strong> y confirma con <strong>Agregar</strong>.</li>
+    </ol>
+    <p class="site-muted">WAKI necesita conexión a internet.</p>
+  </div>
+</dialog>

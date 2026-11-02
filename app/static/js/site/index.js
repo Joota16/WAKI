@@ -4,11 +4,13 @@ import { initAdmin } from './admin.js';
 import { initPublicReports } from './reports.js';
 import { initAccountPages } from './account-pages.js';
 import { initHeader } from './header.js';
+import { initPWA } from './pwa.js';
 
 document.addEventListener('click', event => {
   const button = event.target.closest('[data-close-dialog]');
   if (button) document.getElementById(button.dataset.closeDialog)?.close();
 });
+initPWA();
 const sessionReady = initAuth();
 initHeader();
 initAlerts();

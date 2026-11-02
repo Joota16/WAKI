@@ -20,6 +20,8 @@
 .waki-header .site-account { font: inherit; }
 .waki-header :is(.site-account-button, .site-alert-button) { min-height: 36px; padding: 7px 10px; font: inherit; line-height: 20px; text-decoration: none; }
 .waki-header .site-alert-button { padding: 7px; color: #475569; }
+.waki-header .waki-install-button { min-height: 36px; gap: 6px; padding: 7px 10px; font: inherit; line-height: 20px; }
+.waki-install-button svg { flex: none; }
 .waki-header .site-account-options { font: inherit; }
 .waki-header .site-account-options p { margin: 0; padding: 0 8px; color: #64748b; font-size: 12px; }
 .waki-header .site-account-options a, .waki-header .site-account-options button { margin: 0; font: inherit; text-decoration: none; }
@@ -29,6 +31,8 @@
   .waki-report-link span, .waki-header-search kbd { display: none; }
 }
 @media (max-width: 760px) {
+  .waki-header .waki-install-button { padding: 7px; }
+  .waki-install-button span { display: none; }
   .waki-header-inner { grid-template-columns: 1fr auto; grid-template-areas: "brand tools" "search search" "nav nav"; gap: 8px; padding: 10px 12px; }
   .waki-brand { grid-area: brand; }
   .waki-header-tools { grid-area: tools; justify-self: end; }
