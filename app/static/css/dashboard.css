@@ -111,6 +111,36 @@ main [data-purpose="citizen-reports-block"] {
 .hydro-station-popup p { margin: 6px 0; }
 .hydro-station-coordinates { overflow-wrap: anywhere; color: #475569; }
 .hydro-station-popup a { color: #0369a1; text-decoration: underline; }
+.station-measurements { display: grid; gap: 10px; margin: 10px 0; }
+.station-measurement { display: flex; flex-direction: column; gap: 5px; padding-top: 8px; border-top: 1px solid #cbd5e1; }
+.station-measurement h4 { font-weight: 700; }
+.station-measurement p { margin: 0; }
+.station-measurement-note { font-size: 11px; color: #64748b; }
+.station-measurement-warning { font-size: 11px; color: #92400e; }
+.station-measurement-actions { order: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.measurement-history-button, .measurement-history-source { color: #0369a1; text-decoration: underline; cursor: pointer; font: inherit; text-align: left; }
+.measurement-history-button:focus-visible { outline: 2px solid #0284c7; outline-offset: 3px; }
+.discharge-thresholds { font-size: 11px; color: #475569; }
+.discharge-threshold-values { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
+.discharge-threshold-values span { padding: 3px 7px; border: 1px solid currentColor; border-radius: 6px; }
+.discharge-threshold-status { font-size: 12px; font-weight: 600; }
+[data-threshold-level="yellow"] { color: #854d0e; }
+[data-threshold-level="orange"] { color: #9a3412; }
+[data-threshold-level="red"] { color: #b91c1c; }
+.discharge-threshold-values [data-threshold-level="yellow"] { background: #fefce8; }
+.discharge-threshold-values [data-threshold-level="orange"] { background: #fff7ed; }
+.discharge-threshold-values [data-threshold-level="red"] { background: #fef2f2; }
+.measurement-history-dialog { width: min(980px, calc(100vw - 24px)); }
+.measurement-history-table { overflow: auto; max-height: 55dvh; margin: 16px 0; border: 1px solid #cbd5e1; border-radius: 8px; }
+.measurement-history-table table { border-collapse: collapse; width: 100%; min-width: 420px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.measurement-history-table table[data-metric="level"] { min-width: 0; }
+.measurement-history-table table[data-metric="level"] th { white-space: normal; }
+.measurement-history-table th, .measurement-history-table td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: left; white-space: nowrap; }
+.measurement-history-table th { position: sticky; top: 0; background: #f1f5f9; color: #334155; font-weight: 600; }
+.measurement-history-table tr:nth-child(even) { background: #f8fafc; }
+.measurement-history-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 20px; border-top: 1px solid #cbd5e1; font-size: 12px; }
+.measurement-history-footer button { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; background: white; }
+.measurement-history-footer button:disabled { opacity: .4; cursor: default; }
 
 .camera-panel { display: flex; flex-direction: column; min-height: 260px; min-width: 0; overflow: hidden; border-radius: 12px; background: #020617; color: #e2e8f0; }
 .camera-panel [hidden] { display: none !important; }

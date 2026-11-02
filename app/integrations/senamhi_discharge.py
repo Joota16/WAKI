@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
 from app.integrations.senamhi import InvalidStationData, SenamhiProvider, _normalize, _variable
-from app.schemas.hydrology import DischargeBatch, DischargeReading, DischargeStation
+from app.schemas.hydrology import DischargeBatch, DischargeReading, DischargeStation, DischargeThresholds
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +60,20 @@ def parse_discharge(html: str, station: DischargeStation, now: datetime | None =
     points = data.get("dato")
     if not isinstance(points, list) or not 1 <= len(points) <= 2000:
         raise InvalidStationData("La fuente no contiene lecturas horarias de caudal.")
+    # Los límites pertenecen a cada instante publicado; no se extrapolan a
+    # otras fechas ni se confunden con las mediciones de la serie «dato».
+    threshold_series = {}
+    for source, name in [('amarillo', 'yellow_m3s'), ('naranja', 'orange_m3s'), ('rojo', 'red_m3s')]:
+        series = data.get(source)
+        values = {}
+        if isinstance(series, list) and len(series) <= 2000:
+            for point in series:
+                if (not isinstance(point, list) or len(point) != 2 or isinstance(point[0], bool)
+                        or not isinstance(point[0], int) or point[0] in values):
+                    values = {}
+                    break
+                values[point[0]] = point[1]
+        threshold_series[name] = values
     now = now or datetime.now(timezone.utc)
     readings = []
     timestamps = []
@@ -76,7 +90,14 @@ def parse_discharge(html: str, station: DischargeStation, now: datetime | None =
             # Se conserva la hora que ve el usuario en el visor y se almacena en UTC real.
             local_time = datetime.fromtimestamp(stamp / 1000, timezone.utc).replace(tzinfo=ZoneInfo("America/Lima"))
             observed_at = local_time.astimezone(timezone.utc)
-            readings.append(DischargeReading(observed_at=observed_at, discharge_m3s=value))
+            limits = {name: series.get(stamp) for name, series in threshold_series.items()}
+            thresholds = None
+            if all(isinstance(limit, (int, float)) and not isinstance(limit, bool) for limit in limits.values()):
+                try:
+                    thresholds = DischargeThresholds(**limits)
+                except ValueError:
+                    pass  # Un umbral incompleto o inválido no elimina un caudal válido.
+            readings.append(DischargeReading(observed_at=observed_at, discharge_m3s=value, thresholds=thresholds))
             timestamps.append(stamp)
         except (ValueError, TypeError, OverflowError) as exc:
             raise InvalidStationData(f"La serie contiene una lectura de caudal inválida: {exc}") from exc

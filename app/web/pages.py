@@ -73,6 +73,7 @@ def admin_reports(request: Request, report_id: UUID | None = None):
 def dashboard(request: Request):
     return templates.TemplateResponse(request=request, name="dashboard/index.html",
                                       context={"discharge_stations": DISCHARGE_STATIONS, "weather_station": OBRAJILLO_WEATHER,
+                                               "camera_capture_seconds": request.app.state.settings.camera_capture_seconds,
                                                "upload_limit_mb": request.app.state.settings.max_upload_mb,
                                                "camera_ids": {item.river_id: item.id for item in CAMERAS.values()
                                                               if item.river_id == 'chillon'}})

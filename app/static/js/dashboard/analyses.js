@@ -42,17 +42,23 @@ export function initAnalyses() {
     find('summary').textContent = ['analyzed', 'partial'].includes(item.status) ? `${water} · ${objects}` : '';
     find('report').addEventListener('click', event => reportDialog.open(item.id, event.currentTarget));
     let original = views.get(item.id) === 'original' || !item.overlay_url;
+    let loadStarted = 0;
     function show() {
       image.hidden = true;
       imageStatus.hidden = false;
       imageStatus.textContent = 'Cargando fotografía…';
+      find('load-time').textContent = '';
+      loadStarted = performance.now();
       image.alt = original ? 'Fotografía original de la captura' : 'Resultado de IA de la captura; pendiente de revisión';
       image.src = original ? item.original_url : item.overlay_url;
       toggle.textContent = original ? 'Ver análisis' : 'Ver original';
       toggle.disabled = !item.overlay_url;
       toggle.hidden = !item.overlay_url;
     }
-    image.addEventListener('load', () => { image.hidden = false; imageStatus.hidden = true; });
+    image.addEventListener('load', () => {
+      image.hidden = false; imageStatus.hidden = true;
+      find('load-time').textContent = `Carga de esta imagen: ${((performance.now() - loadStarted) / 1000).toFixed(1)} s. Varía según tu conexión.`;
+    });
     image.addEventListener('error', () => {
       image.hidden = true;
       imageStatus.hidden = false;
@@ -118,6 +124,7 @@ export function initAnalyses() {
   previous.addEventListener('click', () => changePage(-1));
   next.addEventListener('click', () => changePage(1));
   function updateSources() {
+    document.getElementById('analyses-capture-frequency').hidden = source !== 'iot';
     document.querySelectorAll('[data-analysis-source]').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.analysisSource === source));
     });

@@ -34,6 +34,7 @@ export function initCamera() {
     element('camera-timestamp').removeAttribute('datetime');
     element('camera-timestamp').removeAttribute('title');
     element('camera-age').textContent = '';
+    element('camera-load-time').textContent = '';
     element('camera-status').textContent = 'Consultando capturas…';
     fullscreen.disabled = true;
     element('camera-dialog-image').removeAttribute('src');
@@ -62,16 +63,18 @@ export function initCamera() {
       if (data.camera.id !== cameraId) throw new Error('Cámara inesperada');
       clockOffset = Date.parse(data.server_time) - Date.now();
       pollSeconds = data.poll_seconds;
+      element('camera-cadence').textContent = `Captura programada: cada ${data.capture_interval_seconds} s.`;
       staleAfter = data.stale_after_seconds;
       element('camera-name').textContent = data.camera.name;
       if (!data.latest) {
         clear();
-        element('camera-status').textContent = 'Todavía no se han recibido fotografías de esta cámara.';
+        element('camera-status').textContent = '';
         return;
       }
       if (frame?.id !== data.latest.id) {
         // Se carga primero para conservar la foto anterior si falla la nueva.
         const nextImage = new Image();
+        const loadStarted = performance.now();
         await new Promise((resolve, reject) => {
           const cleanup = () => {
             request.signal.removeEventListener('abort', abort);
@@ -85,6 +88,7 @@ export function initCamera() {
           else nextImage.src = data.latest.image_url;
         });
         if (current !== sequence) return;
+        element('camera-load-time').textContent = `Carga de esta imagen: ${((performance.now() - loadStarted) / 1000).toFixed(1)} s. Puede variar según tu conexión.`;
         frame = data.latest;
         image.src = nextImage.src;
         image.hidden = false; element('camera-empty').hidden = true;

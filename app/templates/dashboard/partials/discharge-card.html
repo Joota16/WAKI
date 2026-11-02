@@ -9,6 +9,11 @@
   </div>
   <p class="text-2xl font-extrabold text-slate-900" data-field="value">—</p>
   <p class="text-xs text-slate-600" data-field="observed-at"></p>
+  <div class="discharge-thresholds" data-field="thresholds" hidden>
+    <p>Umbrales SENAMHI (m³/s)</p>
+    <div class="discharge-threshold-values" data-field="threshold-values"></div>
+  </div>
+  <p class="discharge-threshold-status" data-field="threshold-status"></p>
   <div data-field="chart" hidden>
     <p class="text-[10px] text-slate-500 mb-1">Lecturas publicadas · hasta 72 horas</p>
     <svg class="w-full h-20" viewBox="0 0 280 80" role="img" aria-label="Caudales de {{ station.name }} en metros cúbicos por segundo">
@@ -25,5 +30,6 @@
   <div class="mt-auto pt-1 flex flex-wrap items-center gap-3 text-[11px]">
     <a href="{{ station.source_url }}" class="text-sky-700 underline" data-field="source" target="_blank" rel="noopener noreferrer">Fuente: SENAMHI</a>
     <button class="text-sky-700 underline" data-field="retry" type="button" hidden>Volver a consultar</button>
+    <button class="measurement-history-button" type="button" data-history-kind="discharge" data-history-station="{{ station.code }}">Ver histórico en tabla</button>
   </div>
 </section>

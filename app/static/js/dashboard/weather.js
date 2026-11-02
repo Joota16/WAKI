@@ -1,3 +1,5 @@
+import { publishMeasurements, markMeasurementsUnavailable } from './measurements.js';
+
 const number = new Intl.NumberFormat('es-PE', { minimumFractionDigits: 1, maximumFractionDigits: 2 });
 const dateLabel = day => day.split('-').reverse().join('/');
 const dayNumber = day => Date.parse(`${day}T00:00:00Z`) / 86400000;
@@ -89,9 +91,11 @@ export function initWeather() {
       const data = await response.json();
       if (current !== sequence) return;
       render(data);
+      publishMeasurements('weather', data);
       if (data.status === 'loading') interval = 5000;
     } catch {
       if (current !== sequence) return;
+      markMeasurementsUnavailable('weather');
       element('weather-status').textContent = 'No se pudo consultar WAKI. Las lecturas visibles conservan sus fechas de publicación.';
       element('weather-status').hidden = false;
       element('weather-retry').hidden = false;

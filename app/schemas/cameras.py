@@ -46,3 +46,4 @@ class LatestCameraFrame(BaseModel):
     server_time: AwareDatetime
     poll_seconds: int = 5
     stale_after_seconds: int = 120
+    capture_interval_seconds: int = 60

@@ -84,7 +84,8 @@ class CamerasService:
         camera = self.camera(camera_id)
         row = self.repository.latest(camera_id)
         return LatestCameraFrame(camera=camera, latest=self.frame(row) if row else None,
-                                 server_time=datetime.now(timezone.utc))
+                                 server_time=datetime.now(timezone.utc),
+                                 capture_interval_seconds=self.settings.camera_capture_seconds)
 
     def image(self, camera_id: str, frame_id: UUID) -> bytes:
         self.camera(camera_id)
