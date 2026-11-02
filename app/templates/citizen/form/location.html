@@ -1,0 +1,31 @@
+<section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4" aria-labelledby="location-title">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">3</span>
+      <div>
+        <h2 id="location-title" class="font-headline-sm text-headline-sm text-on-surface">Ubicación del reporte</h2>
+      </div>
+    </div>
+    <button class="px-4 py-2.5 rounded-xl bg-primary text-on-primary text-sm font-semibold" id="btnGpsEasy" type="button">Usar mi ubicación actual</button>
+  </div>
+  <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-2" id="gpsStatusBox" aria-live="polite">
+    <span class="text-xs font-semibold" id="gpsBadge">Sin coordenadas</span>
+    <span class="text-sm break-words" id="gpsCoordsText">Sin coordenadas.</span>
+    <a id="locationMapLink" class="text-sm text-primary underline" target="_blank" rel="noopener noreferrer" hidden>Comprobar ubicación en el mapa</a>
+  </div>
+  <p id="locationAccuracyWarning" class="location-warning" role="status" hidden></p>
+  <p id="locationError" class="form-error" role="alert" hidden></p>
+  <details>
+    <summary class="cursor-pointer text-sm text-primary font-semibold">Introducir coordenadas manualmente</summary>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+      <label class="text-sm">Latitud (−90 a 90)
+        <input id="hiddenLat" type="number" min="-90" max="90" step="any" inputmode="decimal" class="w-full rounded-xl bg-surface-container-low p-3" placeholder="Ej.: -11.8924">
+      </label>
+      <label class="text-sm">Longitud (−180 a 180)
+        <input id="hiddenLon" type="number" min="-180" max="180" step="any" inputmode="decimal" class="w-full rounded-xl bg-surface-container-low p-3" placeholder="Ej.: -77.0682">
+      </label>
+    </div>
+  </details>
+  <input id="gpsAccuracy" type="hidden">
+  <button id="btnClearLocation" type="button" class="text-sm text-primary underline self-start">Quitar coordenadas</button>
+</section>

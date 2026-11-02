@@ -1,0 +1,67 @@
+  <article class="flex flex-col gap-6" id="analysis-detail" data-id="{{ analysis.id }}" data-status="{{ analysis.status }}">
+    <header>
+      {% if not embedded %}<h1 class="text-2xl font-bold">Informe de análisis visual</h1>{% endif %}
+      <p class="text-sm mt-2">{% if analysis.source == 'test' %}Prueba manual{% else %}Cámara {{ analysis.camera_id }}{% endif %} · Río {{ analysis.river_id | capitalize }}</p>
+      <p class="text-xs break-all mt-1">{{ 'Imagen de prueba' if analysis.source == 'test' else 'Captura' }} {{ analysis.id }}</p>
+      <p class="text-sm mt-1">Recibida: {{ analysis.received_at | lima_datetime }} (Lima)</p>
+      {% if analysis.captured_at %}<p class="text-sm">Capturada: {{ analysis.captured_at | lima_datetime }} (Lima)</p>{% endif %}
+      {% if analysis.completed_at %}<p class="text-sm">Procesada: {{ analysis.completed_at | lima_datetime }} (Lima)</p>{% endif %}
+    </header>
+    <section class="bg-white rounded-2xl border border-outline-variant/30 p-5 flex flex-col gap-2">
+      <h2 class="font-bold text-lg">{{ analysis.status_label }}</h2>
+      <p id="analysis-live-status" role="status">{{ analysis.message }}</p>
+      <p class="text-sm">Resultados pendientes de revisión humana. Los recuadros son zonas candidatas; no confirman la identidad de los objetos.</p>
+      <a class="text-primary underline text-sm" href="/api/analyses/{{ analysis.id }}/report.json">Descargar informe JSON</a>
+    </section>
+    <section class="bg-white rounded-2xl border border-outline-variant/30 p-5 flex flex-col gap-4">
+      <div class="flex flex-wrap gap-3" role="group" aria-label="Vista de la captura">
+        <button type="button" data-analysis-preview="{{ analysis.original_url }}" data-label="Fotografía original" aria-pressed="{{ 'false' if analysis.overlay_url else 'true' }}" class="text-primary underline">Original</button>
+        {% for key, label in [('combined_overlay', 'Análisis combinado'), ('objects_overlay', 'Zonas de objetos'), ('water_overlay', 'Segmentación del agua')] %}
+          {% if analysis.artifacts.get(key) %}
+            <button type="button" data-analysis-preview="{{ analysis.artifacts[key] }}" data-label="{{ label }}" aria-pressed="{{ 'true' if key == 'combined_overlay' and analysis.overlay_url else 'false' }}" class="text-primary underline">{{ label }}</button>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <p id="analysis-preview-label" class="font-semibold text-sm">{{ 'Análisis combinado' if analysis.overlay_url else 'Fotografía original' }}</p>
+      <img id="analysis-preview" src="{{ analysis.overlay_url or analysis.original_url }}" alt="{{ 'Análisis combinado' if analysis.overlay_url else 'Fotografía original' }}" class="w-full max-h-[65vh] object-contain bg-slate-950 rounded-xl">
+      <p id="analysis-image-error" role="status" hidden>No se pudo cargar la imagen seleccionada.</p>
+      {% if analysis.artifacts.get('mask') %}<button type="button" data-analysis-preview="{{ analysis.artifacts['mask'] }}" data-label="Máscara de agua" aria-pressed="false" class="text-primary underline text-sm text-left">Ver máscara de agua</button>{% endif %}
+    </section>
+    <section class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <article class="bg-white rounded-2xl border border-outline-variant/30 p-5">
+        <h2 class="font-bold">Segmentación del agua</h2>
+        <p class="mt-2">{% if analysis.water_fraction is not none %}{{ (analysis.water_fraction * 100) | round(1) }} % de píxeles de la imagen{% else %}No disponible{% endif %}</p>
+        <p class="text-sm mt-2">No mide profundidad, nivel, caudal ni riesgo de inundación. Una máscara vacía no significa que el río esté seco.</p>
+      </article>
+      <article class="bg-white rounded-2xl border border-outline-variant/30 p-5">
+        <h2 class="font-bold">Objetos candidatos</h2>
+        <p class="mt-2">{% if analysis.objects_available %}{{ analysis.candidate_count }} candidatos para revisar{% else %}Detección no disponible{% endif %}</p>
+        <p class="text-sm mt-2">Las puntuaciones son valores del detector, no probabilidades de acierto. No detectar candidatos no prueba ausencia de objetos.</p>
+      </article>
+    </section>
+    {% if analysis.result %}
+      {% set modules = analysis.result.modules %}
+      <section class="bg-white rounded-2xl border border-outline-variant/30 p-5 flex flex-col gap-3">
+        <h2 class="font-bold text-lg">Módulos y observaciones</h2>
+        <p class="text-sm">Segmentación: {{ {'predicted_nonempty': 'Agua identificada', 'predicted_empty_needs_review': 'Sin píxeles de agua identificados; requiere revisión', 'error': 'Falló el análisis', 'not_performed': 'No ejecutada'}.get(modules.water_segmentation.status, modules.water_segmentation.status) }}</p>
+        {% for name, module in modules.object_candidates.get('model_status', {}).items() %}
+          <p class="text-sm">{{ {'yoloe_multiscale': 'YOLOE multiescala', 'grounding_dino': 'Grounding DINO'}.get(name, name) }}: {{ {'processed': 'Ejecutado', 'error': 'Falló; no implica ausencia de objetos', 'disabled': 'Desactivado'}.get(module.status, module.status) }}</p>
+        {% endfor %}
+        <ul class="list-disc pl-5 text-sm">{% for observation in analysis.result.summary.observations %}<li>{{ observation }}</li>{% endfor %}</ul>
+      </section>
+      {% if modules.object_candidates.get('candidates') %}
+        <section class="bg-white rounded-2xl border border-outline-variant/30 p-5">
+          <h2 class="font-bold text-lg mb-3">Candidatos asociados a los recuadros</h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left">
+              <thead><tr><th class="p-2">Candidato / zona</th><th class="p-2">Etiqueta propuesta</th><th class="p-2">Modelo</th><th class="p-2">Recuadro (píxeles)</th></tr></thead>
+              <tbody>{% for item in modules.object_candidates.candidates %}
+                <tr class="border-t"><td class="p-2">{{ item.candidate_id }} / {{ item.get('review_region_id', '—') }}</td><td class="p-2">{{ item.label_es }}</td><td class="p-2">{{ item.source_models | join(', ') }}</td><td class="p-2">{{ item.bbox_xyxy | join(', ') }}</td></tr>
+              {% endfor %}</tbody>
+            </table>
+          </div>
+        </section>
+      {% endif %}
+    {% endif %}
+    <p class="text-xs">{% if analysis.source == 'test' %}Este informe corresponde a una imagen subida manualmente para probar el modelo. No es una captura de la cámara ni un reporte ciudadano.{% else %}Este informe pertenece a una captura del dispositivo y se conserva separado de los reportes ciudadanos.{% endif %} Su disponibilidad está sujeta a la retención de imágenes configurada.</p>
+  </article>

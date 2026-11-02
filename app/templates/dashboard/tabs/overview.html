@@ -1,0 +1,28 @@
+<!-- 1. RESUMEN PANEL -->
+<div class="tab-panel flex flex-col gap-4" id="tab-panel-resumen">
+  <!-- Metrics and Monitoring Inner Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+    {% include "dashboard/partials/camera.html" %}
+    {% include "dashboard/partials/water-level.html" %}
+  </div>
+  <!-- Caudales publicados por las dos estaciones de Chillón. -->
+  <div class="pt-3 border-t border-slate-100">
+    <div id="discharge-cards" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {% for station in discharge_stations %}
+        {% include "dashboard/partials/discharge-card.html" %}
+      {% endfor %}
+    </div>
+    <p id="discharge-empty" class="text-xs text-slate-500" hidden>No hay estaciones de caudal conectadas para este río.</p>
+  </div>
+  {% include "dashboard/partials/weather-card.html" %}
+  <div>
+    <!-- Último reporte real; se actualiza independientemente del tramo de demostración. -->
+    <div class="bg-white border border-slate-200/80 rounded-xl p-3 flex flex-col gap-3" data-purpose="citizen-reports-block">
+      <div class="flex items-start justify-between gap-2">
+        <h4 class="text-xs font-bold text-slate-900">Últimos reportes ciudadanos</h4>
+        <a href="{{ url_for('reports_list').path }}" class="text-xs text-sky-600 font-semibold hover:underline" id="reports-count-label">Ver reportes</a>
+      </div>
+      <div id="latest-saved-report" class="text-xs text-slate-500" aria-live="polite">Cargando reportes guardados…</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es" class="{% block html_class %}{% endblock %}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0284c7">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="WAKI">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="{{ url_for('static', path='manifest.webmanifest').path }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='img/waki-logo.svg').path }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', path='img/icons/waki-apple-180.png').path }}">
+    <title>{% block title %}WAKI{% endblock %}</title>
+    {% block head %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/base.css').path }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/site.css').path }}">
+    {% block styles %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/header.css').path }}">
+  </head>
+  <body class="{% block body_class %}{% endblock %}">
+    {% include "shared/header.html" %}
+    {% block content %}{% endblock %}
+    {% include "shared/dialogs.html" %}
+    {% block scripts %}{% endblock %}
+    <script type="module" src="{{ url_for('static', path='js/site/index.js').path }}"></script>
+  </body>
+</html>
+

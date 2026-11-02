@@ -1,0 +1,27 @@
+<!-- BEGIN: StretchDetailCard -->
+<article class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 sm:p-5 flex-1 flex flex-col justify-between" data-purpose="stretch-detailed-card" id="detalle-chillon">
+  <!-- Header Info & Alert Badge -->
+  <div>
+    <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <h3 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight" id="card-river-title">Río Chillón – Tramo Comas</h3>
+        </div>
+      </div>
+      <span class="inline-flex px-3 py-1.5 rounded-lg border text-xs font-semibold bg-slate-100 text-slate-600 border-slate-300" id="card-river-badge" aria-label="Nivel de atención">
+        <span id="card-river-badge-text">Pendiente de evaluación</span>
+      </span>
+    </div>
+    <!-- Secondary Tabs Navigation -->
+    <div class="flex items-center border-b border-slate-200 overflow-x-auto text-xs font-medium text-slate-500 gap-6 mb-4" id="detail-tabs">
+      <button class="tab-button py-2 border-b-2 border-sky-600 text-sky-600 font-semibold whitespace-nowrap transition-colors" id="tab-btn-resumen" data-tab="resumen">Resumen</button>
+      <button class="tab-button py-2 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap transition-colors" id="tab-btn-imagenes" data-tab="imagenes">Imágenes</button>
+      <button class="tab-button py-2 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap transition-colors" id="tab-btn-reportes" data-tab="reportes">Reportes ciudadanos</button>
+    </div>
+    <!-- TAB PANELS CONTAINER -->
+    {% include "dashboard/tabs/overview.html" %}
+    {% include "dashboard/tabs/images.html" %}
+    {% include "dashboard/tabs/reports.html" %}
+  </div>
+</article>
+<!-- END: StretchDetailCard -->

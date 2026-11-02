@@ -1,0 +1,27 @@
+<p id="site-message" class="site-message" role="status" aria-live="polite" hidden></p>
+<aside id="active-alert-banner" class="site-alert-banner" hidden>
+  <strong>Aviso importante activo</strong>
+  <button type="button" data-open-notices>Ver avisos</button>
+</aside>
+
+<dialog id="important-notice-dialog" class="site-dialog site-notice-dialog" role="alertdialog" aria-labelledby="important-notice-title" aria-describedby="important-notice-description">
+  <header class="site-notice-header"><span aria-hidden="true">⚠</span><div><p>AVISO IMPORTANTE</p><h2 id="important-notice-title">Evento peligroso informado</h2></div></header>
+  <div class="site-dialog-body"><p id="important-notice-description">Avisos publicados por la administración de WAKI.</p><div id="important-notice-list" class="site-stack"></div></div>
+  <footer class="site-notice-footer"><button id="acknowledge-notices" type="button" class="site-danger" autofocus>Entendido</button></footer>
+</dialog>
+
+<dialog id="pwa-install-dialog" class="site-dialog" aria-labelledby="pwa-install-title" aria-describedby="pwa-install-description">
+  <header class="site-dialog-header">
+    <h2 id="pwa-install-title">Instalar WAKI</h2>
+    <button type="button" data-close-dialog="pwa-install-dialog" aria-label="Cerrar instrucciones de instalación">Cerrar ×</button>
+  </header>
+  <div class="site-dialog-body">
+    <p id="pwa-install-description">Agrega WAKI a tu pantalla de inicio para abrirlo como una aplicación.</p>
+    <p id="pwa-open-safari" hidden>Abre esta página en Safari para instalar WAKI.</p>
+    <ol class="pwa-install-steps">
+      <li>En Safari, toca <strong>Compartir</strong>.</li>
+      <li>Selecciona <strong>Agregar a Inicio</strong> y confirma con <strong>Agregar</strong>.</li>
+    </ol>
+    <p class="site-muted">WAKI necesita conexión a internet.</p>
+  </div>
+</dialog>

@@ -1,0 +1,8 @@
+# Adaptador web SegFormer + Grounding DINO + YOLOE. El manifiesto original no se modifica.
+# Instalar primero PyTorch/torchvision apropiados para CPU o CUDA (ver docs/ai-integration.md).
+numpy>=1.24,<3
+transformers>=4.51,<5
+safetensors>=0.4
+accelerate>=0.28
+opencv-python-headless>=4.8,<5
+ultralytics-opencv-headless==8.4.149

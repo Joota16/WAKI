@@ -1,0 +1,39 @@
+<!-- MODAL DE ÉXITO CIUDADANO -->
+<div class="fixed inset-0 z-50 bg-on-surface/50 backdrop-blur-sm hidden items-center justify-center p-4" id="successCitizenModal" role="dialog" aria-modal="true" aria-labelledby="demo-modal-title">
+  <div class="bg-surface-container-lowest max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col gap-6 text-center transform transition-all scale-95 opacity-0 duration-200 border border-outline-variant/30" id="successCitizenModalContent">
+    <div class="w-20 h-20 rounded-full bg-primary-fixed text-primary flex items-center justify-center mx-auto shadow-inner">
+      <span class="material-symbols-outlined text-[42px]">check_circle</span>
+    </div>
+    <div class="flex flex-col gap-2">
+      <span class="text-xs uppercase tracking-wider text-primary font-bold">¡Gracias por avisar a tiempo!</span>
+      <h3 class="font-headline-md text-headline-md text-on-surface font-bold" id="demo-modal-title">Reporte guardado</h3>
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        Tus fotografías y la observación quedaron registradas en WAKI. Puedes consultar el reporte con el siguiente enlace.
+      </p>
+    </div>
+    <div class="p-4 rounded-2xl bg-surface-container-low flex flex-col gap-2.5 text-left border border-outline-variant/30 text-xs">
+      <div class="flex items-center justify-between">
+        <span class="text-on-surface-variant">Identificador:</span>
+        <span class="font-telemetry-data font-bold text-primary text-sm break-all" id="modalTicket"></span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-on-surface-variant">Hora de registro:</span>
+        <span class="font-telemetry-data font-semibold text-on-surface" id="modalHora">Ahora mismo</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-on-surface-variant">Estado:</span>
+        <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-secondary-fixed text-on-secondary-fixed">
+          Registrado en WAKI
+        </span>
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+      <a id="viewSavedReport" class="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg transition-colors text-center font-semibold">
+        Consultar reporte guardado
+      </a>
+      <button class="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg transition-colors font-semibold shadow-sm" id="btnReportAnother" type="button">
+        Hacer Otro Reporte
+      </button>
+    </div>
+  </div>
+</div>

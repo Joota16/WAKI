@@ -1,0 +1,57 @@
+<!-- SECCIÓN 2: ¿QUÉ ESTÁ PASANDO EN EL RÍO? (MARCA LO QUE VEAS) -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4">
+  <div class="flex items-center gap-3">
+    <span class="w-8 h-8 rounded-xl bg-primary-container/20 text-primary font-bold flex items-center justify-center text-sm">2</span>
+    <div>
+      <h2 class="font-headline-sm text-headline-sm text-on-surface">¿Qué está pasando en el río?</h2>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+    <label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+      <input class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="Desborde de agua hacia pistas o casas"/>
+      <div class="flex flex-col">
+        <span class="font-label-md text-label-md text-on-surface font-semibold">Desborde de agua hacia pistas o casas</span>
+      </div>
+    </label>
+    <label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+      <input class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="El agua está carcomiendo la orilla"/>
+      <div class="flex flex-col">
+        <span class="font-label-md text-label-md text-on-surface font-semibold">El agua carcome la orilla / orilla cayéndose</span>
+      </div>
+    </label>
+    <label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+      <input class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="Basura, troncos o rocas atorados en el puente"/>
+      <div class="flex flex-col">
+        <span class="font-label-md text-label-md text-on-surface font-semibold">Basura, troncos o rocas atorados en el puente</span>
+      </div>
+    </label>
+    <label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+      <input class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="Ruidos fuertes de piedras o amenaza de huaico"/>
+      <div class="flex flex-col">
+        <span class="font-label-md text-label-md text-on-surface font-semibold">Ruidos fuertes de piedras o amenaza de huaico</span>
+      </div>
+    </label>
+    <label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+      <input class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="Casas, muros o postes en peligro de caer"/>
+      <div class="flex flex-col">
+        <span class="font-label-md text-label-md text-on-surface font-semibold">Casas, muros o postes en peligro de caer</span>
+      </div>
+    </label>
+    <label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+      <input class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" name="situacion" type="checkbox" value="Personas o animales atrapados en el cauce"/>
+      <div class="flex flex-col">
+        <span class="font-label-md text-label-md text-on-surface font-semibold">Personas o animales atrapados en el cauce</span>
+      </div>
+    </label>
+    <label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer border border-outline-variant/30">
+      <input class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary" id="situation-other" name="situacion" type="checkbox" value="Otros" aria-controls="situation-other-field" aria-expanded="false"/>
+      <div class="flex flex-col">
+        <span class="font-label-md text-label-md text-on-surface font-semibold">Otros</span>
+      </div>
+    </label>
+  </div>
+  <div class="flex flex-col gap-2" id="situation-other-field" hidden>
+    <label class="font-label-md text-label-md text-on-surface font-semibold" for="situation-other-description">Describe la otra situación</label>
+    <textarea class="w-full p-4 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary border border-transparent focus:border-primary leading-relaxed" id="situation-other-description" name="other_situation" maxlength="500" rows="3" placeholder="Cuéntanos qué está pasando en el río…" disabled></textarea>
+  </div>
+</div>

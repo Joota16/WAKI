@@ -1,0 +1,164 @@
+.dashboard-map { isolation: isolate; }
+
+.map-gesture-hint {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  z-index: 1000;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #0f172ae6;
+  color: white;
+  font-size: 13px;
+  text-align: center;
+  pointer-events: none;
+}
+.map-gesture-hint[hidden] { display: none; }
+
+.map-alert-zones { display: grid; gap: 4px; width: 176px; padding: 12px; border: 1px solid #fca5a5; border-radius: 12px; background: #fff7f7f2; color: #991b1b; box-shadow: 0 4px 12px #0f172a1a; font-size: 12px; }
+.map-alert-zones strong { display: flex; align-items: center; gap: 6px; }
+.map-alert-zones strong span { width: 12px; height: 12px; border: 2px solid #dc2626; border-radius: 50%; background: #fee2e2; }
+.map-alert-zones button { color: #991b1b; text-decoration: underline; text-align: left; font: inherit; font-weight: 600; }
+.alert-zone-popup { display: grid; gap: 5px; font-size: 12px; }
+.alert-zone-popup p { margin: 0 !important; }
+
+/* Bordes más definidos en los cuadros de datos del tablero. */
+main [data-purpose="priority-stretches-list"],
+#detalle-chillon,
+#water-level-card,
+#discharge-cards [data-discharge-station],
+#weather-card,
+main [data-purpose="citizen-reports-block"] {
+  border-color: #94a3b8;
+}
+#weather-card > .grid > div {
+  border: 1px solid #94a3b8;
+}
+
+/* Custom clean scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+/* Leaflet popup customization */
+.leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  overflow: hidden;
+}
+.leaflet-popup-content {
+  margin: 0;
+  line-height: inherit;
+}
+.leaflet-popup-tip {
+  background: white;
+}
+.leaflet-container {
+  font-family: inherit;
+}
+
+.hydro-station-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 2px solid white;
+  border-radius: 8px;
+  background: #7c3aed;
+  color: white;
+  font: 700 11px/1 system-ui, sans-serif;
+  box-shadow: 0 2px 8px #0f172a40;
+}
+.hydro-station-legend {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: #7c3aed;
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+}
+.hydro-station-label { font-weight: 600; }
+.hydro-station-popup { padding: 12px; font-size: 12px; }
+.hydro-station-popup h3 { font-size: 14px; font-weight: 700; }
+.hydro-station-popup p { margin: 6px 0; }
+.hydro-station-coordinates { overflow-wrap: anywhere; color: #475569; }
+.hydro-station-popup a { color: #0369a1; text-decoration: underline; }
+
+.camera-panel { display: flex; flex-direction: column; min-height: 260px; min-width: 0; overflow: hidden; border-radius: 12px; background: #020617; color: #e2e8f0; }
+.camera-panel [hidden] { display: none !important; }
+.camera-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: start; gap: 8px; padding: 12px; font-size: 11px; }
+.camera-header time { font-variant-numeric: tabular-nums; color: #cbd5e1; }
+.camera-badge { display: inline-block; margin-top: 4px; color: #cbd5e1; font-size: 10px; }
+.camera-badge.camera-recent { color: #6ee7b7; }
+.camera-picture { position: relative; flex: 1; min-height: 190px; }
+.camera-picture img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.camera-empty { display: grid; align-content: center; justify-items: center; gap: 12px; height: 100%; min-height: 190px; padding: 24px; text-align: center; color: #94a3b8; font-size: 12px; }
+.camera-footer { padding: 12px; font-size: 11px; color: #cbd5e1; }
+.camera-footer p + p { margin-top: 4px; }
+.camera-actions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 10px; }
+.camera-actions button, .camera-dialog button { padding: 6px 10px; border: 1px solid #475569; border-radius: 6px; background: #0f172a; color: #f8fafc; cursor: pointer; font-size: 11px; }
+.camera-actions button:disabled { opacity: .45; cursor: default; }
+.camera-panel:fullscreen { width: 100vw; height: 100vh; border-radius: 0; }
+.camera-dialog { width: 100vw; height: 100dvh; max-width: none; max-height: none; padding: 16px; margin: 0; border: 0; background: #020617; color: #f8fafc; }
+.camera-dialog::backdrop { background: #020617; }
+.camera-dialog-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 12px; }
+.camera-dialog img { width: 100%; height: calc(100% - 48px); object-fit: contain; margin-top: 12px; }
+
+.analysis-dialog-open { overflow: hidden; }
+.analysis-report-dialog { width: min(1000px, calc(100vw - 32px)); max-width: none; max-height: calc(100dvh - 32px); padding: 0; margin: auto; border: 1px solid #e2e8f0; border-radius: 16px; background: #f8fafc; color: #0f172a; box-shadow: 0 24px 80px #02061766; }
+.analysis-report-dialog::backdrop { background: #02061799; }
+.analysis-report-dialog[open] { display: flex; flex-direction: column; }
+.analysis-report-dialog [hidden] { display: none !important; }
+.analysis-dialog-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 1px solid #e2e8f0; background: white; flex-shrink: 0; }
+.analysis-dialog-header h2 { font-size: 18px; font-weight: 700; }
+.analysis-dialog-header button, #analysis-dialog-retry { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; background: white; font-size: 14px; white-space: nowrap; cursor: pointer; }
+.analysis-dialog-body { padding: 20px; overflow-y: auto; min-height: 0; overscroll-behavior: contain; }
+#analysis-dialog-status { font-size: 14px; color: #475569; }
+#analysis-dialog-retry { margin-top: 12px; }
+.analysis-report-dialog #analysis-preview { max-height: 50dvh; }
+.analysis-report-dialog a, .analysis-report-dialog [data-analysis-preview] { color: #0369a1; }
+.analysis-report-dialog [aria-pressed="true"] { font-weight: 700; }
+.analysis-test-upload { border: 1px solid #bae6fd; border-radius: 12px; background: #f0f9ff; padding: 12px; }
+.analysis-test-upload summary { color: #0369a1; font-size: 14px; font-weight: 600; cursor: pointer; }
+.analysis-test-form { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.analysis-test-form [hidden] { display: none !important; }
+.analysis-test-form input { max-width: 100%; font-size: 14px; }
+.analysis-test-form input[type="password"] { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; background: white; }
+#analysis-test-preview { max-height: 180px; width: 100%; object-fit: contain; border-radius: 8px; background: #0f172a; }
+#analysis-test-submit { align-self: start; padding: 10px 16px; border-radius: 8px; background: #0284c7; color: white; font-size: 14px; font-weight: 600; }
+#analysis-test-submit:disabled { opacity: .6; cursor: wait; }
+.analysis-source-option { padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 12px; }
+.analysis-source-option[aria-pressed="true"] { border-color: #0284c7; background: #e0f2fe; color: #0369a1; font-weight: 600; }
+@media (max-width: 640px) {
+  .analysis-report-dialog { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); border-radius: 12px; }
+  .analysis-dialog-header, .analysis-dialog-body { padding: 16px; }
+  .analysis-dialog-header h2 { font-size: 16px; }
+}

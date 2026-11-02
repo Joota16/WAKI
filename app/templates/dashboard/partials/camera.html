@@ -1,0 +1,28 @@
+<section id="camera-panel" class="md:col-span-7 camera-panel" data-cameras='{{ camera_ids|tojson }}' aria-label="Última captura de cámara">
+  <div class="camera-header">
+    <div>
+      <p id="camera-name">Cámara del río</p>
+      <span id="camera-badge" class="camera-badge">Sin imágenes</span>
+    </div>
+    <time id="camera-timestamp">Sin capturas recibidas</time>
+  </div>
+  <div class="camera-picture">
+    <div id="camera-empty" class="camera-empty">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h4l2-3h4l2 3h4v14H4z"></path><circle cx="12" cy="12" r="4"></circle></svg>
+      <p>Esperando la primera captura de la cámara</p>
+    </div>
+    <img id="camera-image" alt="Última fotografía recibida de la cámara del río" hidden>
+  </div>
+  <div class="camera-footer">
+    <p id="camera-age"></p>
+    <p id="camera-status" role="status">Consultando capturas…</p>
+    <div class="camera-actions">
+      <button id="camera-refresh" type="button">Actualizar</button>
+      <button id="camera-fullscreen" type="button" disabled>Pantalla completa</button>
+    </div>
+  </div>
+</section>
+<dialog id="camera-dialog" class="camera-dialog" aria-label="Captura ampliada">
+  <div class="camera-dialog-header"><p id="camera-dialog-caption">Última captura</p><button id="camera-dialog-close" type="button">Cerrar</button></div>
+  <img id="camera-dialog-image" alt="Fotografía de la cámara ampliada">
+</dialog>

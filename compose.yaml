@@ -1,0 +1,53 @@
+name: waki
+
+services:
+  waki:
+    build:
+      context: .
+      args:
+        INSTALL_AI: ${WAKI_INSTALL_AI:-false}
+    ports:
+      - "${WAKI_BIND_ADDRESS:-127.0.0.1}:${WAKI_PORT:-8000}:8000"
+    environment:
+      APP_NAME: ${APP_NAME:-WAKI}
+      DATA_DIR: /app/data
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-8}
+      MAX_PHOTOS: ${MAX_PHOTOS:-5}
+      MAX_IMAGE_PIXELS: ${MAX_IMAGE_PIXELS:-20000000}
+      NORMALIZED_MAX_SIDE: ${NORMALIZED_MAX_SIDE:-1920}
+      SENAMHI_ENABLED: ${SENAMHI_ENABLED:-true}
+      SENAMHI_POLL_SECONDS: ${SENAMHI_POLL_SECONDS:-3600}
+      IOT_KEY: ${IOT_KEY:-}
+      IOT_RETENTION_IMAGES: ${IOT_RETENTION_IMAGES:-100}
+      MODEL_PROVIDER: ${MODEL_PROVIDER:-none}
+      AI_WATER_CHECKPOINT: ${AI_WATER_CHECKPOINT:-/app/weights/segformer_chillon_finetuned}
+      AI_DINO_CHECKPOINT: ${AI_DINO_CHECKPOINT:-}
+      AI_YOLOE_CHECKPOINT: ${AI_YOLOE_CHECKPOINT:-}
+      AI_YOLOE_PROMPTS: ${AI_YOLOE_PROMPTS:-}
+      AI_DEVICE: ${AI_DEVICE:-cpu}
+      AI_RIVERS: ${AI_RIVERS:-chillon}
+      AI_RETENTION_IMAGES: ${AI_RETENTION_IMAGES:-100}
+      AI_MAX_PENDING: ${AI_MAX_PENDING:-4}
+      JWT_SECRET: ${JWT_SECRET:-}
+      JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-60}
+      AUTH_COOKIE_SECURE: ${AUTH_COOKIE_SECURE:-false}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+    volumes:
+      - waki_data:/app/data
+      - ./weights:/app/weights:ro
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3).close()"
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+volumes:
+  waki_data:
+

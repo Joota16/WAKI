@@ -1,0 +1,53 @@
+<!-- BEGIN: PriorityTableCard -->
+<article class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 sm:p-5" data-purpose="priority-stretches-list">
+  <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-3">
+    <div>
+      <h2 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">Tramos prioritarios</h2>
+    </div>
+    <button class="inline-flex items-center text-xs font-semibold text-sky-600 hover:text-sky-700 group transition-colors" data-map-action="recenter">
+      Ver todos
+      <svg class="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+      </svg>
+    </button>
+  </div>
+  <!-- Table / List Layout -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+      <thead>
+        <tr class="text-[11px] font-semibold uppercase text-slate-400 border-b border-slate-100">
+          <th class="py-2.5 pl-2 font-medium w-8">#</th>
+          <th class="py-2.5 font-medium">Río / Tramo</th>
+          <th class="py-2.5 font-medium">Ubicación</th>
+          <th class="py-2.5 font-medium">Nivel de atención</th>
+          <th class="py-2.5 pr-2 font-medium text-right">Última evaluación</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100/80" id="river-rows">
+        <!-- Row 1: Chillón (Active selection) -->
+        <tr class="river-row bg-sky-50/60 hover:bg-sky-50 transition-colors cursor-pointer" id="row-chillon" data-river="chillon" tabindex="0">
+          <td class="py-3 pl-2 font-medium text-slate-400">1</td>
+          <td class="py-3 font-semibold text-slate-900">
+            <div>Río Chillón</div>
+            <span class="text-xs font-normal text-slate-500">Tramo Comas</span>
+          </td>
+          <td class="py-3 text-slate-600 font-medium">Lima</td>
+          <td class="py-3">
+            <span id="river-attention-chillon" class="inline-flex px-2.5 py-1 rounded-lg border text-xs font-semibold bg-slate-100 text-slate-600 border-slate-300">
+              Pendiente de evaluación
+            </span>
+          </td>
+          <td id="river-evaluated-chillon" class="py-3 pr-2 text-right text-xs text-slate-500 whitespace-nowrap">
+            Sin evaluación
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="flex flex-wrap items-center gap-3 mt-3 text-xs">
+    <a id="attention-source" class="text-sky-700 underline" hidden>Ver reporte validado</a>
+    <p id="attention-status" role="status" class="text-slate-600" hidden></p>
+    <button id="retry-attention" type="button" class="text-sky-700 underline" hidden>Reintentar evaluación</button>
+  </div>
+</article>
+<!-- END: PriorityTableCard -->

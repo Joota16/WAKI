@@ -1,0 +1,33 @@
+{
+  "id": "/",
+  "name": "WAKI",
+  "short_name": "WAKI",
+  "description": "Monitoreo fluvial, avisos y reportes ciudadanos.",
+  "lang": "es-PE",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0284c7",
+  "background_color": "#f8fafc",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/static/img/icons/waki-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/img/icons/waki-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/img/icons/waki-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

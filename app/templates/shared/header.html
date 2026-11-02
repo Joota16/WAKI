@@ -1,0 +1,31 @@
+{% set current_path = request.url.path %}
+<header class="waki-header" id="waki-header">
+  <div class="waki-header-inner">
+    <a class="waki-brand" href="{{ url_for('dashboard').path }}" aria-label="WAKI · Inicio">
+      <span class="waki-brand-icon" aria-hidden="true">
+        <img src="{{ url_for('static', path='img/waki-logo.svg').path }}" width="40" height="37" alt="">
+      </span>
+      <span>WAKI</span>
+    </a>
+    <form class="waki-header-search" id="header-search-form" action="{{ url_for('dashboard').path }}" method="get" role="search">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+      <input id="global-search" name="q" type="search" placeholder="Buscar río o estación..." aria-label="Buscar río o estación" maxlength="120" value="{{ request.query_params.get('q', '')[:120] }}">
+      <kbd aria-hidden="true" data-search-shortcut>Ctrl K</kbd>
+    </form>
+    <nav class="waki-header-nav" aria-label="Navegación principal">
+      <a href="{{ url_for('dashboard').path }}"{% if current_path == '/' %} aria-current="page"{% endif %}>Dashboard</a>
+      <a href="{{ url_for('admin_alerts').path }}" data-admin-only hidden{% if current_path == '/admin/avisos' %} aria-current="page"{% endif %}>Publicar aviso</a>
+      <a href="{{ url_for('admin_reports').path }}" data-admin-only hidden{% if current_path == '/admin/reportes' %} aria-current="page"{% endif %}>Revisar reportes</a>
+      <a href="{{ url_for('reports_list').path }}"{% if current_path.startswith('/reportes') %} aria-current="page"{% endif %}>Reportes</a>
+      <a class="waki-report-link" href="{{ url_for('citizen_report').path }}"{% if current_path == '/reportar' %} aria-current="page"{% endif %}>Reportar <span>observación</span></a>
+    </nav>
+    <div class="waki-header-tools">
+      <button id="pwa-install-button" class="site-account-button waki-install-button" type="button" aria-label="Instalar WAKI" aria-haspopup="dialog" hidden>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span>Instalar</span>
+      </button>
+      {% include "shared/alert-button.html" %}
+      {% include "shared/account.html" %}
+    </div>
+  </div>
+</header>
