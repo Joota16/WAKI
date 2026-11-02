@@ -2,6 +2,7 @@ import { attentionStyle, RIVERS_DATA } from './data.js';
 import { addHydrologicalStations } from './stations.js';
 import { addRiverGeometry } from './river-geometry.js';
 import { addAlertZones } from './alert-zones.js';
+import { configureMapGestures } from './map-gestures.js';
 
 /** Leaflet y sus capas pertenecen a este módulo, sin variables globales. */
 export function createRiverMap(onSelect) {
@@ -14,6 +15,7 @@ export function createRiverMap(onSelect) {
   }
   const L = window.L;
   const map = L.map(container, { center: [-12.0464, -77.0428], zoom: 11, zoomControl: false });
+  configureMapGestures(map);
   const markers = {};
   let reportMarkers = [];
   let reports = [];
