@@ -40,6 +40,7 @@ class ReportsService:
         fields.update(review_status=row['review_status'], review_label=REVIEW_LABELS[row['review_status']],
                       review_version=row['review_version'], reviewed_at=row['reviewed_at'],
                       review_notes=row['review_notes'] if admin else None)
+        fields['phone'] = row['phone'] if admin else None
         level = row['attention_level'] if row['review_status'] == 'validated' else None
         fields.update(attention_level=level, attention_label=ATTENTION_LABELS.get(level))
         return ReportOut(**fields, detail_url=f"/reportes/{row['id']}")
@@ -52,6 +53,8 @@ class ReportsService:
         if not fingerprint_payload['other_situation']:
             # Conserva la huella de reintentos enviados antes de añadir el campo opcional.
             fingerprint_payload.pop('other_situation')
+        if not fingerprint_payload['phone']:
+            fingerprint_payload.pop('phone')
         digest = hashlib.sha256(json.dumps(fingerprint_payload, sort_keys=True).encode())
         for content in contents:
             digest.update(hashlib.sha256(content).digest())
@@ -84,7 +87,8 @@ class ReportsService:
                 if previous:
                     return previous
             raise
-        return self.get(row["id"])
+        # El envío devuelve su comprobante; las consultas públicas requieren validación.
+        return self.present(self.repository.get(row["id"], include_discarded=True))
 
     def get(self, report_id: str, admin=False) -> ReportOut:
         row = self.repository.get(report_id, include_discarded=admin)
@@ -93,7 +97,8 @@ class ReportsService:
         return self.present(row, admin=admin)
 
     def list(self, limit: int, offset: int, *, admin=False, include_discarded=False, review_status=None) -> ReportPage:
-        rows, total = self.repository.list(limit, offset, include_discarded=admin and include_discarded, review_status=review_status)
+        rows, total = self.repository.list(limit, offset, include_discarded=admin and include_discarded,
+                                           review_status=review_status, admin=admin)
         return ReportPage(items=[self.present(row, admin=admin) for row in rows], total=total, limit=limit, offset=offset)
 
     def photo_path(self, report_id: str, photo_id: str, admin=False):

@@ -12,7 +12,13 @@ class UsersRepository:
 
     def create(self, values: dict):
         with self.database.connect() as db:
-            db.execute('INSERT INTO users(id,username,username_key,password_hash,role,created_at) VALUES (:id,:username,:username_key,:password_hash,:role,:created_at)', values)
+            db.execute('INSERT INTO users(id,username,username_key,password_hash,role,created_at,phone) VALUES (:id,:username,:username_key,:password_hash,:role,:created_at,:phone)', values)
+
+    def change_phone(self, user_id: str, session_id: str, phone: str, now: int):
+        with self.database.connect() as db:
+            return bool(db.execute('''UPDATE users SET phone=? WHERE id=? AND EXISTS
+                (SELECT 1 FROM auth_sessions WHERE id=? AND user_id=? AND revoked=0 AND expires_at>?)''',
+                                   (phone, user_id, session_id, user_id, now)).rowcount)
 
     def create_session(self, session_id: str, user_id: str, expires_at: int, now: int):
         with self.database.connect() as db:

@@ -8,6 +8,7 @@
       <p class="text-sm text-on-surface-variant break-all">Reporte {{ report.id }}</p>
       <p class="text-sm">Registrado el {{ registered_local }} (Lima)</p>
       <p class="site-review-badge" data-report-review-label>{{ report.review_label }}</p>
+      {% if report.phone %}<p class="text-sm" data-admin-only>Celular: <a href="tel:+51{{ report.phone }}" class="text-primary underline">{{ report.phone }}</a></p>{% endif %}
       {% if report.attention_label %}<p class="text-sm">Nivel de atención asignado: {{ report.attention_label }}</p>{% endif %}
       <a href="{{ url_for('admin_reports').path }}?report_id={{ report.id }}" class="site-admin-review-button" data-admin-only hidden>Revisar este reporte</a>
     </div>

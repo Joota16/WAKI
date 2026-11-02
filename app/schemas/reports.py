@@ -4,6 +4,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.schemas.attention import AttentionLevel
+from app.schemas.phone import OptionalPhone
 
 Situation = Literal[
     "Desborde de agua hacia pistas o casas",
@@ -41,6 +42,7 @@ class ReportInput(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
 
     observations: str = Field(default="", max_length=2000)
+    phone: OptionalPhone = None
     observed_condition: Literal["critico", "muy-alto", "alto", "normal"]
     situations: list[Situation] = Field(default_factory=list, max_length=7)
     other_situation: str = Field(default="", max_length=500)
@@ -88,6 +90,7 @@ class ReportOut(BaseModel):
     review_version: int = 0
     reviewed_at: datetime | None = None
     review_notes: str | None = None
+    phone: OptionalPhone = None
     attention_level: AttentionLevel | None = None
     attention_label: str | None = None
 

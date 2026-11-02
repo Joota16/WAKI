@@ -174,7 +174,7 @@ export function initAdminAlerts() {
       await authenticatedJSON('/api/alerts', { method: 'POST', body: JSON.stringify({ kind: kind.value, source_type: source.source_type, source_id: source.source_id, message_key: instruction.value, radius_m: meters }) });
       if (!isAdmin()) return;
       historyOffset = 0; historyFilter.value = 'active'; refreshAlerts();
-      status.textContent = 'Aviso publicado y guardado en el historial.'; message('Aviso publicado para quienes tienen WAKI abierto.');
+      status.textContent = 'Aviso publicado y guardado en el historial.'; message('Aviso publicado. Se notificará a quienes tengan los avisos activados y una ubicación vigente dentro de la zona.');
     } catch (error) { if (isAdmin()) { status.textContent = error.message; loadOptions(); } }
     finally { publishing = false; if (isAdmin()) place.disabled = kind.disabled = instruction.disabled = radius.disabled = false; preview(); }
   });

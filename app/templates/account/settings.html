@@ -4,6 +4,12 @@
 {% block protected_content %}
   <section class="site-page-card">
     <h1>Administrar cuenta</h1>
+    <h2 class="site-section-title">Celular</h2>
+    <form id="phone-form" class="site-form">
+      <input id="account-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="20" pattern="9[0-9]{8}" placeholder="9 dígitos" aria-label="Celular de tu cuenta" required>
+      <p id="phone-status" class="site-muted" role="status" aria-live="polite"></p>
+      <button type="submit" class="site-primary">Guardar celular</button>
+    </form>
     <h2 class="site-section-title">Cambiar contraseña</h2>
     <form id="password-form" class="site-form">
       <label for="current-password">Contraseña actual</label>

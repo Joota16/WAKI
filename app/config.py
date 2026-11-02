@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     senamhi_poll_seconds: int = Field(default=3600, ge=300, le=86400)
     iot_key: SecretStr = SecretStr("")
     iot_retention_images: int = Field(default=100, ge=1, le=1000)
+    camera_capture_seconds: int = Field(default=60, ge=5, le=86400)
+    push_enabled: bool = True
+    push_subject: str = 'https://waki.jellbru.lat'
+    push_location_max_age_seconds: int = Field(default=86400, ge=300, le=86400)
     model_provider: Literal['none', 'waki'] = 'none'
     ai_water_checkpoint: Path = Path('weights/segformer_chillon_finetuned')
     ai_dino_checkpoint: Path | None = None

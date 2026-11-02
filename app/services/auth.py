@@ -68,7 +68,7 @@ class AuthService:
     def _create_user(self, credentials: Credentials, role: str):
         values = {'id': str(uuid4()), 'username': credentials.username, 'username_key': credentials.username.casefold(),
                   'password_hash': self.passwords.hash(credentials.password.get_secret_value()), 'role': role,
-                  'created_at': datetime.now(timezone.utc).isoformat()}
+                  'created_at': datetime.now(timezone.utc).isoformat(), 'phone': getattr(credentials, 'phone', None)}
         try:
             self.repository.create(values)
         except sqlite3.IntegrityError as exc:
@@ -83,6 +83,12 @@ class AuthService:
     def register(self, values: Registration, client: str):
         self.throttle(client, 'register')
         return self._create_user(values, 'user')
+
+    def change_phone(self, context: AuthContext, phone: str):
+        if not self.repository.change_phone(str(context.user.id), context.session_id, phone, int(time.time())):
+            raise AuthError('Tu sesión terminó. Inicia sesión nuevamente.')
+        user = context.user.model_copy(update={'phone': phone})
+        return self.session_out(AuthContext(user, context.session_id, context.expires_at))
 
     def login(self, values: Credentials, client: str):
         self.throttle(client, 'login')

@@ -3,6 +3,7 @@ from typing import Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator, model_validator
+from app.schemas.phone import Phone, OptionalPhone
 
 
 class Credentials(BaseModel):
@@ -17,6 +18,7 @@ class Credentials(BaseModel):
 
 
 class Registration(Credentials):
+    phone: Phone
     password_confirmation: SecretStr = Field(min_length=8, max_length=128)
 
     @model_validator(mode='after')
@@ -30,6 +32,12 @@ class UserOut(BaseModel):
     id: UUID
     username: str
     role: Literal['user', 'admin']
+    phone: OptionalPhone = None
+
+
+class PhoneChange(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    phone: Phone
 
 
 class PasswordChange(BaseModel):

@@ -5,6 +5,7 @@ import { initPublicReports } from './reports.js';
 import { initAccountPages } from './account-pages.js';
 import { initHeader } from './header.js';
 import { initPWA } from './pwa.js';
+import { initNearbyNotifications } from './nearby-notifications.js';
 
 document.addEventListener('click', event => {
   const button = event.target.closest('[data-close-dialog]');
@@ -13,6 +14,7 @@ document.addEventListener('click', event => {
 initPWA();
 const sessionReady = initAuth();
 initHeader();
+initNearbyNotifications();
 initAlerts();
 initAccountPages();
 sessionReady.then(initAdmin);

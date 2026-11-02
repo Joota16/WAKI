@@ -5,7 +5,7 @@
     <div class="flex flex-wrap items-start justify-between gap-4">
       <div>
         <h1 class="text-2xl sm:text-3xl font-bold">Reportes ciudadanos</h1>
-        <p class="text-sm text-on-surface-variant mt-2">Fotografías y observaciones ciudadanas registradas en WAKI.</p>
+        <p class="text-sm text-on-surface-variant mt-2">Reportes ciudadanos verificados por la administración de WAKI.</p>
         {% if not error %}<p id="reports-total" class="text-sm mt-2">{{ total }} {{ 'reporte registrado' if total == 1 else 'reportes registrados' }} · Más recientes primero</p>{% endif %}
       </div>
       <a href="{{ url_for('citizen_report').path }}" class="px-4 py-3 rounded-xl bg-primary text-on-primary text-sm font-semibold">Registrar observación</a>
@@ -30,8 +30,8 @@
     {% else %}
       <section id="reports-empty" class="bg-white border border-outline-variant/30 rounded-2xl p-8 text-center">
         <span class="material-symbols-outlined text-primary text-4xl" aria-hidden="true">photo_library</span>
-        <h2 class="font-bold text-xl mt-3">Todavía no hay reportes registrados</h2>
-        <p class="text-sm text-on-surface-variant mt-2">Las observaciones que envíes aparecerán aquí con sus fotografías y ubicación.</p>
+        <h2 class="font-bold text-xl mt-3">Todavía no hay reportes validados</h2>
+        <p class="text-sm text-on-surface-variant mt-2">Los reportes aparecerán aquí después de su verificación.</p>
         <a href="{{ url_for('citizen_report').path }}" class="inline-block text-primary underline mt-4">Registrar el primer reporte</a>
       </section>
     {% endif %}

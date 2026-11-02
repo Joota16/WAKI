@@ -12,6 +12,10 @@
       <label for="auth-username">Usuario</label>
       <input id="auth-username" name="username" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9_.\-]+" required>
       <p class="site-muted">Entre 3 y 32 caracteres: letras, números, punto, guion o guion bajo.</p>
+      {% if mode == 'register' %}
+        <label for="auth-phone">Celular</label>
+        <input id="auth-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="20" pattern="9[0-9]{8}" placeholder="9 dígitos" required>
+      {% endif %}
       <label for="auth-password">Contraseña</label>
       <input id="auth-password" name="password" type="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" minlength="8" maxlength="128" required>
       {% if mode == 'register' %}

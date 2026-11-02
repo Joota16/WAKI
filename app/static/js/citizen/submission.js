@@ -29,6 +29,7 @@ export function initSubmission({ photos, location, modal }) {
       if (!form.reportValidity()) return;
       const metadata = {
         observations: value('descripcionCiudadana'),
+        phone: value('report-phone') || null,
         observed_condition: form.querySelector('[name="nivelPeligro"]:checked').value,
         situations: [...form.querySelectorAll('[name="situacion"]:checked')].map(input => input.value),
         other_situation: document.getElementById('situation-other').checked ? value('situation-other-description') : '',
