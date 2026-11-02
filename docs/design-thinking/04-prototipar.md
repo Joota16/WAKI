@@ -27,22 +27,65 @@ La implementación no se duplica aquí; cada artefacto enlaza a su documentació
 
 | Artefacto | Descripción | Dónde está |
 |---|---|---|
-| Sitio web WAKI | Vista de reporte ciudadano y panel de administrador, accesible desde celular o PC. | Prototipos HTML: [`docs/prototypes/`](../prototypes/README.md) · Código: [`app/`](../../app/) |
+| Sitio web WAKI | Vista de reporte ciudadano y panel de administrador, accesible desde celular o PC. | Pantallas: [ANX-04 y ANX-05](#secuencia-de-pantallas) · Prototipos HTML: [`docs/prototypes/`](../prototypes/README.md) · Código: [`app/`](../../app/) |
 | Dispositivo de monitoreo | ESP32-CAM con carcasa impresa en 3D. | Firmware: [`firmware/waki_esp32cam/`](../../firmware/waki_esp32cam/) · Documentación: [`docs/esp32-camera.md`](../esp32-camera.md) |
 | Modelo de reconocimiento de imágenes | Integrado al dispositivo. | [`docs/ia/`](../ia/LEEME_INICIO.md) |
-| Modelo CAD de la carcasa (Onshape) | Diseño de la carcasa para impresión 3D. | ANX-05 (pendiente, ver abajo) |
-| Storyboard | Flujo vecino → plataforma → personal GRD. | ANX-04 (pendiente, ver abajo) |
+| Modelo CAD de la carcasa (Onshape) | Diseño de la carcasa para impresión 3D. | ANX-08 (pendiente, ver abajo) |
+| Storyboard | Flujo vecino → plataforma → personal GRD. | ANX-07 (pendiente, ver abajo) |
 
-### Imágenes del prototipo
+### Imágenes pendientes
 
 | ID | Contenido | Archivo esperado |
 |---|---|---|
-| ANX-04 | Storyboard del flujo vecino → plataforma → personal GRD | `anexos/img/prototipar/anx-04-storyboard.jpg` |
-| ANX-05 | Modelo CAD de la carcasa (Onshape) | `anexos/img/prototipar/anx-05-carcasa-cad.png` |
-| ANX-06 | Capturas del sitio web WAKI | `anexos/img/prototipar/anx-06-captura-*.png` |
+| ANX-07 | Storyboard del flujo vecino → plataforma → personal GRD | `anexos/img/prototipar/anx-07-storyboard.jpg` |
+| ANX-08 | Modelo CAD de la carcasa (Onshape) | `anexos/img/prototipar/anx-08-carcasa-cad.png` |
 
-> TODO: pendiente — agregar las imágenes en [`anexos/img/prototipar/`](anexos/img/prototipar/) con los nombres indicados y reemplazar este bloque por las referencias `![ANX-0n: ...](anexos/img/prototipar/...)`.
+> TODO: pendiente — agregar estas imágenes en [`anexos/img/prototipar/`](anexos/img/prototipar/) con los nombres indicados y referenciarlas aquí.
 
 ## Secuencia de pantallas
 
-> TODO: pendiente — agregar el enlace al prototipo en Figma y/o las capturas de la secuencia de pantallas (ANX-06).
+Capturas del prototipo funcional tomadas de los Anexos 4 y 5 de la Ficha Técnica. Las pantallas que en la Ficha estaban bajo un mismo rótulo se muestran juntas.
+
+### ANX-04: Pantallas de la web (PC)
+
+#### Dashboard
+
+![ANX-04-01: dashboard web con mapa, tramos prioritarios y datos del tramo](anexos/img/prototipar/anx-04-01-web-dashboard.png)
+
+#### Reportes
+
+![ANX-04-02: formulario web de reporte ciudadano](anexos/img/prototipar/anx-04-02-web-reportes.png)
+
+#### Cuentas
+
+![ANX-04-03: inicio de sesión y creación de cuenta en la web](anexos/img/prototipar/anx-04-03-web-cuentas.png)
+
+#### Admin: envío de notificaciones
+
+![ANX-04-04: publicación de avisos por el administrador en la web](anexos/img/prototipar/anx-04-04-web-avisos.png)
+
+#### Admin: validar reportes
+
+![ANX-04-05: revisión y validación de reportes en la web](anexos/img/prototipar/anx-04-05-web-validar-reportes.png)
+
+### ANX-05: Pantallas del aplicativo (celular)
+
+#### Dashboard
+
+![ANX-05-01: dashboard del aplicativo con mapa, detalle del tramo y caudal](anexos/img/prototipar/anx-05-01-app-dashboard.png)
+
+#### Reportes
+
+![ANX-05-02: formulario de reporte ciudadano en el aplicativo](anexos/img/prototipar/anx-05-02-app-reportes.png)
+
+#### Cuenta
+
+![ANX-05-03: inicio de sesión y creación de cuenta en el aplicativo](anexos/img/prototipar/anx-05-03-app-cuenta.png)
+
+#### Admin: envío de notificaciones
+
+![ANX-05-04: publicación de avisos por el administrador en el aplicativo](anexos/img/prototipar/anx-05-04-app-avisos.png)
+
+#### Admin: validar reportes
+
+<img src="anexos/img/prototipar/anx-05-05-app-validar-reportes.png" alt="ANX-05-05: validación de reportes en el aplicativo" width="324">

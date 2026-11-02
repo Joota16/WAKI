@@ -11,7 +11,8 @@ Para proteger la identidad de las personas entrevistadas, en todo el repositorio
 | OBS-01 | Observación de campo | Malecón Chillón–Gallinazos, Comas (Zonal 14) | 31/10/2026 | [Empatizar](01-empatizar.md#observación-contextual-segura-obs-01) |
 | OBS-01-F0n | Fotografía | Fotografías de la observación OBS-01 (F01, F02, F03) | 31/10/2026 | [Empatizar](01-empatizar.md#fotografías), [Anexos](anexos/README.md) |
 | Qn | Pregunta | Número de pregunta de la guía de entrevista. Ej.: MUN-01/Q04 = pregunta 4 de la entrevista MUN-01 | — | [Empatizar](01-empatizar.md) |
-| Obj. nn | Objetivo | Objetivo de la guía de entrevista al que corresponde la cita. Ej.: MUN-02 · Obj. 02 | — | [Idear](03-idear.md#journey-map-ideal-to-be) |
-| ANX-nn | Anexo | Imágenes de apoyo (bocetos, storyboard, CAD, capturas) | — | [Anexos](anexos/README.md) |
+| Obj. nn | Objetivo | Objetivo de la guía de entrevista en que se agruparon las preguntas (Objetivo 01, 02, 03). Ej.: MUN-02 · Obj. 02 | — | [Idear](03-idear.md#journey-map-ideal-to-be) |
+| ANX-nn | Anexo | Imágenes de apoyo. ANX-01 a ANX-05 conservan la numeración de los anexos de la Ficha Técnica | — | [Anexos](anexos/README.md) |
+| PRU-01-Cnn | Captura | Capturas de la prueba en campo del 31/10/2026 | 31/10/2026 | [Evaluar](05-evaluar.md#evidencia-disponible-prueba-en-campo-31102026) |
 
-> TODO: pendiente — agregar la guía de entrevista como anexo y enlazarla aquí. Confirmar que "Obj. nn" corresponde a los objetivos de esa guía.
+> TODO: pendiente — agregar la guía de entrevista como anexo y enlazarla aquí.

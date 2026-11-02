@@ -25,8 +25,6 @@
 | Fotografía o fuente permitida (ID) | [OBS-01-F01](#obs-01-f01), [OBS-01-F02](#obs-01-f02), [OBS-01-F03](#obs-01-f03) |
 | Consentimiento / permiso correspondiente | Fotografías propias del equipo, tomadas desde la vía pública. |
 
-> TODO: pendiente — al agregar las fotos, verificar que no aparezcan personas, rostros ni placas identificables (difuminar si es necesario).
-
 ### Qué puede observarse desde espacio seguro
 
 Se observó en una de las márgenes acumulación de desmonte sin cobertura vegetal que llegaba hasta el borde del cauce, con sacos y residuos sólidos que invadían y reducían su sección ([OBS-01-F03](#obs-01-f03)). La margen opuesta presentaba vegetación alta en la parte superior, con el talud de tierra expuesto ([OBS-01-F01](#obs-01-f01)). En el cauce se apreciaron vegetación herbácea, residuos y zonas de agua estancada de coloración verdosa, con olor a desagüe ([OBS-01-F02](#obs-01-f02)).
@@ -44,26 +42,35 @@ Estas condiciones coinciden con las descritas en el Plan de Contingencia de la M
 
 ### Fotografías
 
-#### OBS-01-F01
+En la Ficha, las tres fotografías ocupan una misma celda; aquí se muestran juntas. Clic en cada ID para verla a tamaño completo.
 
-Margen con vegetación alta en la parte superior y talud de tierra expuesto.
+![OBS-01: fotografías F01, F02 y F03 del Malecón Chillón–Gallinazos](anexos/img/empatizar/obs-01-f01-f03.jpg)
 
-> **Imagen pendiente:** agregar en [`anexos/img/empatizar/obs-01-f01.jpg`](anexos/img/empatizar/) y reemplazar este bloque por:
-> `![OBS-01-F01: talud expuesto](anexos/img/empatizar/obs-01-f01.jpg)`
+| ID | Descripción | Archivo |
+|---|---|---|
+| <a id="obs-01-f01"></a>OBS-01-F01 | Margen con vegetación alta en la parte superior y talud de tierra expuesto. | [obs-01-f01.jpg](anexos/img/empatizar/obs-01-f01.jpg) |
+| <a id="obs-01-f02"></a>OBS-01-F02 | Cauce con vegetación herbácea, residuos y agua estancada de coloración verdosa. | [obs-01-f02.jpg](anexos/img/empatizar/obs-01-f02.jpg) |
+| <a id="obs-01-f03"></a>OBS-01-F03 | Margen con desmonte sin cobertura vegetal hasta el borde del cauce, con sacos y residuos sólidos. | [obs-01-f03.jpg](anexos/img/empatizar/obs-01-f03.jpg) |
 
-#### OBS-01-F02
+## Contexto del área de estudio
 
-Cauce con vegetación herbácea, residuos y agua estancada de coloración verdosa.
+Anexos de la Ficha Técnica que ubican el tramo observado.
 
-> **Imagen pendiente:** agregar en [`anexos/img/empatizar/obs-01-f02.jpg`](anexos/img/empatizar/) y reemplazar este bloque por:
-> `![OBS-01-F02: cauce con residuos y agua estancada](anexos/img/empatizar/obs-01-f02.jpg)`
+### ANX-01: Mapa de peligro por inundación fluvial del distrito de Comas
 
-#### OBS-01-F03
+![ANX-01: mapa de peligro por inundación fluvial del distrito de Comas](anexos/img/empatizar/anx-01-mapa-peligro-comas.png)
 
-Margen con desmonte sin cobertura vegetal hasta el borde del cauce, con sacos y residuos sólidos.
+*Fuente: Plan de Prevención y Reducción del Riesgo de Desastres del distrito de Comas 2024–2030, Municipalidad Distrital de Comas.*
 
-> **Imagen pendiente:** agregar en [`anexos/img/empatizar/obs-01-f03.jpg`](anexos/img/empatizar/) y reemplazar este bloque por:
-> `![OBS-01-F03: desmonte y residuos en la margen](anexos/img/empatizar/obs-01-f03.jpg)`
+### ANX-02: Área piloto WAKI (Malecón Chillón–Gallinazos)
+
+![ANX-02: área piloto WAKI en el Malecón Chillón–Gallinazos](anexos/img/empatizar/anx-02-mapa-area-piloto.jpg)
+
+### ANX-03: Fotografías del tramo
+
+![ANX-03: dos fotografías del tramo del río Chillón](anexos/img/empatizar/anx-03-fotos-tramo.jpg)
+
+> TODO: pendiente — la Ficha no indica leyenda ni fecha para estas fotografías; completar.
 
 ## Códigos de evidencia
 

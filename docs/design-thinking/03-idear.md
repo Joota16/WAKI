@@ -30,17 +30,17 @@
 | Público objetivo | Actores involucrados en la Gestión del Riesgo de Desastres y/o atención de emergencias; población local. |
 | Beneficios | Centraliza información dispersa, facilita la ubicación de incidencias, permite consultar evidencias visuales y ayuda a organizar la atención preventiva de los tramos ribereños. |
 | Actores involucrados | Equipo desarrollador de WAKI, personal municipal de GRD, serenazgo, población local, SENAMHI y ANA, según sus competencias y la disponibilidad de información. |
-| Boceto | Ver [Bocetos](#bocetos) (ANX-01 a ANX-03). |
+| Boceto | Ver [Bocetos](#bocetos) (ANX-06). |
 
 ### Bocetos
 
 | ID | Pantalla | Imagen |
 |---|---|---|
-| ANX-01 | Pantalla 1 | **Pendiente:** `anexos/img/idear/anx-01-boceto-pantalla-1.jpg` |
-| ANX-02 | Pantalla 2 | **Pendiente:** `anexos/img/idear/anx-02-boceto-pantalla-2.jpg` |
-| ANX-03 | Pantalla 3 | **Pendiente:** `anexos/img/idear/anx-03-boceto-pantalla-3.jpg` |
+| ANX-06-a | Pantalla 1 | **Pendiente:** `anexos/img/idear/anx-06-a-boceto-pantalla-1.jpg` |
+| ANX-06-b | Pantalla 2 | **Pendiente:** `anexos/img/idear/anx-06-b-boceto-pantalla-2.jpg` |
+| ANX-06-c | Pantalla 3 | **Pendiente:** `anexos/img/idear/anx-06-c-boceto-pantalla-3.jpg` |
 
-> **Imágenes pendientes:** exportar los bocetos (Figma) a [`anexos/img/idear/`](anexos/img/idear/) con los nombres indicados y reemplazar cada celda por `![ANX-0n: boceto pantalla n](anexos/img/idear/anx-0n-boceto-pantalla-n.jpg)`.
+> **Imágenes pendientes:** agregar los bocetos en [`anexos/img/idear/`](anexos/img/idear/) con los nombres indicados y reemplazar cada celda por `![ANX-06-x: boceto pantalla n](anexos/img/idear/anx-06-x-boceto-pantalla-n.jpg)`. Las pantallas del prototipo ya implementado están en [Prototipar](04-prototipar.md#secuencia-de-pantallas) (ANX-04 y ANX-05).
 
 ## Propuesta de valor
 
