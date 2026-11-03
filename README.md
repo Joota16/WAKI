@@ -29,15 +29,9 @@ Todas las pantallas comparten la misma cabecera, con navegación, buscador,
 campana y menú de cuenta. El buscador abre el dashboard si se utiliza desde
 otra pantalla.
 
-La configuración de cuentas, el administrador inicial y el funcionamiento de
-los avisos se explican en [Cuentas y avisos importantes](docs/accounts-and-alerts.md).
-
 La tabla, el mapa y la búsqueda muestran únicamente el **río Chillón**.
 Los reportes ciudadanos no solicitan río, distrito, referencia ni datos de contacto.
 
-Las pantallas proceden de `code.html` y `code3.html`. Los originales se conservan
-sin modificar en `docs/prototypes/`; la aplicación utiliza las versiones
-separadas en plantillas, estilos y módulos JavaScript.
 
 ## Estructura
 
@@ -150,15 +144,13 @@ Los paquetes Python incluyen sus archivos `__init__.py`.
   [Jinja2Templates de FastAPI](https://fastapi.tiangolo.com/advanced/templates/).
 - `static/css/` define estilos y `static/js/` contiene el comportamiento del navegador.
 
-Flujo: `api → services → repositories → db`. El coordinador de procesamiento
-llama a `vision/` en segundo plano y conserva resultados por captura.
 
 ## Organización de la interfaz
 
 | Recurso | Responsabilidad |
 | --- | --- |
-| `templates/dashboard/index.html` | Ensamblar las secciones del tablero de `code.html`. |
-| `templates/citizen/index.html` | Ensamblar las secciones del formulario de `code3.html`. |
+| `templates/dashboard/index.html` | Ensamblar las secciones del tablero del dashboard. |
+| `templates/citizen/index.html` | Ensamblar las secciones del formulario de reportes. |
 | `js/dashboard/data.js` | Datos ilustrativos de ríos; sin acceso al DOM. |
 | `js/dashboard/map.js` | Leaflet, capas y marcadores de reportes reales. |
 | `js/dashboard/camera.js` | Última foto del ESP32, fecha, antigüedad, actualización y pantalla completa. |
@@ -191,10 +183,9 @@ FastAPI para que las plantillas se compongan y los recursos se sirvan correctame
 La pestaña **Imágenes** muestra capturas reales del ESP32 con fecha, estado,
 original y resultado visual. El botón **Ver informe IA** abre una ventana emergente
 en el tablero con el informe asociado a esa captura, separado de los reportes ciudadanos, con candidatos por zona y
-descarga JSON. Las imágenes de ejemplo de esta pestaña se eliminaron.
+descarga JSON.
 
-El motor `app/vision/waki_ia/`, sus documentos, `requirements-ai.txt` y los pesos
-copiados se mantienen sin cambios. La integración usa adaptadores nuevos y
+La integración usa adaptadores nuevos y
 `BackgroundTasks`, con cola acotada, estados persistidos y retención de originales
 y resultados. Las tareas no son durables: al reiniciar, los trabajos interrumpidos
 se marcan como error. Ejecutar una sola instancia con un worker.
@@ -205,11 +196,8 @@ opcionales. Los pesos están excluidos de Git. **Grounding DINO y YOLOE multiesc
 conectados**, usando los archivos locales de `weights/grounding-dino-tiny/`,
 `weights/yoloe-26s-seg.pt` y `weights/waki_yoloe_prompts.npz`. Configura sus rutas
 en `.env` para habilitarlos; si falta o falla un módulo, se muestra el resultado
-parcial disponible. No se descargan pesos ni se usan resultados guardados
-como si fueran detecciones nuevas.
+parcial disponible.
 
-Consulta la [guía de integración, instalación CPU/CUDA, Docker, configuración,
-endpoints, reintentos y limitaciones](docs/ai-integration.md).
 
 ### Probar una fotografía sin el ESP32
 
@@ -227,17 +215,11 @@ candidatos de objetos de Grounding DINO y YOLOE. El límite de archivo es `MAX_U
 ## Cámara ESP32 lista para recibir fotografías
 
 La cámara del resumen muestra **Esperando la primera captura del ESP32** hasta
-recibir una imagen real. Cada río tiene un identificador (`chillon-01` o
-`rimac-01`). `POST /api/iot/upload?camera_id=chillon-01` acepta la imagen binaria
+recibir una imagen real. `POST /api/iot/upload?camera_id=chillon-01` acepta la imagen binaria
 con `Content-Type: image/jpeg` y `X-IoT-Key`. Guarda el archivo normalizado y sus
 fechas UTC antes de responder HTTP 201. La clave se configura mediante `IOT_KEY`
 en `.env`; vacía, la recepción permanece desactivada.
 
-El navegador comprueba si hay una foto nueva cada cinco segundos, muestra su
-hora real de recepción (o captura si el dispositivo la proporciona) y permite
-ampliarla a pantalla completa. El reloj de antigüedad no sustituye la fecha de
-la imagen. Los archivos IoT se guardan aparte de los reportes, con una retención
-predeterminada de 100 fotos por cámara y persistencia en el volumen Docker.
 
 Consulta el [contrato HTTP, configuración de red, script de prueba y ejemplo
 ESP32](docs/esp32-camera.md). La validación se hizo con envíos simulados; queda
@@ -251,7 +233,7 @@ La tarjeta **Último nivel publicado**, junto a la cámara del resumen, consulta
 último promedio diario disponible en metros, su fecha, la variación respecto al
 promedio del día anterior cuando existe y hasta 31 fechas de la serie publicada.
 El valor pertenece a esa estación, aunque el encabezado del tablero describa el
-tramo de Comas. No es una lectura instantánea ni una profundidad general del río.
+tramo de Comas.
 
 Fuente: [gráfico público de SENAMHI](https://www.senamhi.gob.pe/mapas/mapa-estaciones-ms/map_red_graf.php?cod=111151).
 El adaptador extrae exclusivamente las fechas y valores JSON que utiliza ese
@@ -261,12 +243,11 @@ CAPTCHA. Es una integración con una página pública, no una API oficial con
 contrato estable; si cambia el formato, se conserva la última serie válida.
 
 El servidor inicia una consulta en segundo plano sin bloquear el arranque y
-repite cada hora. Los visitantes leen SQLite; no generan consultas a SENAMHI.
+repite cada hora. Los visitantes leen SQLite, no generan consultas a SENAMHI.
 Cada ciclo actualiza lecturas por estación/fecha, incorpora correcciones y
 conserva huecos como valores ausentes. Los días sin datos no se conectan en la
 gráfica ni se convierten en cero. La diferencia se calcula solo entre días
-consecutivos disponibles. Esta integración no modifica niveles de riesgo,
-resultados de IA ni los otros datos ilustrativos del diseño.
+consecutivos disponibles.
 
 Configuración, también disponible en Docker Compose:
 
@@ -288,19 +269,12 @@ Las lecturas sobreviven a reinicios. El temporizador vive en el proceso de
 FastAPI: se cancela al detenerlo y vuelve a consultar al arrancar. Ejecutar con
 **un worker**, como el Compose incluido, para mantener un temporizador por
 integración y evitar consultas duplicadas entre procesos.
-No se utiliza Redis ni otro servicio. Al cambiar esta configuración con Docker,
+Al cambiar esta configuración con Docker,
 vuelve a ejecutar `docker compose up --build -d`.
-
-`GET /api/hydrology/rimac` devuelve `not_configured`: no hay aún una estación
-conectada para Rímac. La interfaz nunca reutiliza las lecturas de Magdalena
-para ese río. `SENAMHI_ENABLED=false` desactiva las consultas externas y permite
-seguir mostrando lecturas previamente guardadas con su estado desactivado.
-El estado general `/api/health` sigue disponible aunque SENAMHI falle.
 
 ## Caudales de Obrajillo y Puente Magdalena
 
-El bloque de **Análisis de IA** fue sustituido por dos tarjetas de **Caudal
-publicado**, con una estación en cada tarjeta. Los reportes ciudadanos se
+Los reportes ciudadanos se
 conservan debajo. Cada tarjeta muestra el último caudal en **m³/s**, estación,
 código, fecha/hora de Lima, serie reciente, fecha de consulta y fuente.
 
@@ -311,13 +285,11 @@ código, fecha/hora de Lima, serie reciente, fecha de consulta y fuente.
 
 Obrajillo tiene otros códigos en otros catálogos; esta integración utiliza el
 identificador comprobado en este visor para evitar mezclar estaciones. Ambos
-puntos pertenecen a Chillón. Al seleccionar Rímac se informa que no hay
-estaciones de caudal conectadas; no se le asignan las lecturas de Chillón.
+puntos pertenecen a Chillón.
 
 `GET /api/hydrology/chillon/discharge` devuelve las dos estaciones, cada una con
 estado independiente, último valor, unidad, marcas UTC y hasta 72 horas de
-lecturas respecto a la última fecha publicada. Para Rímac devuelve una lista
-vacía. Estas rutas solo leen SQLite y no provocan consultas remotas.
+lecturas respecto a la última fecha publicada. 
 
 El adaptador consulta el servicio OGC WFS público de SENAMHI para conocer la
 última fecha de cada estación y construye la misma consulta que usa el visor:
@@ -326,20 +298,19 @@ El adaptador consulta el servicio OGC WFS público de SENAMHI para conocer la
 convierte niveles a caudales. Lee únicamente la serie `dato`; las series de
 umbrales rojo/naranja/amarillo no son observaciones y no se usan como caudal.
 Comprueba identidad de estación, río, variable, unidad, fechas y valores finitos
-no negativos. Las expresiones JavaScript no se ejecutan.
+no negativos.
 
 El hidrograma codifica la hora que muestra en marcas de milisegundos con reloj
 UTC. El adaptador conserva esa hora visible como **America/Lima** y la convierte
 a UTC real para guardar: por ejemplo, **29/10/2026 10:00 Lima = 15:00 UTC**.
 La conversión se contrasta con los registros horarios publicados en la misma
-página y se verifica en las pruebas. No se desplaza dos veces la hora.
+página y se verifica en las pruebas.
 
 La frecuencia de medición depende de la estación: en la muestra consultada,
 Obrajillo publica puntos horarios y Magdalena lecturas separadas por varias
 horas. La gráfica respeta las marcas publicadas y corta tramos ante valores
 nulos o huecos mayores que la separación prevista; no rellena lecturas.
-Los datos están sujetos a revisión por SENAMHI. No determinan por sí solos el
-riesgo y no actualizan los colores ilustrativos del mapa.
+Los datos están sujetos a revisión por SENAMHI.
 
 Una tarea de FastAPI consulta estas fuentes al arrancar y cada
 `SENAMHI_POLL_SECONDS` (3600 por defecto), con el mismo interruptor
@@ -347,16 +318,14 @@ Una tarea de FastAPI consulta estas fuentes al arrancar y cada
 un fallo de una estación no borra las lecturas guardadas ni bloquea a la otra.
 El navegador refresca las tarjetas desde WAKI cada minuto. Se avisa cuando el
 último caudal supera 24 horas de antigüedad o falla la actualización; sin datos
-se muestra un estado vacío. Al detener el proceso, se cancela el temporizador;
-los datos persisten en `discharge_readings` y `discharge_sync` de SQLite.
+se muestra un estado vacío.
 
 ## Precipitación y temperatura de Obrajillo
 
 Hay **una sola tarjeta meteorológica**, debajo de los caudales, para
 [Obrajillo en SENAMHI](https://www.senamhi.gob.pe/mapas/mapa-estaciones-ms/map_red_graf.php?cod=111159).
 La ficha indica **Código 156133**, aunque el catálogo y la URL utilizan **111159**;
-ambos identificadores se comprobaron. Es una estación meteorológica diferente
-de las fuentes hidrológicas `202802` y `47E9F488` de Obrajillo.
+ambos identificadores se comprobaron.
 
 La verificación del **29/10/2026** encontró una serie del **31/08/2026 al
 30/09/2026**, con precipitación diaria en mm/día y las dos series de temperatura
@@ -367,14 +336,13 @@ completamente nulas. Por tanto:
 - Temperatura máxima y mínima muestran **Sin datos publicados**, sin sustituir
   valores nulos por cero ni por estimaciones. La gráfica de temperaturas aparece
   únicamente cuando la fuente publique valores numéricos.
-- La gráfica de precipitación conserva ceros, nulos y fechas. No rellena huecos.
+- La gráfica de precipitación conserva ceros, nulos y fechas.
   Si en el futuro hay temperaturas, se representan en un gráfico separado en °C;
   no se mezclan escalas de temperatura y precipitación.
 
 Se comparó la ficha de **Puente Magdalena 111151** con la tarjeta de nivel ya
 conectada: es la misma URL y la misma serie de nivel promedio diario en metros.
-No aporta precipitación ni temperatura en esa ficha. Por eso **no se añade otra
-tarjeta ni otra consulta periódica para Magdalena**.
+No aporta precipitación ni temperatura en esa ficha.
 
 `GET /api/hydrology/chillon/weather` devuelve la estación, hasta 31 fechas,
 último valor y fecha independientes para lluvia, temperatura máxima y mínima,
@@ -449,7 +417,7 @@ La vista inicial abarca las tres estaciones. El botón **Ver estaciones** vuelve
 a encuadrarlas, y el buscador permite encontrarlas por su nombre, con o sin
 tildes. Al pulsar un punto se abre su nombre, tipo y coordenadas. La capa de
 estaciones se mantiene activa en los modos de tramos y de reportes recientes.
-Estos puntos no incluyen mediciones, estados operativos ni niveles de riesgo.
+
 
 ## Instalación y ejecución
 
@@ -651,17 +619,11 @@ y las dos tarjetas de caudal utilizan sus hidrogramas horarios publicados.
 La tarjeta meteorológica muestra precipitación y, cuando existan, temperaturas
 máximas/mínimas de la fuente de Obrajillo, con fechas y ausencia de datos explícitas.
 El nivel de atención es una evaluación preventiva asignada por el administrador,
-con fecha y reporte de respaldo. Sin evaluación aparece en gris. La segmentación de agua no determina
-profundidad, caudal ni riesgo de inundación.
+con fecha y reporte de respaldo. Sin evaluación aparece en gris.
 
 El formulario, el listado, las miniaturas y la capa de reportes utilizan datos
 reales. Los cauces utilizan cartografía OSM; los niveles de Puente Magdalena
-proceden de SENAMHI. Ambos son independientes de los reportes registrados. La condición
-seleccionada por el ciudadano no constituye una evaluación técnica de riesgo.
-Guardar un reporte no envía avisos a las autoridades.
+proceden de SENAMHI. Ambos son independientes de los reportes registrados.
 
-Se mantienen las dependencias externas de los HTML originales: Tailwind por CDN,
-Leaflet 1.9.4, mapas de OpenStreetMap y Google Fonts.
-La apariencia y el mapa requieren Internet; si Leaflet no carga, se muestra un
-mensaje y el resto del tablero puede seguir utilizándose.
+
 
