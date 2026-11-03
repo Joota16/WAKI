@@ -1,4 +1,4 @@
-# Contrato para el compañero que integra la web
+# Contrato para web
 
 Una llamada procesa **una imagen desde celular o cámara IoT**.
 
@@ -46,6 +46,3 @@ La llamada de Python devuelve un `dict` JSON serializable y artefactos (PIL + nu
 
 En Windows, el servidor debe reutilizar el mismo proceso de Python/GPU para que los modelos se mantengan en memoria. En producción, procesar tareas pesadas en un trabajador y no bloquear las peticiones. El módulo no hace solicitudes a internet en inferencias posteriores si los pesos ya están almacenados localmente.
 
-## Embalaje con tu checkpoint
-
-El ZIP de entrega inicial no tiene los pesos personalizados; el responsable del entrenamiento debe ejecutar `python scripts/empaquetar_para_web.py --checkpoint models/segformer_chillon_finetuned --out WAKI_IA_FINAL_con_checkpoint.zip` desde este proyecto. El paquete resultante se comparte al equipo web.
