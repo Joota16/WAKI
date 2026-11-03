@@ -63,17 +63,17 @@
 | **Sugerencias** | Validar los reportes antes de mostrarlos a la comunidad e indicar su estado de verificación. También, informar cada cuánto se capturan las imágenes y cuánto tardan en cargarse. | Añadir umbrales por tarjeta de información, datos recientes en los puntos del mapa y acceso al historial en tablas. Resaltar la severidad de las opciones, incluir “Otros” como opción, separar personas y animales, agregar SAMU y colocar primero a Bomberos en la vista de opción adicional. Incorporar indicaciones para niveles naranja o superiores y avisos con selección en mapa, radio de peligro y recomendaciones.<br><br>Solicitar un teléfono asociado a las cuentas y opcional para reportes sin cuenta, mostrando al público únicamente los reportes validados. El entrevistado también propone dar menor credibilidad a los reportes sin contacto y considerar incentivos por aportes confiables. |
 
 
-## Evidencia disponible: prueba en campo (31/10/2026)
+## Evidencia disponible: prueba en campo (2026-10-31)
 
-La Ficha Técnica registra una prueba en campo el 31/10/2026, en la que se evaluó el funcionamiento del dispositivo bajo las condiciones reales (Tabla 3, columna "Ajuste" sin completar). Estas capturas, tomadas de la pestaña "Pruebas" de la Ficha, son la evidencia disponible de esa prueba. No sustituyen el plan ni los resultados de esta fase.
+La Ficha Técnica registra una prueba en campo el 2026-10-31, en la que se evaluó el funcionamiento del dispositivo bajo las condiciones reales (Tabla 3, columna "Ajuste" sin completar). Estas capturas, tomadas de la pestaña "Pruebas" de la Ficha, son la evidencia disponible de esa prueba. No sustituyen el plan ni los resultados de esta fase.
 
 | ID | Contenido |
 |---|---|
-| PRU-01-C01 | Dashboard, pestaña de cámara ESP32 con capturas del 31/10 |
+| PRU-01-C01 | Dashboard, pestaña de cámara ESP32 con capturas del 2026-10-31 |
 | PRU-01-C02 | Dashboard, capturas de la cámara ESP32 (continuación) |
-| PRU-01-C03 | Reportes ciudadanos guardados: reporte del 31/10, pendiente de verificación |
+| PRU-01-C03 | Reportes ciudadanos guardados: reporte del 2026-10-31, pendiente de verificación |
 | PRU-01-C04 | Observación ciudadana registrada con fotografía y coordenadas |
-| PRU-01-C05 | Pruebas manuales del 31/10 con análisis de IA terminado, pendientes de revisión humana |
+| PRU-01-C05 | Pruebas manuales del 2026-10-31 con análisis de IA terminado, pendientes de revisión humana |
 
 ![PRU-01-C01: capturas de la cámara ESP32 en el dashboard](anexos/img/evaluar/pru-01-c01.png)
 

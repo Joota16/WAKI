@@ -21,7 +21,7 @@ Plantillas usadas:
 | Campo | Registro de información |
 |---|---|
 | Insight | Observamos que el personal combina información de fuentes oficiales, reportes vecinales y recursos de vigilancia para conocer las condiciones del río y verificar incidencias. Sin embargo, la falta de monitoreo hidrométrico local, los recursos operativos limitados y las dificultades de acceso y coordinación con algunos vecinos pueden dificultar la verificación oportuna de las condiciones de determinados tramos ribereños. |
-| Evidencia | Entrevista MUN-01, 27/10/2026. Matriz de volcado de entrevistas (documento interno del equipo). |
+| Evidencia | Entrevista MUN-01, 2026-10-27. Matriz de volcado de entrevistas (documento interno del equipo). |
 | POV | El personal municipal de GRD necesita identificar y verificar oportunamente las condiciones e incidencias en los tramos ribereños, porque depende de información de distintas fuentes y enfrenta limitaciones tecnológicas, operativas y de acceso que dificultan contrastarla en campo. |
 | HMW | ¿Cómo podríamos facilitar al personal municipal la identificación y priorización de tramos ribereños que requieren evaluación preventiva frente al riesgo de inundación, sin sustituir las inspecciones técnicas ni los procedimientos oficiales? |
 
@@ -38,7 +38,7 @@ Plantillas usadas:
 | Campo | Registro de información |
 |---|---|
 | Insight | Observamos que, ante un reporte de emergencia relacionado con el río, el personal municipal verifica la información mediante el envío de personal de serenazgo cercano y consulta de fuentes oficiales; esto puede deberse a la necesidad de confirmar la situación antes de actuar y evitar falsas alarmas, y produce una demora potencial en la identificación y atención de la emergencia. |
-| Evidencia | Entrevista MUN-02, 28/10/2026. Matriz de volcado de entrevistas (documento interno del equipo). |
+| Evidencia | Entrevista MUN-02, 2026-10-28. Matriz de volcado de entrevistas (documento interno del equipo). |
 | POV | El personal responsable de la gestión de emergencias necesita verificar oportunamente las condiciones del río y la credibilidad de los reportes ciudadanos, porque la información proviene de distintas fuentes y las falsas alarmas pueden generar pánico y afectar la confianza de la población. |
 | HMW | ¿Cómo podríamos facilitar al personal municipal la verificación y priorización de reportes sobre las condiciones del río para responder oportunamente ante una posible emergencia, sin depender exclusivamente de la verificación presencial ni de las comunicaciones móviles? |
 

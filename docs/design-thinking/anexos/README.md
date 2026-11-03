@@ -28,11 +28,11 @@ Imágenes que no cupieron en la ficha técnica. Cada archivo se nombra con su ID
 | ANX-06-a/b/c | Bocetos, pantallas 1–3 | Idear | `img/idear/anx-06-*-boceto-pantalla-*.jpg` | [03-idear.md](../03-idear.md#bocetos) | Pendiente |
 | ANX-07 | Storyboard del flujo vecino → plataforma → personal GRD | Prototipar | `img/prototipar/anx-07-storyboard.jpg` | [04-prototipar.md](../04-prototipar.md#imágenes-pendientes) | Pendiente |
 | ANX-08 | Modelo CAD de la carcasa (Onshape) | Prototipar | `img/prototipar/anx-08-carcasa-cad.png` | [04-prototipar.md](../04-prototipar.md#imágenes-pendientes) | Pendiente |
-| PRU-01-C01 | Dashboard: capturas de la cámara ESP32 (31/10) | Evaluar | [pru-01-c01.png](img/evaluar/pru-01-c01.png) | [05-evaluar.md](../05-evaluar.md#evidencia-disponible-prueba-en-campo-31102026) | Agregada |
-| PRU-01-C02 | Dashboard: capturas de la cámara ESP32, continuación | Evaluar | [pru-01-c02.png](img/evaluar/pru-01-c02.png) | [05-evaluar.md](../05-evaluar.md#evidencia-disponible-prueba-en-campo-31102026) | Agregada |
-| PRU-01-C03 | Reportes ciudadanos guardados | Evaluar | [pru-01-c03.png](img/evaluar/pru-01-c03.png) | [05-evaluar.md](../05-evaluar.md#evidencia-disponible-prueba-en-campo-31102026) | Agregada |
-| PRU-01-C04 | Observación ciudadana registrada con fotografía | Evaluar | [pru-01-c04.png](img/evaluar/pru-01-c04.png) | [05-evaluar.md](../05-evaluar.md#evidencia-disponible-prueba-en-campo-31102026) | Agregada |
-| PRU-01-C05 | Pruebas manuales con análisis de IA | Evaluar | [pru-01-c05.png](img/evaluar/pru-01-c05.png) | [05-evaluar.md](../05-evaluar.md#evidencia-disponible-prueba-en-campo-31102026) | Agregada |
+| PRU-01-C01 | Dashboard: capturas de la cámara ESP32 (2026-10-31) | Evaluar | [pru-01-c01.png](img/evaluar/pru-01-c01.png) | [05-evaluar.md](../05-evaluar.md#evidencia-disponible-prueba-en-campo-2026-10-31) | Agregada |
+| PRU-01-C02 | Dashboard: capturas de la cámara ESP32, continuación | Evaluar | [pru-01-c02.png](img/evaluar/pru-01-c02.png) | [05-evaluar.md](../05-evaluar.md#evidencia-disponible-prueba-en-campo-2026-10-31) | Agregada |
+| PRU-01-C03 | Reportes ciudadanos guardados | Evaluar | [pru-01-c03.png](img/evaluar/pru-01-c03.png) | [05-evaluar.md](../05-evaluar.md#evidencia-disponible-prueba-en-campo-2026-10-31) | Agregada |
+| PRU-01-C04 | Observación ciudadana registrada con fotografía | Evaluar | [pru-01-c04.png](img/evaluar/pru-01-c04.png) | [05-evaluar.md](../05-evaluar.md#evidencia-disponible-prueba-en-campo-2026-10-31) | Agregada |
+| PRU-01-C05 | Pruebas manuales con análisis de IA | Evaluar | [pru-01-c05.png](img/evaluar/pru-01-c05.png) | [05-evaluar.md](../05-evaluar.md#evidencia-disponible-prueba-en-campo-2026-10-31) | Agregada |
 
 ## Cómo agregar una imagen
 

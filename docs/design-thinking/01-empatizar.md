@@ -19,7 +19,7 @@
 | Campo | Registro del equipo |
 |---|---|
 | Lugar general / tramo autorizado | Malecón Chillón–Gallinazos, Comas (Zonal 14). Observación desde el malecón. La observación desde el tramo no requiere autorización al ser vía pública. |
-| Fecha / observadores | 31/10/2026, 15:00 a 18:00 horas aproximadamente. Observador: 1 integrante del equipo. |
+| Fecha / observadores | 2026-10-31, 15:00–18:00 (UTC−05:00, hora de Perú), aproximadamente. Observador: 1 integrante del equipo. |
 | Qué puede observarse desde espacio seguro | Ver detalle abajo. |
 | Qué NO pudo observarse / limitaciones | Ver detalle abajo. |
 | Fotografía o fuente permitida (ID) | [OBS-01-F01](#obs-01-f01), [OBS-01-F02](#obs-01-f02), [OBS-01-F03](#obs-01-f03) |
@@ -70,7 +70,6 @@ Anexos de la Ficha Técnica que ubican el tramo observado.
 
 ![ANX-03: dos fotografías del tramo del río Chillón](anexos/img/empatizar/anx-03-fotos-tramo.jpg)
 
-> TODO: pendiente — la Ficha no indica leyenda ni fecha para estas fotografías; completar.
 
 ## Códigos de evidencia
 
