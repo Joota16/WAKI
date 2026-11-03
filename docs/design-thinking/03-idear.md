@@ -6,11 +6,9 @@
 
 | Ideas | Descripción |
 |---|---|
-| Integrante 1 | Implementar un sistema de cámaras de bajo costo para obtener fotografías periódicas de tramos ribereños y observar sus condiciones. |
-| Integrante 2 | Complementar las cámaras con reportes ciudadanos que incluyan fotografías, ubicación y descripción de posibles incidencias. |
-| Integrante 3 | Integrar las cámaras y los reportes ciudadanos en una plataforma digital con un mapa para visualizar y localizar las incidencias. |
-| Integrante 4 | Incorporar información meteorológica e hidrológica oficial para complementar las fotografías y los reportes ciudadanos. |
-| Integrante 5 | Añadir criterios de atención preliminar para identificar y priorizar los tramos ribereños que requieren evaluación técnica preventiva. |
+| Idea 1 | Sistema de cámaras de bajo costo para obtener fotografías periódicas de tramos ribereños y observar sus condiciones. |
+| Idea 2 | Sistema de registro de reportes ciudadanos en una plataforma digital con un mapa para visualizar y localizar las incidencias. |
+| Idea 3 | Sistema de criterios de atención preliminar para identificar y priorizar los tramos ribereños que requieren evaluación técnica preventiva. |
 
 ## Matriz de priorización (NOW–WOW–HOW)
 
@@ -30,17 +28,21 @@
 | Público objetivo | Actores involucrados en la Gestión del Riesgo de Desastres y/o atención de emergencias; población local. |
 | Beneficios | Centraliza información dispersa, facilita la ubicación de incidencias, permite consultar evidencias visuales y ayuda a organizar la atención preventiva de los tramos ribereños. |
 | Actores involucrados | Equipo desarrollador de WAKI, personal municipal de GRD, serenazgo, población local, SENAMHI y ANA, según sus competencias y la disponibilidad de información. |
-| Boceto | Ver [Bocetos](#bocetos) (ANX-06). |
+| Boceto | Pantallas: ver [Bocetos](#bocetos) (FIG-01 y ANX-04). Boceto conceptual inicial: ANX-03. |
 
 ### Bocetos
 
-| ID | Pantalla | Imagen |
-|---|---|---|
-| ANX-06-a | Pantalla 1 | **Pendiente:** `anexos/img/idear/anx-06-a-boceto-pantalla-1.jpg` |
-| ANX-06-b | Pantalla 2 | **Pendiente:** `anexos/img/idear/anx-06-b-boceto-pantalla-2.jpg` |
-| ANX-06-c | Pantalla 3 | **Pendiente:** `anexos/img/idear/anx-06-c-boceto-pantalla-3.jpg` |
+#### ANX-03: Boceto conceptual inicial
 
-> **Imágenes pendientes:** agregar los bocetos en [`anexos/img/idear/`](anexos/img/idear/) con los nombres indicados y reemplazar cada celda por `![ANX-06-x: boceto pantalla n](anexos/img/idear/anx-06-x-boceto-pantalla-n.jpg)`. Las pantallas del prototipo ya implementado están en [Prototipar](04-prototipar.md#secuencia-de-pantallas) (ANX-04 y ANX-05).
+<img src="anexos/img/idear/anx-03-boceto-conceptual.jpg" alt="ANX-03: boceto conceptual inicial del dispositivo WAKI, vistas frontal y lateral" width="360">
+
+#### Pantallas
+
+FIG-01: interfaz de la plataforma WAKI, dashboard e imágenes captadas por el dispositivo IoT (Figura 1 de la Ficha Técnica).
+
+![FIG-01: dashboard de WAKI con imágenes captadas por el dispositivo IoT](anexos/img/idear/fig-01-dashboard-imagenes-iot.png)
+
+ANX-04: visualización de resultados del análisis de visión computacional en la plataforma. Ver [Prototipar](04-prototipar.md#anx-04-visualización-de-resultados-del-análisis-de-visión-computacional).
 
 ## Propuesta de valor
 
@@ -76,16 +78,38 @@
 
 ## Journey Map ideal (TO-BE)
 
-Las referencias entre paréntesis remiten a la entrevista (MUN-01, MUN-02) y al objetivo de la guía de entrevista (Obj.). Ver [evidencias.md](evidencias.md).
+| Pasos, momentos | Experiencia y acciones |
+|---|---|
+| 1. Monitoreo del río | El dispositivo IoT captura imágenes periódicas del cauce y sus márgenes. La plataforma permite consultar los datos hidrometeorológicos oficiales disponibles del SENAMHI (Estación Obrajillo y Puente Magdalena). |
+| 2. Identificación de una incidencia | Un vecino identifica una situación relevante, como acumulación de residuos o deterioro de la ribera. |
+| 3. Registro ciudadano | Desde su celular, el vecino ingresa a WAKI, describe la incidencia, adjunta una fotografía y proporciona su ubicación. |
+| 4. Recepción del reporte | El reporte queda registrado en la plataforma con un identificador único y pendiente de verificación. |
+| 5. Consulta y verificación | El personal institucional visualiza la ubicación del reporte y revisa su evidencia fotográfica. Puede contrastarla con las imágenes del dispositivo IoT y los resultados del análisis de visión computacional. |
+| 6. Análisis de información | El personal consulta los datos hidrometeorológicos disponibles (caudal, nivel del río y variables meteorológicas) y evalúa las condiciones del tramo. |
+| 7. Priorización y atención | El personal institucional asigna un nivel cualitativo de atención y, según sus competencias y recursos disponibles, puede programar una inspección técnica o coordinar acciones preventivas. |
+| 8. Comunicación y seguimiento | El personal puede publicar avisos en la plataforma y registrar el seguimiento de las incidencias, facilitando la consulta de evidencias y decisiones adoptadas. |
 
-| # | Pasos, momentos | Emociones | Qué se está solucionando |
-|---|---|---|---|
-| 1 | La cámara WAKI del tramo capta imágenes periódicas. La plataforma se actualiza con los datos del SENAMHI (Obrajillo, Puente Magdalena y avisos hidrológicos). | Tranquilidad: "el tramo se está observando aunque no haya estación en mi distrito". | Falta de estaciones hidrométricas locales (MUN-01 · Obj. 02) |
-| 2 | Un vecino ve acumulación de residuos. Desde el celular envía un reporte con foto, ubicación automática y tipo de incidencia, en pocos toques y sencillo. | Preocupación, que pasa a "alguien me va a escuchar" (idealmente). | Se provee una herramienta no técnica que no pide datos UTM, pero que aún así obtiene la información relevante de ubicación y fecha (MUN-01 · Obj. 03) |
-| 3 | El reporte aparece en la plataforma para el personal con una etiqueta de "pendiente por revisar". | Alerta y atento, pero sin pánico. | Reportes dispersos entre llamadas y WhatsApp (MUN-01 · Obj. 01) |
-| 4 | El personal de la municipalidad abre el tramo donde hubo el reporte y lo compara con la foto enviada, además de imágenes anteriores. | Transición duda–confianza. | Hoy se verifica mandando serenazgo o la camioneta cada vez (MUN-01 y MUN-02 · Obj. 02) |
-| 5 | En la misma vista puede verificar los datos hidrológicos de caudal, nivel del río y avisos vigentes. | Respaldo y tranquilidad. | Fuentes dispersas; necesidad de información sistematizada de aguas arriba (MUN-02 · Obj. 02) |
-| 6 | WAKI sugiere un nivel de prioridad, el cual será confirmado por el personal, con lo cual se verifica el reporte. | Claridad y control. | Falsas alarmas y pérdida de credibilidad (MUN-02 · Obj. 02) |
-| 7 | Una vez priorizados los tramos, se programa una inspección técnica y se envían recursos donde hacen falta. | Alivio, eficiencia y dirección. | Pocos recursos operativos: "una o dos camionetas" (MUN-01 · Obj. 02) |
-| 8 | Se comunica por los canales existentes a los actores que participarán en la limpieza del río (serenazgos, dirigentes) con evidencia fotográfica. | Seguridad al comunicar con pruebas y dirección, pues se implementan canales ya conocidos. | Credibilidad: "mostrar información más sólida y los cambios del río" (MUN-02 · Obj. 02) |
-| 9 | El resultado es registrado. En caso de que los reportes dirijan la interpretación a la de una emergencia, el personal podrá generar un aviso a los usuarios que están usando WAKI. | El vecino se siente tomado en cuenta y podría sentir disposición a volver a reportar. | Los puntos críticos se definen por antecedentes (MUN-01 · Obj. 01); confianza en la herramienta (MUN-02 · Obj. 03) |
+### Emociones y experiencia del usuario
+
+| Etapa | Emoción esperada | Necesidad o percepción |
+|---|---|---|
+| Monitoreo del río | Tranquilidad | "El tramo cuenta con un mecanismo de observación periódica, aunque no exista una estación hidrométrica en mi sector". |
+| Identificación y reporte | Preocupación y expectativa | "Alguien me va a escuchar. Mi reporte será recibido y tomado en cuenta". |
+| Registro ciudadano | Confianza | "Puedo comunicar una incidencia de manera sencilla, sin conocimientos técnicos". |
+| Consulta institucional | Claridad y control | "Puedo acceder a información centralizada y evidencias para evaluar las condiciones del tramo". |
+| Priorización de atención | Confianza y dirección | "Cuento con información organizada para movilizar recursos y orientar la atención preventiva". |
+| Comunicación y seguimiento | Alivio | "Puedo conocer el estado de las incidencias y las acciones comunicadas". |
+
+### ¿Qué problema se está solucionando?
+
+Las referencias entre paréntesis remiten a la entrevista (MUN-01, MUN-02) y al objetivo de la [guía de entrevista](anexos/guia-entrevista.md) en que se agruparon las preguntas (Obj.). Ver [evidencias.md](evidencias.md).
+
+| Problema identificado | Evidencia de las entrevistas | Solución planteada por WAKI |
+|---|---|---|
+| Falta de estaciones hidrométricas locales y acceso limitado a información del comportamiento del río (MUN-01 · Obj. 02). | Necesidad de contar con información sistematizada de aguas arriba (MUN-02 · Obj. 02). | Integra imágenes periódicas del tramo mediante un dispositivo IoT y permite consultar datos hidrometeorológicos oficiales disponibles de estaciones de referencia. |
+| Limitados recursos operativos para atender y verificar incidencias (MUN-01 y MUN-02 · Obj. 02). | Disponibilidad de "una o dos camionetas" (MUN-01 · Obj. 02). | Centraliza evidencias para facilitar la identificación y priorización cualitativa de sectores que requieren evaluación técnica. |
+| Verificación de incidencias mediante desplazamientos de personal y vehículos (MUN-01 y MUN-02 · Obj. 02). | Actualmente se envía serenazgo o una camioneta para verificar las incidencias (MUN-01 y MUN-02 · Obj. 02). | Facilita una primera revisión remota mediante reportes georreferenciados, fotografías e imágenes captadas por el dispositivo IoT. |
+| Reportes ciudadanos dispersos entre llamadas y WhatsApp (MUN-01 · Obj. 01). | Reportes dispersos entre llamadas y WhatsApp (MUN-01 · Obj. 01). | Centraliza los reportes ciudadanos en una plataforma, con fotografías, ubicación e identificadores únicos para facilitar su seguimiento. |
+| Riesgo de falsas alarmas y pérdida de credibilidad en los reportes (MUN-02 · Obj. 02). | Preocupación por las falsas alarmas y la pérdida de credibilidad (MUN-02 · Obj. 02). | Permite contrastar las evidencias ciudadanas con imágenes IoT y otras fuentes de información, además de validar o descartar reportes. |
+| Identificación de puntos críticos basada principalmente en antecedentes (MUN-01 · Obj. 01; MUN-02 · Obj. 02). | Los puntos críticos se definen por antecedentes (MUN-01 · Obj. 01); necesidad de "mostrar información más sólida y los cambios del río" (MUN-02 · Obj. 02) y generar confianza en la herramienta (MUN-02 · Obj. 03). | Incorpora evidencias visuales y reportes georreferenciados que complementan los antecedentes para identificar cambios y condiciones relevantes en el cauce y sus márgenes. |
+| Dificultad para registrar incidencias sin conocimientos técnicos (MUN-01 · Obj. 03). | Necesidad de facilitar el registro de información de ubicación sin requerir datos UTM (MUN-01 · Obj. 03). | Ofrece un formulario web accesible desde el celular que permite registrar incidencias, adjuntar fotografías y proporcionar la ubicación mediante geolocalización o ingreso manual de coordenadas, según preferencia y/o conocimiento. |

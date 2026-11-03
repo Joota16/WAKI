@@ -27,5 +27,3 @@ Las fases se presentan en secuencia para facilitar el control, pero el proceso e
 | [Idear](03-idear.md) | Alternativas diversas; matriz NOW–WOW–HOW; propuesta de valor; TO-BE | Elección razonada y funcionalidades ligadas a necesidades, no a modas | Realizado |
 | [Prototipar](04-prototipar.md) | Prototipo móvil; vista municipal; flujo de datos e Internet of Things (IoT) | Tareas observables y límites funcionales explícitos | Realizado |
 | [Evaluar](05-evaluar.md) | Plan de tareas; resultados con línea base; problemas; decisiones e iteración | Resultados reales, límites y siguiente experimento, sin atribuir reducción de inundaciones | Realizado |
-
-> Realizado: pendiente — completar la columna **Estado** de cada fase.

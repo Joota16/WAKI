@@ -16,11 +16,7 @@
 | **Cronograma de evaluación y duración de las sesiones** | Sesiones individuales de aproximadamente 15 a 20 minutos por participante, durante la etapa de validación del MVP. |
 
 
-## Entrevistas
-
-> TODO: pendiente
-
-## Descarga de comentarios por objetivo y tarea
+## Evaluación por objetivos y tareas
 
 
 | **Objetivo 1:**<br> | Evaluar la experiencia inicial del usuario ciudadano al interactuar con la plataforma. |
@@ -53,7 +49,7 @@
 | **Nuevas Ideas** | Mejoras propuestas para la consulta y gestión de información. |
 | **Dudas** | Consultas sobre el funcionamiento de las herramientas y la interpretación de los datos. |
 
-## Hallazgos y conclusiones por objetivo
+## Descripción de hallazgos y conclusiones por objetivo
 
 
 | | **Objetivo 1: Ciudadano** | **Objetivo 2: Institucional** |
@@ -62,6 +58,19 @@
 | **Conclusiones** | La información oficial y la participación ciudadana se perciben como útiles para advertir a las comunidades. La verificación de los reportes y la claridad sobre la actualización de las imágenes contribuyen a generar confianza. | Las mejoras propuestas buscan facilitar la interpretación de los datos y orientar a la población ante una emergencia. La validación administrativa y el contacto con el reportante se consideran importantes para generar confianza en los reportes publicados. |
 | **Sugerencias** | Validar los reportes antes de mostrarlos a la comunidad e indicar su estado de verificación. También, informar cada cuánto se capturan las imágenes y cuánto tardan en cargarse. | Añadir umbrales por tarjeta de información, datos recientes en los puntos del mapa y acceso al historial en tablas. Resaltar la severidad de las opciones, incluir “Otros” como opción, separar personas y animales, agregar SAMU y colocar primero a Bomberos en la vista de opción adicional. Incorporar indicaciones para niveles naranja o superiores y avisos con selección en mapa, radio de peligro y recomendaciones.<br><br>Solicitar un teléfono asociado a las cuentas y opcional para reportes sin cuenta, mostrando al público únicamente los reportes validados. El entrevistado también propone dar menor credibilidad a los reportes sin contacto y considerar incentivos por aportes confiables. |
 
+
+## Iteración: pantallas antes y después de la evaluación
+
+Capturas de la plataforma antes y después de los ajustes, registradas por el equipo en la Ficha Técnica. Las sugerencias que motivaron los cambios están en la tabla de [hallazgos y conclusiones](#descripción-de-hallazgos-y-conclusiones-por-objetivo).
+
+| Vista | Antes | Después |
+|---|---|---|
+| <a id="ite-01"></a>ITE-01 · Dashboard | ![ITE-01: dashboard antes](anexos/img/evaluar/ite-01-dashboard-antes.png) | ![ITE-01: dashboard después](anexos/img/evaluar/ite-01-dashboard-despues.png) |
+| <a id="ite-02"></a>ITE-02 · Reportes | ![ITE-02: formulario de reportes antes](anexos/img/evaluar/ite-02-reportes-antes.png) | ![ITE-02: formulario de reportes después](anexos/img/evaluar/ite-02-reportes-despues.png) |
+| <a id="ite-03"></a>ITE-03 · Opciones de administrador | ![ITE-03: opciones de administrador antes](anexos/img/evaluar/ite-03-admin-antes.png) | ![ITE-03: opciones de administrador después](anexos/img/evaluar/ite-03-admin-despues.png) |
+| <a id="ite-04"></a>ITE-04 · Alerta | ![ITE-04: publicación de aviso antes](anexos/img/evaluar/ite-04-aviso-antes.png) | ![ITE-04: publicación de aviso después](anexos/img/evaluar/ite-04-aviso-despues.png) |
+
+> TODO: pendiente — describir qué cambió en cada vista y qué sugerencia lo motivó.
 
 ## Evidencia disponible: prueba en campo (2026-10-31)
 

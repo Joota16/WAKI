@@ -6,7 +6,7 @@
 
 | Perfil | Diversidad buscada | Meta orientativa |
 |---|---|---|
-| A. Personal municipal | Personal que recibe reportes, verifica incidencias, realiza inspecciones de campo o prioriza intervenciones. | 2–3 participantes, si hay acceso |
+| Personal institucional | Personal que recibe reportes, verifica incidencias, realiza inspecciones de campo o prioriza intervenciones. | 2–3 participantes, si hay acceso |
 
 ## Preparación: antes, durante y después
 
@@ -62,15 +62,18 @@ Anexos de la Ficha Técnica que ubican el tramo observado.
 
 *Fuente: Plan de Prevención y Reducción del Riesgo de Desastres del distrito de Comas 2024–2030, Municipalidad Distrital de Comas.*
 
-### ANX-02: Área piloto WAKI (Malecón Chillón–Gallinazos)
+### ANX-02: Evidencia fotográfica del tramo piloto
 
-![ANX-02: área piloto WAKI en el Malecón Chillón–Gallinazos](anexos/img/empatizar/anx-02-mapa-area-piloto.jpg)
+Condiciones observadas en el tramo piloto del río Chillón, fotografías tomadas el 2026-10-31.
 
-### ANX-03: Fotografías del tramo
+![ANX-02: dos fotografías de las condiciones del tramo piloto del río Chillón](anexos/img/empatizar/anx-02-fotos-tramo.jpg)
 
-![ANX-03: dos fotografías del tramo del río Chillón](anexos/img/empatizar/anx-03-fotos-tramo.jpg)
+### CTX-01: Área piloto WAKI (Malecón Chillón–Gallinazos)
 
+Mapa incluido en una versión preliminar de la Ficha Técnica; no forma parte de los anexos de la versión final.
+
+![CTX-01: área piloto WAKI en el Malecón Chillón–Gallinazos](anexos/img/empatizar/ctx-01-mapa-area-piloto.jpg)
 
 ## Códigos de evidencia
 
-Los códigos usados en este documento (MUN-01, MUN-02, OBS-01, Qn) se describen en [evidencias.md](evidencias.md).
+Los códigos usados en este documento (MUN-01, MUN-02, OBS-01, Qn) se describen en [evidencias.md](evidencias.md). Las preguntas (Qn) corresponden a la [guía de entrevista](anexos/guia-entrevista.md).

@@ -27,65 +27,74 @@ La implementación no se duplica aquí; cada artefacto enlaza a su documentació
 
 | Artefacto | Descripción | Dónde está |
 |---|---|---|
-| Sitio web WAKI | Vista de reporte ciudadano y panel de administrador, accesible desde celular o PC. | Pantallas: [ANX-04 y ANX-05](#secuencia-de-pantallas) · Prototipos HTML: [`docs/prototypes/`](../prototypes/README.md) · Código: [`app/`](../../app/) |
+| Sitio web WAKI | Vista de reporte ciudadano y panel de administrador, accesible desde celular o PC. | Pantallas: [ANX-05 y ANX-06](#secuencia-de-pantallas) · Diseño en [Figma](https://www.figma.com/design/uz8ZkFeTMAT75fdedoP7RO/WAKI-%C2%B7-Prototipos-de-la-aplicaci%C3%B3n-actual?node-id=0-1) · Prototipos HTML: [`docs/prototypes/`](../prototypes/README.md) · Código: [`app/`](../../app/) |
 | Dispositivo de monitoreo | ESP32-CAM con carcasa impresa en 3D. | Firmware: [`firmware/waki_esp32cam/`](../../firmware/waki_esp32cam/) · Documentación: [`docs/esp32-camera.md`](../esp32-camera.md) |
-| Modelo de reconocimiento de imágenes | Integrado al dispositivo. | [`docs/ia/`](../ia/LEEME_INICIO.md) |
-| Modelo CAD de la carcasa (Onshape) | Diseño de la carcasa para impresión 3D. | ANX-08 (pendiente, ver abajo) |
-| Storyboard | Flujo vecino → plataforma → personal GRD. | ANX-07 (pendiente, ver abajo) |
+| Modelo de reconocimiento de imágenes | Integrado al dispositivo. | Resultados en plataforma: [ANX-04](#anx-04-visualización-de-resultados-del-análisis-de-visión-computacional) · [`docs/ia/`](../ia/LEEME_INICIO.md) |
+| Arquitectura funcional | Flujo de integración de los componentes tecnológicos. | [ANX-07](#anx-07-arquitectura-funcional-de-waki) |
+| Modelo CAD de la carcasa (Onshape) | Diseño de la carcasa para impresión 3D. Boceto inicial en [ANX-03](03-idear.md#anx-03-boceto-conceptual-inicial). | ANX-09 (pendiente, ver abajo) |
+| Storyboard | Flujo vecino → plataforma → personal GRD. | ANX-08 (pendiente, ver abajo) |
 
 ### Imágenes pendientes
 
 | ID | Contenido | Archivo esperado |
 |---|---|---|
-| ANX-07 | Storyboard del flujo vecino → plataforma → personal GRD | `anexos/img/prototipar/anx-07-storyboard.jpg` |
-| ANX-08 | Modelo CAD de la carcasa (Onshape) | `anexos/img/prototipar/anx-08-carcasa-cad.png` |
+| ANX-08 | Storyboard del flujo vecino → plataforma → personal GRD | `anexos/img/prototipar/anx-08-storyboard.jpg` |
+| ANX-09 | Modelo CAD de la carcasa (Onshape) | `anexos/img/prototipar/anx-09-carcasa-cad.png` |
 
 > TODO: pendiente — agregar estas imágenes en [`anexos/img/prototipar/`](anexos/img/prototipar/) con los nombres indicados y referenciarlas aquí.
 
+## ANX-07: Arquitectura funcional de WAKI
+
+Diagrama de la arquitectura funcional de WAKI y el flujo de integración de sus componentes tecnológicos.
+
+![ANX-07: arquitectura funcional de WAKI: fuentes de información, servidor y procesamiento, y plataforma web](anexos/img/prototipar/anx-07-arquitectura.png)
+
 ## Secuencia de pantallas
 
-Capturas del prototipo funcional tomadas de los Anexos 4 y 5 de la Ficha Técnica. Las pantallas que en la Ficha estaban bajo un mismo rótulo se muestran juntas.
+Capturas del prototipo funcional tomadas de los Anexos 4, 5 y 6 de la Ficha Técnica. Las pantallas que en la Ficha estaban bajo un mismo rótulo se muestran juntas. Diseño completo en [Figma](https://www.figma.com/design/uz8ZkFeTMAT75fdedoP7RO/WAKI-%C2%B7-Prototipos-de-la-aplicaci%C3%B3n-actual?node-id=0-1).
 
-### ANX-04: Pantallas de la web (PC)
+### ANX-04: Visualización de resultados del análisis de visión computacional
+
+![ANX-04: informe de análisis visual con segmentación de agua en la plataforma](anexos/img/prototipar/anx-04-vision-computacional.png)
+
+### ANX-05: Pantallas de la plataforma (PC)
+
+#### a. Inicio de sesión del usuario
+
+![ANX-05-01: inicio de sesión del usuario institucional y del usuario ciudadano](anexos/img/prototipar/anx-05-01-web-inicio-sesion.png)
+
+#### b. Visualización del dashboard (usuario institucional y usuario ciudadano)
+
+![ANX-05-02: dashboard con mapa, nivel de atención del tramo y datos del SENAMHI](anexos/img/prototipar/anx-05-02-web-dashboard.png)
+
+#### c. Visualización y registro de reportes (usuario ciudadano)
+
+![ANX-05-03: formulario de reporte ciudadano](anexos/img/prototipar/anx-05-03-web-reportes.png)
+
+#### d. Gestión administrativa de incidencias y comunicación (usuario institucional)
+
+##### d.1. Publicación y gestión de avisos
+
+![ANX-05-04: publicación y gestión de avisos](anexos/img/prototipar/anx-05-04-web-avisos.png)
+
+##### d.2. Validación y revisión de reportes ciudadanos
+
+![ANX-05-05: validación y revisión de reportes ciudadanos](anexos/img/prototipar/anx-05-05-web-validar-reportes.png)
+
+### ANX-06: Pantallas vía dispositivo móvil
 
 #### Dashboard
 
-![ANX-04-01: dashboard web con mapa, tramos prioritarios y datos del tramo](anexos/img/prototipar/anx-04-01-web-dashboard.png)
+![ANX-06-01: dashboard en el celular con mapa, detalle del tramo y caudal](anexos/img/prototipar/anx-06-01-app-dashboard.png)
 
 #### Reportes
 
-![ANX-04-02: formulario web de reporte ciudadano](anexos/img/prototipar/anx-04-02-web-reportes.png)
+![ANX-06-02: formulario de reporte ciudadano en el celular](anexos/img/prototipar/anx-06-02-app-reportes.png)
 
-#### Cuentas
+#### Inicio de sesión del usuario
 
-![ANX-04-03: inicio de sesión y creación de cuenta en la web](anexos/img/prototipar/anx-04-03-web-cuentas.png)
+![ANX-06-03: inicio de sesión institucional y ciudadano en el celular](anexos/img/prototipar/anx-06-03-app-inicio-sesion.png)
 
-#### Admin: envío de notificaciones
+#### Gestión administrativa de incidencias y comunicación (usuario institucional)
 
-![ANX-04-04: publicación de avisos por el administrador en la web](anexos/img/prototipar/anx-04-04-web-avisos.png)
-
-#### Admin: validar reportes
-
-![ANX-04-05: revisión y validación de reportes en la web](anexos/img/prototipar/anx-04-05-web-validar-reportes.png)
-
-### ANX-05: Pantallas del aplicativo (celular)
-
-#### Dashboard
-
-![ANX-05-01: dashboard del aplicativo con mapa, detalle del tramo y caudal](anexos/img/prototipar/anx-05-01-app-dashboard.png)
-
-#### Reportes
-
-![ANX-05-02: formulario de reporte ciudadano en el aplicativo](anexos/img/prototipar/anx-05-02-app-reportes.png)
-
-#### Cuenta
-
-![ANX-05-03: inicio de sesión y creación de cuenta en el aplicativo](anexos/img/prototipar/anx-05-03-app-cuenta.png)
-
-#### Admin: envío de notificaciones
-
-![ANX-05-04: publicación de avisos por el administrador en el aplicativo](anexos/img/prototipar/anx-05-04-app-avisos.png)
-
-#### Admin: validar reportes
-
-<img src="anexos/img/prototipar/anx-05-05-app-validar-reportes.png" alt="ANX-05-05: validación de reportes en el aplicativo" width="324">
+![ANX-06-04: publicación de avisos y validación de reportes en el celular](anexos/img/prototipar/anx-06-04-app-gestion-admin.png)
