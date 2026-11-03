@@ -22,10 +22,10 @@ Las fases se presentan en secuencia para facilitar el control, pero el proceso e
 
 | Fase | Entregables mínimos | Criterio de salida / prueba | Estado |
 |---|---|---|---|
-| [Empatizar](01-empatizar.md) | Plan de reclutamiento; entrevistas; observación segura; fichas; proto-personas revisadas | Ejemplos concretos de comportamiento y diferencias entre ambos perfiles; vacíos visibles | TODO |
-| [Definir](02-definir.md) | Mapa AS-IS por perfil; patrones; insights; POV; reto redefinido | Problema centrado en persona con citas o registros trazables; alcance claro | TODO |
-| [Idear](03-idear.md) | Alternativas diversas; matriz NOW–WOW–HOW; propuesta de valor; TO-BE | Elección razonada y funcionalidades ligadas a necesidades, no a modas | TODO |
-| [Prototipar](04-prototipar.md) | Prototipo móvil; vista municipal; flujo de datos e Internet of Things (IoT) | Tareas observables y límites funcionales explícitos | TODO |
-| [Evaluar](05-evaluar.md) | Plan de tareas; resultados con línea base; problemas; decisiones e iteración | Resultados reales, límites y siguiente experimento, sin atribuir reducción de inundaciones | TODO |
+| [Empatizar](01-empatizar.md) | Plan de reclutamiento; entrevistas; observación segura; fichas; proto-personas revisadas | Ejemplos concretos de comportamiento y diferencias entre ambos perfiles; vacíos visibles | Realizado |
+| [Definir](02-definir.md) | Mapa AS-IS por perfil; patrones; insights; POV; reto redefinido | Problema centrado en persona con citas o registros trazables; alcance claro | Realizado |
+| [Idear](03-idear.md) | Alternativas diversas; matriz NOW–WOW–HOW; propuesta de valor; TO-BE | Elección razonada y funcionalidades ligadas a necesidades, no a modas | Realizado |
+| [Prototipar](04-prototipar.md) | Prototipo móvil; vista municipal; flujo de datos e Internet of Things (IoT) | Tareas observables y límites funcionales explícitos | Realizado |
+| [Evaluar](05-evaluar.md) | Plan de tareas; resultados con línea base; problemas; decisiones e iteración | Resultados reales, límites y siguiente experimento, sin atribuir reducción de inundaciones | Realizado |
 
-> TODO: pendiente — completar la columna **Estado** de cada fase.
+> Realizado: pendiente — completar la columna **Estado** de cada fase.
