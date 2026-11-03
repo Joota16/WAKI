@@ -37,7 +37,7 @@ class ReportsRepository:
 
     def get(self, report_id: str, include_discarded: bool = False) -> dict | None:
         with self.database.connect() as connection:
-            row = connection.execute("SELECT * FROM reports WHERE id=? AND (review_status!='discarded' OR ?)", (report_id, include_discarded)).fetchone()
+            row = connection.execute("SELECT * FROM reports WHERE id=? AND (review_status='validated' OR ?)", (report_id, include_discarded)).fetchone()
             return self._present(connection, row) if row else None
 
     def get_by_key(self, request_key: str) -> dict | None:
@@ -45,11 +45,11 @@ class ReportsRepository:
             row = connection.execute("SELECT * FROM reports WHERE request_key=?", (request_key,)).fetchone()
             return self._present(connection, row) if row else None
 
-    def list(self, limit: int, offset: int, include_discarded=False, review_status=None) -> tuple[list[dict], int]:
+    def list(self, limit: int, offset: int, include_discarded=False, review_status=None, admin=False) -> tuple[list[dict], int]:
         with self.database.connect() as connection:
             connection.execute("BEGIN")
-            where = "(review_status!='discarded' OR ?) AND (? IS NULL OR review_status=?)"
-            params = (include_discarded, review_status, review_status)
+            where = "(review_status='validated' OR ?) AND (review_status!='discarded' OR ?) AND (? IS NULL OR review_status=?)"
+            params = (admin, include_discarded, review_status, review_status)
             total = connection.execute(f"SELECT COUNT(*) FROM reports WHERE {where}", params).fetchone()[0]
             rows = connection.execute(
                 f"SELECT * FROM reports WHERE {where} ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?", (*params, limit, offset)
@@ -60,7 +60,7 @@ class ReportsRepository:
         with self.database.connect() as connection:
             row = connection.execute(
                 """SELECT p.* FROM report_photos p JOIN reports r ON r.id=p.report_id
-                    WHERE p.report_id=? AND p.id=? AND (r.review_status!='discarded' OR ?)""", (report_id, photo_id, include_discarded)
+                    WHERE p.report_id=? AND p.id=? AND (r.review_status='validated' OR ?)""", (report_id, photo_id, include_discarded)
             ).fetchone()
             return dict(row) if row else None
 

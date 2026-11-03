@@ -13,6 +13,7 @@ from test_reports import send
 
 ADMIN_PASSWORD = 'admin-test-password-123'
 USER_PASSWORD = 'citizen-test-password-123'
+USER_PHONE = '987654321'
 
 
 @pytest.fixture
@@ -34,9 +35,9 @@ def login(client, username='admin', password=ADMIN_PASSWORD):
     return result.json()
 
 
-def register(client, username='citizen'):
+def register(client, username='citizen', phone=USER_PHONE):
     response = client.post('/api/auth/register', json={'username': username, 'password': USER_PASSWORD,
-                                                       'password_confirmation': USER_PASSWORD})
+                                                       'password_confirmation': USER_PASSWORD, 'phone': phone})
     assert response.status_code == 201, response.text
     return response.json()
 
@@ -69,7 +70,7 @@ def test_public_dashboard_form_and_reporting_remain_available(client):
 
 def test_registration_creates_only_normal_role_and_sets_jwt_cookie(client, settings):
     response = client.post('/api/auth/register', json={
-        'username': 'Citizen', 'password': USER_PASSWORD, 'password_confirmation': USER_PASSWORD,
+        'username': 'Citizen', 'password': USER_PASSWORD, 'password_confirmation': USER_PASSWORD, 'phone': USER_PHONE,
     })
     assert response.status_code == 201
     session = response.json()
@@ -91,7 +92,7 @@ def test_registration_creates_only_normal_role_and_sets_jwt_cookie(client, setti
     {'password_confirmation': 'does-not-match'}, {'role': 'admin'}, {'email': 'not-needed@example.com'},
 ])
 def test_registration_validation_and_no_password_echo(client, changes):
-    values = {'username': 'new-user', 'password': USER_PASSWORD, 'password_confirmation': USER_PASSWORD, **changes}
+    values = {'username': 'new-user', 'password': USER_PASSWORD, 'password_confirmation': USER_PASSWORD, 'phone': USER_PHONE, **changes}
     response = client.post('/api/auth/register', json=values)
     assert response.status_code == 422
     assert USER_PASSWORD not in response.text and 'does-not-match' not in response.text
@@ -101,7 +102,7 @@ def test_registration_validation_and_no_password_echo(client, changes):
 
 def test_duplicate_usernames_are_case_insensitive(client):
     register(client, 'Citizen')
-    response = client.post('/api/auth/register', json={'username': 'citizen', 'password': USER_PASSWORD, 'password_confirmation': USER_PASSWORD})
+    response = client.post('/api/auth/register', json={'username': 'citizen', 'password': USER_PASSWORD, 'password_confirmation': USER_PASSWORD, 'phone': USER_PHONE})
     assert response.status_code == 409
 
 
@@ -154,8 +155,8 @@ def test_normal_users_and_guests_have_same_public_access_and_no_admin_functions(
     report = send(client).json()
     for authenticated in (False, True):
         if authenticated: register(client)
-        assert client.get('/api/reports').json()['total'] == 1
-        assert client.get(report['detail_url']).status_code == 200
+        assert client.get('/api/reports').json()['total'] == 0
+        assert client.get(report['detail_url']).status_code == 404
         expected = 403 if authenticated else 401
         assert client.post('/api/alerts', json=alert_values()).status_code == expected
         assert client.post(f"/api/reports/{report['id']}/review", json={'decision': 'validated', 'expected_version': 0}).status_code == expected
@@ -187,6 +188,9 @@ def test_discarded_reports_are_archived_hidden_and_restorable(client):
             assert guest.get('/api/reports?review_status=discarded').status_code == 403
         restored = review(client, discarded, 'pending').json()
         assert restored['review_status'] == 'pending'
+        assert guest.get('/api/reports/' + report['id']).status_code == 404
+        assert guest.get(photo_url).status_code == 404
+        review(client, restored, 'validated')
         public = guest.get('/api/reports/' + report['id']).json()
         assert public['review_notes'] is None
         assert guest.get(photo_url).status_code == 200
@@ -194,7 +198,7 @@ def test_discarded_reports_are_archived_hidden_and_restorable(client):
     with client.app.state.database.connect() as db:
         assert db.execute('SELECT COUNT(*) FROM reports').fetchone()[0] == 1
         assert db.execute('SELECT COUNT(*) FROM report_photos').fetchone()[0] == 1
-        assert db.execute('SELECT COUNT(*) FROM report_reviews').fetchone()[0] == 3
+        assert db.execute('SELECT COUNT(*) FROM report_reviews').fetchone()[0] == 4
 
 
 def test_review_rejects_stale_version_and_csrf_failures(client):
@@ -285,6 +289,7 @@ def test_jwt_secret_and_sessions_survive_restart(tmp_path):
 def test_existing_reports_gain_review_state_without_losing_photos(settings):
     with TestClient(create_app(settings)) as original:
         report = send(original).json()
+        login(original)
         photo = original.get(report['photos'][0]['url']).content
         database = original.app.state.database
     # Reproduce el esquema anterior, que no tenía columnas de moderación.
@@ -293,12 +298,13 @@ def test_existing_reports_gain_review_state_without_losing_photos(settings):
         for column in ('review_status', 'reviewed_at', 'reviewed_by', 'review_notes', 'review_version'):
             db.execute(f'ALTER TABLE reports DROP COLUMN {column}')
     with TestClient(create_app(settings)) as updated:
+        assert updated.get('/api/reports/' + report['id']).status_code == 404
+        login(updated)
         migrated = updated.get('/api/reports/' + report['id']).json()
         assert migrated['review_status'] == 'pending' and migrated['review_version'] == 0
         assert migrated['observations'] == report['observations']
         assert updated.get(report['photos'][0]['url']).content == photo
         assert updated.get('/api/reports').json()['total'] == 1
-        login(updated)
         assert review(updated, migrated, 'validated').status_code == 200
 
 

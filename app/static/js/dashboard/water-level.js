@@ -1,3 +1,5 @@
+import { publishMeasurements, markMeasurementsUnavailable } from './measurements.js';
+
 const number = new Intl.NumberFormat('es-PE', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
 const dateLabel = value => value.split('-').reverse().join('/');
 const dayNumber = value => Date.parse(`${value}T00:00:00Z`) / 86400000;
@@ -93,9 +95,11 @@ export function initWaterLevel() {
       const data = await response.json();
       if (current !== sequence) return;
       render(data);
+      publishMeasurements('level', data);
       if (data.status === 'loading') interval = 5000;
     } catch {
       if (current !== sequence) return;
+      markMeasurementsUnavailable('level');
       element('water-level-status').textContent = 'No se pudo consultar WAKI. Volveremos a intentarlo; cualquier lectura visible conserva su fecha de publicación.';
       element('water-level-retry').hidden = false;
     } finally {

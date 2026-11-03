@@ -22,7 +22,7 @@ export function initReportModal() {
     document.getElementById('modalHora').textContent = new Intl.DateTimeFormat('es-PE', {
       timeZone: 'America/Lima', dateStyle: 'short', timeStyle: 'medium',
     }).format(new Date(report.created_at));
-    document.getElementById('viewSavedReport').href = report.detail_url;
+    document.getElementById('viewSavedReport').href = '/reportes';
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     close.focus();

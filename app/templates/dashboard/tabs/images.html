@@ -1,6 +1,7 @@
 <div class="tab-panel hidden flex flex-col gap-4" id="tab-panel-imagenes" data-cameras='{{ camera_ids | tojson }}'>
   <div>
     <h4 class="font-bold text-sm text-slate-800">Capturas y análisis de IA</h4>
+    <p id="analyses-capture-frequency" class="text-xs text-slate-600 mt-1">La cámara está programada para capturar cada {{ camera_capture_seconds }} segundos, si tiene conexión. Los informes se consultan cada 5 segundos.</p>
   </div>
   {% include "dashboard/partials/analysis-upload.html" %}
   <div class="flex flex-wrap gap-2" role="group" aria-label="Origen de las imágenes">
@@ -26,6 +27,7 @@
         <p data-analysis-state class="font-semibold text-sky-700"></p>
         <p data-analysis-summary class="text-slate-600"></p>
         <p data-analysis-message class="text-slate-500"></p>
+        <p data-analysis-load-time class="text-slate-500"></p>
         <div class="flex flex-wrap gap-3 mt-auto items-center">
           <button type="button" data-analysis-toggle class="text-sky-700 underline disabled:opacity-50">Ver original</button>
           <button type="button" data-analysis-report aria-haspopup="dialog" aria-controls="analysis-report-dialog" class="rounded-lg bg-sky-600 text-white px-3 py-2 font-semibold">Ver informe IA</button>

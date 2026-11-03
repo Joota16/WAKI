@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request, Response
 
 from app.api.dependencies import optional_session, same_origin, session_write
-from app.schemas.auth import Credentials, PasswordChange, Registration, SessionOut
+from app.schemas.auth import Credentials, PasswordChange, PhoneChange, Registration, SessionOut
 from app.services.auth import AuthContext, COOKIE_NAME
 
 router = APIRouter(prefix='/api/auth', tags=['Cuentas'])
@@ -52,3 +52,9 @@ def clear_session_cookie(request: Request):
 def change_password(values: PasswordChange, request: Request, context: AuthContext = Depends(session_write)):
     request.app.state.auth.change_password(context, values)
     return clear_session_cookie(request)
+
+
+@router.put('/phone', response_model=SessionOut)
+def change_phone(values: PhoneChange, request: Request, response: Response, context: AuthContext = Depends(session_write)):
+    response.headers['Cache-Control'] = 'no-store'
+    return request.app.state.auth.change_phone(context, values.phone)

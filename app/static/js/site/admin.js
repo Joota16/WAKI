@@ -21,6 +21,11 @@ export function initAdmin() {
     card.append(element('h3', `Reporte ${report.id.slice(0, 8)}`),
       element('p', report.review_label, 'site-review-badge'), element('p', report.observations || 'Sin observaciones adicionales.'));
     if (report.other_situation) card.append(element('p', `Otros: ${report.other_situation}`, 'report-observations'));
+    if (report.phone) {
+      const contact = element('p', 'Celular: ');
+      const phone = element('a', report.phone); phone.href = `tel:+51${report.phone}`;
+      contact.append(phone); card.append(contact);
+    }
     if (report.photos.length) {
       const img = element('img'); img.src = report.photos[0].url; img.alt = 'Fotografía del reporte a revisar'; img.loading = 'lazy'; card.append(img);
     }

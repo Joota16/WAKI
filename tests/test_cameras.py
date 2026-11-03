@@ -144,6 +144,8 @@ def test_retention_and_restart_preserve_other_cameras_and_citizen_reports(tmp_pa
         report = client.post('/api/reports', data={'metadata': json.dumps({
             'observed_condition': 'normal',
         })}, files=[('files', ('citizen.jpg', photograph(), 'image/jpeg'))]).json()
+        from test_reports import publish_report
+        publish_report(client, report)
         first = upload(client).json()
         rimac = upload(client, camera='rimac-01').json()
         upload(client, content=photograph('red'))

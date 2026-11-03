@@ -1,3 +1,5 @@
+import { publishMeasurements, markMeasurementsUnavailable, thresholdText, decimal } from './measurements.js';
+
 const number = new Intl.NumberFormat('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
 const timestamp = new Intl.DateTimeFormat('es-PE', {
   timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric',
@@ -57,6 +59,19 @@ export function initDischarge() {
     field(card, 'status').className = ['error', 'stale'].includes(data.status) ? 'text-[11px] text-amber-800' : 'text-[11px] text-slate-600';
     field(card, 'checked-at').textContent = data.last_success_at ? `Consultado: ${timestamp.format(new Date(data.last_success_at))} (Lima).` : '';
     field(card, 'source').href = data.source_url;
+    const reading = data.latest;
+    field(card, 'value').dataset.thresholdLevel = reading?.threshold_level || '';
+    field(card, 'threshold-status').textContent = thresholdText(reading);
+    field(card, 'threshold-status').dataset.thresholdLevel = reading?.threshold_level || '';
+    field(card, 'thresholds').hidden = !reading?.thresholds;
+    field(card, 'threshold-values').replaceChildren();
+    if (reading?.thresholds) {
+      for (const [key, label] of [['yellow', 'Amarillo'], ['orange', 'Naranja'], ['red', 'Rojo']]) {
+        const chip = document.createElement('span'); chip.dataset.thresholdLevel = key;
+        chip.textContent = `${label} ≥ ${decimal.format(reading.thresholds[key + '_m3s'])}`;
+        field(card, 'threshold-values').append(chip);
+      }
+    }
     drawChart(card, data);
   }
 
@@ -82,9 +97,11 @@ export function initDischarge() {
         if (!reading) throw new Error('Falta una estación de caudal');
         render(card, reading);
       }
+      publishMeasurements('discharge', data);
       if (data.some(item => item.status === 'loading')) interval = 5000;
     } catch {
       if (current !== sequence) return;
+      markMeasurementsUnavailable('discharge');
       cards.forEach(card => {
         field(card, 'status').textContent = 'No se pudo consultar WAKI. Cualquier lectura visible conserva su fecha de publicación.';
         field(card, 'retry').hidden = false;

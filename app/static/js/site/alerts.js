@@ -1,5 +1,6 @@
 import { element, localTime, requestJSON } from './utils.js';
 import { hasAlertZone } from './alert-zones.js';
+import { isNearbyAlert } from './nearby-notifications.js';
 
 const kindLabels = { inundacion: 'Inundación', derrumbe: 'Derrumbe', erosion_fluvial: 'Erosión fluvial', huaico: 'Huaico', otro: 'Evento peligroso' };
 export const alertKind = value => kindLabels[value] || 'Aviso importante';
@@ -20,14 +21,16 @@ export function initAlerts() {
   const dialog = document.getElementById('important-notice-dialog');
   const list = document.getElementById('important-notice-list');
   const banner = document.getElementById('active-alert-banner');
-  let active = new Map(), feed = null, stopped = false, cursor = 0;
+  let active = new Map(), feed = null, stopped = false, cursor = 0, nearbyOnly = false;
   let acknowledged;
   try { acknowledged = new Set(JSON.parse(sessionStorage.getItem('waki-acknowledged-alerts') || '[]')); }
   catch { acknowledged = new Set(); }
 
   function render() {
     list.replaceChildren();
-    const items = [...active.values()].sort((a, b) => b.created_at.localeCompare(a.created_at));
+    const allItems = [...active.values()].sort((a, b) => b.created_at.localeCompare(a.created_at));
+    const items = nearbyOnly ? allItems.filter(isNearbyAlert) : allItems;
+    document.getElementById('important-notice-title').textContent = nearbyOnly ? 'Aviso en tu zona' : 'Avisos de WAKI';
     for (const item of items) {
       const card = element('article', undefined, 'site-notice-card');
       card.dataset.noticeId = item.id;
@@ -40,23 +43,26 @@ export function initAlerts() {
       list.append(card);
     }
     if (!items.length) list.append(element('p', 'No hay avisos importantes activos.'));
-    document.querySelectorAll('[data-alert-count]').forEach(node => { node.textContent = items.length; node.hidden = !items.length; });
-    banner.hidden = !items.length;
-    latestAlerts = items;
-    document.dispatchEvent(new CustomEvent('active-alerts-updated', { detail: items }));
+    document.querySelectorAll('[data-alert-count]').forEach(node => { node.textContent = allItems.length; node.hidden = !allItems.length; });
+    banner.hidden = !allItems.length;
+    latestAlerts = allItems;
+    document.dispatchEvent(new CustomEvent('active-alerts-updated', { detail: allItems }));
+    if (nearbyOnly && !items.length && dialog.open) dialog.close();
   }
-  function open() {
+  function open(nearby = false) {
+    nearbyOnly = nearby;
     render();
     if (!dialog.open) dialog.showModal();
     document.getElementById('acknowledge-notices').focus({ preventScroll: true });
   }
   function notifyUnseen() {
-    if ([...active.keys()].some(id => !acknowledged.has(id))) open();
+    if (document.getElementById('nearby-notifications-dialog')?.open) return;
+    if ([...active.values()].some(item => isNearbyAlert(item) && !acknowledged.has(item.id))) open(true);
   }
   document.addEventListener('click', event => { if (event.target.closest('[data-open-notices]')) open(); });
   dialog.addEventListener('cancel', event => event.preventDefault());
   document.getElementById('acknowledge-notices').addEventListener('click', () => {
-    active.forEach((_, id) => acknowledged.add(id));
+    active.forEach((item, id) => { if (!nearbyOnly || isNearbyAlert(item)) acknowledged.add(id); });
     try { sessionStorage.setItem('waki-acknowledged-alerts', JSON.stringify([...acknowledged].slice(-200))); } catch { /* El popup también funciona sin almacenamiento del navegador. */ }
     dialog.close();
   });
@@ -67,6 +73,8 @@ export function initAlerts() {
     notifyUnseen();
     document.dispatchEvent(new Event('alerts-changed'));
   }
+  document.addEventListener('nearby-location-changed', () => { render(); notifyUnseen(); });
+  document.getElementById('nearby-notifications-dialog')?.addEventListener('close', notifyUnseen);
   function connect(after) {
     if (stopped || !window.EventSource || feed) return;
     feed = new EventSource(`/api/events?after=${after}`);

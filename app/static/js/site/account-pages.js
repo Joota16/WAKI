@@ -1,7 +1,36 @@
-import { adopt, authenticatedJSON } from './auth.js';
+import { adopt, authenticatedJSON, getSession } from './auth.js';
 import { requestJSON } from './utils.js';
+import { initPhoneInput } from './phone-input.js';
 
 export function initAccountPages() {
+  initPhoneInput(document.getElementById('auth-phone'));
+  const phoneForm = document.getElementById('phone-form');
+  if (phoneForm) {
+    const input = document.getElementById('account-phone');
+    const normalize = initPhoneInput(input);
+    let lastPhone = '';
+    function fillPhone() {
+      const value = getSession().user?.phone || '';
+      if (!getSession().user || input.value === lastPhone) { input.value = value; normalize(); }
+      lastPhone = value;
+    }
+    document.addEventListener('session-changed', fillPhone);
+    fillPhone();
+    phoneForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const button = phoneForm.querySelector('[type="submit"]');
+      const status = document.getElementById('phone-status');
+      if (button.disabled) return;
+      normalize();
+      if (!phoneForm.reportValidity()) return;
+      button.disabled = true; status.textContent = '';
+      try {
+        adopt(await authenticatedJSON('/api/auth/phone', { method: 'PUT', body: JSON.stringify({ phone: input.value }) }));
+        status.textContent = 'Celular guardado.';
+      } catch (error) { status.textContent = error.message; }
+      finally { button.disabled = false; }
+    });
+  }
   const access = document.getElementById('auth-form');
   access?.addEventListener('submit', async event => {
     event.preventDefault();

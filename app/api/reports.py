@@ -7,21 +7,24 @@ from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 
 from app.schemas.reports import ReportInput, ReportOut, ReportPage, ReportReview, ReviewStatus
-from app.api.dependencies import admin_write, optional_session
+from app.api.dependencies import admin_write, optional_session, same_origin
 from app.services.auth import AuthContext
 from app.services.images import ImageTooLarge
 
 router = APIRouter(prefix="/api/reports", tags=["Reportes"])
 
 
-@router.post("", response_model=ReportOut, status_code=201)
+@router.post("", response_model=ReportOut, status_code=201, dependencies=[Depends(same_origin)])
 async def create_report(request: Request, metadata: Annotated[str, Form(max_length=20_000)],
                         files: Annotated[list[UploadFile], File()],
-                        idempotency_key: Annotated[UUID | None, Header()] = None):
+                        idempotency_key: Annotated[UUID | None, Header()] = None,
+                        context: AuthContext | None = Depends(optional_session)):
     settings = request.app.state.settings
     try:
         try:
             values = ReportInput.model_validate_json(metadata)
+            if 'phone' not in values.model_fields_set and context and context.user.phone:
+                values = values.model_copy(update={'phone': context.user.phone})
         except ValidationError as exc:
             raise HTTPException(status_code=422, detail=exc.errors(include_context=False, include_input=False)) from exc
         if not 1 <= len(files) <= settings.max_photos:
@@ -44,8 +47,8 @@ def list_reports(request: Request, response: Response, limit: Annotated[int, Que
                  offset: Annotated[int, Query(ge=0)] = 0, review_status: ReviewStatus | None = None,
                  include_discarded: bool = False, context: AuthContext | None = Depends(optional_session)):
     admin = bool(context and context.is_admin)
-    if (include_discarded or review_status == 'discarded') and not admin:
-        raise HTTPException(status_code=403, detail='Los reportes descartados solo están disponibles para administradores.')
+    if (include_discarded or review_status in ('pending', 'discarded')) and not admin:
+        raise HTTPException(status_code=403, detail='Los reportes sin validar solo están disponibles para administradores.')
     response.headers['Cache-Control'] = 'no-store'
     return request.app.state.reports.list(limit, offset, admin=admin,
                                          include_discarded=include_discarded or review_status == 'discarded', review_status=review_status)

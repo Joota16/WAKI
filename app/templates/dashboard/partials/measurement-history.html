@@ -1,0 +1,19 @@
+<dialog id="measurement-history-dialog" class="site-dialog measurement-history-dialog" aria-labelledby="measurement-history-title">
+  <header class="site-dialog-header">
+    <h2 id="measurement-history-title">Historial de mediciones</h2>
+    <button type="button" data-close-dialog="measurement-history-dialog" aria-label="Cerrar historial">Cerrar ×</button>
+  </header>
+  <div class="site-dialog-body">
+    <p id="measurement-history-status" role="status" aria-live="polite"></p>
+    <div class="measurement-history-table" role="region" aria-label="Tabla de mediciones históricas" tabindex="0">
+      <table><thead id="measurement-history-head"></thead><tbody id="measurement-history-body"></tbody></table>
+    </div>
+    <a id="measurement-history-source" class="measurement-history-source" target="_blank" rel="noopener noreferrer" hidden>Fuente: SENAMHI</a>
+  </div>
+  <footer class="measurement-history-footer">
+    <button id="measurement-history-previous" type="button" disabled>Anterior</button>
+    <span id="measurement-history-page"></span>
+    <button id="measurement-history-next" type="button" disabled>Siguiente</button>
+    <button id="measurement-history-refresh" type="button">Actualizar</button>
+  </footer>
+</dialog>

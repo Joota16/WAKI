@@ -153,8 +153,27 @@ class Database:
                     sequence INTEGER PRIMARY KEY AUTOINCREMENT,
                     event_type TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL
                 );
+                CREATE TABLE IF NOT EXISTS push_subscriptions (
+                    id TEXT PRIMARY KEY, endpoint TEXT NOT NULL UNIQUE, subscription_json TEXT NOT NULL,
+                    latitude REAL NOT NULL, longitude REAL NOT NULL, accuracy_m REAL NOT NULL,
+                    location_at INTEGER NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS push_deliveries (
+                    subscription_id TEXT NOT NULL REFERENCES push_subscriptions(id) ON DELETE CASCADE,
+                    alert_id TEXT NOT NULL REFERENCES alerts(id) ON DELETE CASCADE,
+                    attempts INTEGER NOT NULL DEFAULT 0, next_attempt_at INTEGER NOT NULL DEFAULT 0,
+                    sent_at INTEGER,
+                    PRIMARY KEY(subscription_id, alert_id)
+                );
             """)
             connection.execute('BEGIN IMMEDIATE')
+            user_columns = {row['name'] for row in connection.execute('PRAGMA table_info(users)')}
+            if 'phone' not in user_columns:
+                connection.execute('ALTER TABLE users ADD COLUMN phone TEXT')
+            discharge_columns = {row['name'] for row in connection.execute('PRAGMA table_info(discharge_readings)')}
+            for name in ('yellow_m3s', 'orange_m3s', 'red_m3s'):
+                if name not in discharge_columns:
+                    connection.execute(f'ALTER TABLE discharge_readings ADD COLUMN {name} REAL')
             alert_columns = {row['name'] for row in connection.execute('PRAGMA table_info(alerts)')}
             for name, definition in {
                 'source_type': 'TEXT', 'source_id': 'TEXT', 'latitude': 'REAL',
@@ -168,6 +187,7 @@ class Database:
                 connection.execute("ALTER TABLE image_analyses ADD COLUMN source TEXT NOT NULL DEFAULT 'iot' CHECK(source IN ('iot','test'))")
             report_columns = {row['name'] for row in connection.execute('PRAGMA table_info(reports)')}
             additions = {
+                'phone': 'TEXT',
                 'other_situation': "TEXT NOT NULL DEFAULT ''",
                 'review_status': "TEXT NOT NULL DEFAULT 'pending' CHECK(review_status IN ('pending','validated','discarded'))",
                 'reviewed_at': 'TEXT', 'reviewed_by': 'TEXT',

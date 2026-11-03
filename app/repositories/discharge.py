@@ -9,9 +9,14 @@ class DischargeRepository:
     def save(self, station_code: str, batch: DischargeBatch, attempted_at: str, completed_at: str):
         with self.database.connect() as connection:
             connection.executemany("""
-                INSERT INTO discharge_readings(station_code, observed_at, discharge_m3s) VALUES (?, ?, ?)
-                ON CONFLICT(station_code, observed_at) DO UPDATE SET discharge_m3s=excluded.discharge_m3s
-            """, [(station_code, item.observed_at.isoformat(), item.discharge_m3s) for item in batch.readings])
+                INSERT INTO discharge_readings(station_code, observed_at, discharge_m3s, yellow_m3s, orange_m3s, red_m3s)
+                VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(station_code, observed_at) DO UPDATE SET
+                discharge_m3s=excluded.discharge_m3s, yellow_m3s=excluded.yellow_m3s,
+                orange_m3s=excluded.orange_m3s, red_m3s=excluded.red_m3s
+            """, [(station_code, item.observed_at.isoformat(), item.discharge_m3s,
+                    item.thresholds.yellow_m3s if item.thresholds else None,
+                    item.thresholds.orange_m3s if item.thresholds else None,
+                    item.thresholds.red_m3s if item.thresholds else None) for item in batch.readings])
             connection.execute("""
                 INSERT INTO discharge_sync(station_code, source_url, last_attempt_at, last_success_at, last_error)
                 VALUES (?, ?, ?, ?, NULL) ON CONFLICT(station_code) DO UPDATE SET source_url=excluded.source_url,
@@ -31,7 +36,14 @@ class DischargeRepository:
             connection.execute("BEGIN")
             state = connection.execute("SELECT * FROM discharge_sync WHERE station_code=?", (station_code,)).fetchone()
             rows = connection.execute("""
-                SELECT observed_at, discharge_m3s FROM discharge_readings WHERE station_code=?
+                SELECT observed_at, discharge_m3s, yellow_m3s, orange_m3s, red_m3s FROM discharge_readings WHERE station_code=?
                 ORDER BY observed_at DESC LIMIT 2000
             """, (station_code,)).fetchall()
-        return dict(state) if state else None, [dict(row) for row in reversed(rows)]
+        return dict(state) if state else None, [discharge_row(row) for row in reversed(rows)]
+
+
+def discharge_row(row):
+    result = dict(row)
+    limits = {name: result.pop(name) for name in ('yellow_m3s', 'orange_m3s', 'red_m3s')}
+    result['thresholds'] = limits if all(value is not None for value in limits.values()) else None
+    return result

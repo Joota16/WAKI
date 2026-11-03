@@ -9,7 +9,9 @@ import { initWeather } from './weather.js';
 import { initCamera } from './camera.js';
 import { initAnalyses } from './analyses.js';
 import { initAttention } from './attention.js';
+import { initMeasurementHistory } from './measurement-history.js';
 
+initMeasurementHistory();
 const waterLevel = initWaterLevel();
 const discharge = initDischarge();
 const weather = initWeather();

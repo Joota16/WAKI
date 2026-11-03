@@ -13,9 +13,9 @@ def test_old_zone_and_contact_columns_are_removed_without_losing_reports(tmp_pat
                         admin_username='admin', admin_password=ADMIN_PASSWORD)
     with TestClient(create_app(settings)) as client:
         report = send(client, payload(observations='Observación anterior a la migración')).json()
+        login(client)
         photo = client.get(report['photos'][0]['url']).content
         if reviewed:
-            login(client)
             report = review(client, report, 'validated', 'Revisión que debe conservarse').json()
         database = client.app.state.database
 
@@ -39,12 +39,12 @@ def test_old_zone_and_contact_columns_are_removed_without_losing_reports(tmp_pat
             db.execute(f'UPDATE reports SET {column}=?', (value,))
 
     with TestClient(create_app(settings)) as client:
+        login(client)
         migrated = client.get('/api/reports/' + report['id']).json()
         for key in ('id', 'created_at', 'observations', 'other_situation', 'latitude', 'longitude', 'photos', 'review_status', 'review_version'):
             assert migrated[key] == report[key], key
         assert not set(legacy).intersection(migrated)
         assert client.get(report['photos'][0]['url']).content == photo
-        login(client)
         if reviewed:
             assert client.get('/api/reports/' + report['id']).json()['review_notes'] == 'Revisión que debe conservarse'
         with database.connect() as db:
@@ -57,5 +57,7 @@ def test_old_zone_and_contact_columns_are_removed_without_losing_reports(tmp_pat
         assert send(client, {'observed_condition': 'normal'}).status_code == 201
 
     with TestClient(create_app(settings)) as client:
+        assert client.get('/api/reports').json()['total'] == int(reviewed)
+        login(client)
         assert client.get('/api/reports').json()['total'] == 2
         assert client.get(report['photos'][0]['url']).content == photo

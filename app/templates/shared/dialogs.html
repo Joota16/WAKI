@@ -7,7 +7,29 @@
 <dialog id="important-notice-dialog" class="site-dialog site-notice-dialog" role="alertdialog" aria-labelledby="important-notice-title" aria-describedby="important-notice-description">
   <header class="site-notice-header"><span aria-hidden="true">⚠</span><div><p>AVISO IMPORTANTE</p><h2 id="important-notice-title">Evento peligroso informado</h2></div></header>
   <div class="site-dialog-body"><p id="important-notice-description">Avisos publicados por la administración de WAKI.</p><div id="important-notice-list" class="site-stack"></div></div>
-  <footer class="site-notice-footer"><button id="acknowledge-notices" type="button" class="site-danger" autofocus>Entendido</button></footer>
+  <footer class="site-notice-footer">
+    <button type="button" data-open-notification-settings>Configurar avisos por cercanía</button>
+    <button id="acknowledge-notices" type="button" class="site-danger" autofocus>Entendido</button>
+  </footer>
+</dialog>
+
+<dialog id="nearby-notifications-dialog" class="site-dialog" aria-labelledby="nearby-notifications-title">
+  <header class="site-dialog-header">
+    <h2 id="nearby-notifications-title">Avisos cerca de mí</h2>
+    <button type="button" data-close-dialog="nearby-notifications-dialog" aria-label="Cerrar configuración de avisos">Cerrar ×</button>
+  </header>
+  <div class="site-dialog-body">
+    <p>Recibe avisos cuando tu ubicación compartida esté dentro del radio de una zona de peligro publicada.</p>
+    <p class="site-muted">Con tu permiso, WAKI guarda tu última ubicación y la actualiza mientras está abierto. Con WAKI cerrado se usa esa última posición, no tu ubicación en tiempo real. La ubicación vence en <span id="nearby-location-expiry">24 horas</span>.</p>
+    <p id="nearby-notifications-status" class="site-muted" role="status" aria-live="polite">Los avisos por cercanía están desactivados. Puedes consultar todos los avisos desde la campana.</p>
+    <div class="nearby-notification-actions">
+      <button id="nearby-location" type="button">Activar avisos cercanos</button>
+      <button id="nearby-push" type="button" disabled>Recibir también con WAKI cerrado</button>
+      <button id="nearby-disable" type="button" hidden>Desactivar y borrar mi ubicación</button>
+    </div>
+    <p id="nearby-push-support" class="site-muted"></p>
+    <p class="site-muted">La entrega depende de internet, los permisos y la configuración de batería del dispositivo. Los avisos se basan en una ubicación aproximada.</p>
+  </div>
 </dialog>
 
 <dialog id="pwa-install-dialog" class="site-dialog" aria-labelledby="pwa-install-title" aria-describedby="pwa-install-description">

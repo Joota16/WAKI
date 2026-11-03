@@ -39,6 +39,7 @@
     <div class="flex flex-wrap items-center gap-3 text-[11px]">
       <a id="weather-source" href="{{ weather_station.source_url }}" class="text-sky-700 underline" target="_blank" rel="noopener noreferrer">Fuente: SENAMHI</a>
       <button id="weather-retry" type="button" class="text-sky-700 underline" hidden>Volver a consultar</button>
+      <button class="measurement-history-button" type="button" data-history-kind="weather" data-history-station="{{ weather_station.code }}">Ver histórico en tabla</button>
     </div>
   </section>
   <p id="weather-empty" class="text-xs text-slate-500" hidden>No hay una estación meteorológica conectada para este río.</p>

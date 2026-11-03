@@ -1,0 +1,9 @@
+services:
+  waki:
+    build:
+      args:
+        INSTALL_AI: "true"
+        TORCH_INDEX_URL: https://download.pytorch.org/whl/cu128
+    gpus: all
+    environment:
+      AI_DEVICE: cuda
