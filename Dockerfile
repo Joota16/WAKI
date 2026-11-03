@@ -11,10 +11,17 @@ COPY requirements.txt ./
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
 ARG INSTALL_AI=false
+ARG TORCH_INDEX_URL=https://download.pytorch.org/whl/cpu
+
 COPY requirements-ai-runtime.txt ./
 RUN if [ "$INSTALL_AI" = "true" ]; then \
-      python -m pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu \
-      && python -m pip install --no-cache-dir -r requirements-ai-runtime.txt; \
+      python -m pip install --no-cache-dir \
+        --timeout 300 --retries 10 \
+        torch==2.11.0 torchvision==0.26.0 \
+        --index-url "$TORCH_INDEX_URL" \
+      && python -m pip install --no-cache-dir \
+        --timeout 300 --retries 10 \
+        -r requirements-ai-runtime.txt; \
     fi
 
 RUN groupadd --gid 10001 waki \
