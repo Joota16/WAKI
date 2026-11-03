@@ -9,7 +9,6 @@ El firmware debe inicializar su módulo de cámara en formato JPEG y conectarse 
 | Río | `camera_id` |
 | --- | --- |
 | Chillón | `chillon-01` |
-| Rímac | `rimac-01` |
 
 El registro está en `app/services/cameras.py`. No se aceptan identificadores
 arbitrarios ni un nombre de río enviado por el dispositivo.
@@ -114,8 +113,5 @@ Para un dominio HTTPS, configura la CA del servidor en el cliente TLS del ESP32.
 - Las fotos son públicas en el tablero. Solo las subidas requieren la clave.
 - La tabla `camera_frames` y `DATA_DIR/camera_photos/` son independientes de los
   reportes ciudadanos. Se conservan las últimas `IOT_RETENTION_IMAGES` fotos por
-  cámara (100 por defecto); las anteriores se eliminan. El volumen Docker persiste
-  ante reinicios. No hay segmentación ni análisis de IA en esta recepción.
+  cámara (100 por defecto); las anteriores se eliminan.
 - Al arrancar se limpian archivos IoT sin referencia tras guardados interrumpidos.
-  Usa un solo proceso/worker, como el Compose incluido; no es un almacenamiento
-  distribuido ni una cola de tareas.
