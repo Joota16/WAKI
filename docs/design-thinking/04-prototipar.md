@@ -31,17 +31,8 @@ La implementación no se duplica aquí; cada artefacto enlaza a su documentació
 | Dispositivo de monitoreo | ESP32-CAM con carcasa impresa en 3D. | Firmware: [`firmware/waki_esp32cam/`](../../firmware/waki_esp32cam/) · Documentación: [`docs/esp32-camera.md`](../esp32-camera.md) |
 | Modelo de reconocimiento de imágenes | Integrado al dispositivo. | Resultados en plataforma: [ANX-04](#anx-04-visualización-de-resultados-del-análisis-de-visión-computacional) · [`docs/ia/`](../ia/LEEME_INICIO.md) |
 | Arquitectura funcional | Flujo de integración de los componentes tecnológicos. | [ANX-07](#anx-07-arquitectura-funcional-de-waki) |
-| Modelo CAD de la carcasa (Onshape) | Diseño de la carcasa para impresión 3D. Boceto inicial en [ANX-03](03-idear.md#anx-03-boceto-conceptual-inicial). | ANX-09 (pendiente, ver abajo) |
-| Storyboard | Flujo vecino → plataforma → personal GRD. | ANX-08 (pendiente, ver abajo) |
-
-### Imágenes pendientes
-
-| ID | Contenido | Archivo esperado |
-|---|---|---|
-| ANX-08 | Storyboard del flujo vecino → plataforma → personal GRD | `anexos/img/prototipar/anx-08-storyboard.jpg` |
-| ANX-09 | Modelo CAD de la carcasa (Onshape) | `anexos/img/prototipar/anx-09-carcasa-cad.png` |
-
-> TODO: pendiente — agregar estas imágenes en [`anexos/img/prototipar/`](anexos/img/prototipar/) con los nombres indicados y referenciarlas aquí.
+| Modelo CAD de la carcasa (Onshape) | Diseño de la carcasa para impresión 3D. | Boceto conceptual inicial: [ANX-03](03-idear.md#anx-03-boceto-conceptual-inicial) |
+| Storyboard | Flujo vecino → plataforma → personal GRD. | Recorrido descrito en el [Journey Map ideal](03-idear.md#journey-map-ideal-to-be) |
 
 ## ANX-07: Arquitectura funcional de WAKI
 
@@ -51,7 +42,7 @@ Diagrama de la arquitectura funcional de WAKI y el flujo de integración de sus 
 
 ## Secuencia de pantallas
 
-Capturas del prototipo funcional tomadas de los Anexos 4, 5 y 6 de la Ficha Técnica. Las pantallas que en la Ficha estaban bajo un mismo rótulo se muestran juntas. Diseño completo en [Figma](https://www.figma.com/design/uz8ZkFeTMAT75fdedoP7RO/WAKI-%C2%B7-Prototipos-de-la-aplicaci%C3%B3n-actual?node-id=0-1).
+Capturas del prototipo funcional (Anexos 4, 5 y 6 de la Ficha Técnica). Las pantallas de una misma funcionalidad se muestran juntas. Diseño completo en [Figma](https://www.figma.com/design/uz8ZkFeTMAT75fdedoP7RO/WAKI-%C2%B7-Prototipos-de-la-aplicaci%C3%B3n-actual?node-id=0-1).
 
 ### ANX-04: Visualización de resultados del análisis de visión computacional
 

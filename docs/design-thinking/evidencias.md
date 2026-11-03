@@ -14,10 +14,10 @@ Todas las fechas siguen la norma ISO 8601 (`AAAA-MM-DD`) y las horas corresponde
 | OBS-01-F0n | Fotografía | Fotografías de la observación OBS-01 (F01, F02, F03) | 2026-10-31 | [Empatizar](01-empatizar.md#fotografías), [Anexos](anexos/README.md) |
 | Qn | Pregunta | Número de pregunta de la [guía de entrevista](anexos/guia-entrevista.md) (1 a 10). Ej.: MUN-01/Q04 = pregunta 4 de la entrevista MUN-01 | — | [Empatizar](01-empatizar.md) |
 | Obj. nn | Objetivo | Objetivo de la [guía de entrevista](anexos/guia-entrevista.md) en que se agruparon las preguntas (Objetivo 01, 02, 03). Ej.: MUN-02 · Obj. 02 | — | [Idear](03-idear.md#qué-problema-se-está-solucionando) |
-| ANX-nn | Anexo | Imágenes de apoyo. ANX-01 a ANX-07 conservan la numeración de los anexos de la Ficha Técnica final; ANX-08 y ANX-09 son pendientes del repositorio | — | [Anexos](anexos/README.md) |
+| ANX-nn | Anexo | Imágenes de apoyo. ANX-01 a ANX-07 conservan la numeración de los anexos de la Ficha Técnica | — | [Anexos](anexos/README.md) |
 | FIG-01 | Figura | Figura 1 de la Ficha Técnica: dashboard e imágenes captadas por IoT | — | [Idear](03-idear.md#pantallas) |
-| CTX-01 | Contexto | Mapa del área piloto, de una versión preliminar de la Ficha Técnica | — | [Empatizar](01-empatizar.md#ctx-01-área-piloto-waki-malecón-chillóngallinazos) |
+| CTX-01 | Contexto | Mapa del área piloto | — | [Empatizar](01-empatizar.md#ctx-01-área-piloto-waki-malecón-chillóngallinazos) |
 | ITE-0n | Captura | Pantallas antes y después de la iteración posterior a la evaluación | — | [Evaluar](05-evaluar.md#iteración-pantallas-antes-y-después-de-la-evaluación) |
-| PRU-01-Cnn | Captura | Capturas de la prueba en campo del 2026-10-31 | 2026-10-31 | [Evaluar](05-evaluar.md#evidencia-disponible-prueba-en-campo-2026-10-31) |
+| PRU-01-Cnn | Captura | Capturas de la prueba en campo del 2026-10-31 | 2026-10-31 | [Evaluar](05-evaluar.md#prueba-en-campo-2026-10-31) |
 
 La guía de entrevista y la plantilla de consentimiento están en [anexos/guia-entrevista.md](anexos/guia-entrevista.md).

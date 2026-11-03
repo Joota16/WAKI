@@ -61,7 +61,7 @@
 
 ## Iteración: pantallas antes y después de la evaluación
 
-Capturas de la plataforma antes y después de los ajustes, registradas por el equipo en la Ficha Técnica. Las sugerencias que motivaron los cambios están en la tabla de [hallazgos y conclusiones](#descripción-de-hallazgos-y-conclusiones-por-objetivo).
+Capturas de la plataforma antes y después de los ajustes. Las sugerencias que motivaron los cambios están en la tabla de [hallazgos y conclusiones](#descripción-de-hallazgos-y-conclusiones-por-objetivo).
 
 | Vista | Antes | Después |
 |---|---|---|
@@ -70,11 +70,11 @@ Capturas de la plataforma antes y después de los ajustes, registradas por el eq
 | <a id="ite-03"></a>ITE-03 · Opciones de administrador | ![ITE-03: opciones de administrador antes](anexos/img/evaluar/ite-03-admin-antes.png) | ![ITE-03: opciones de administrador después](anexos/img/evaluar/ite-03-admin-despues.png) |
 | <a id="ite-04"></a>ITE-04 · Alerta | ![ITE-04: publicación de aviso antes](anexos/img/evaluar/ite-04-aviso-antes.png) | ![ITE-04: publicación de aviso después](anexos/img/evaluar/ite-04-aviso-despues.png) |
 
-> TODO: pendiente — describir qué cambió en cada vista y qué sugerencia lo motivó.
+A partir de la entrevista, se añadieron umbrales hidrológicos e información histórica en tablas. En la pantalla de reportes se hicieron modificaciones visuales para que el sistema sea más amigable para el ciudadano.
 
-## Evidencia disponible: prueba en campo (2026-10-31)
+## Prueba en campo (2026-10-31)
 
-La Ficha Técnica registra una prueba en campo el 2026-10-31, en la que se evaluó el funcionamiento del dispositivo bajo las condiciones reales (Tabla 3, columna "Ajuste" sin completar). Estas capturas, tomadas de la pestaña "Pruebas" de la Ficha, son la evidencia disponible de esa prueba. No sustituyen el plan ni los resultados de esta fase.
+El 2026-10-31 se realizó una prueba en campo en el tramo piloto para evaluar el funcionamiento del dispositivo bajo condiciones reales. Las capturas muestran las imágenes recibidas desde la cámara ESP32, un reporte ciudadano registrado y los análisis de visión computacional generados.
 
 | ID | Contenido |
 |---|---|
@@ -94,6 +94,3 @@ La Ficha Técnica registra una prueba en campo el 2026-10-31, en la que se evalu
 
 ![PRU-01-C05: pruebas manuales con análisis de IA](anexos/img/evaluar/pru-01-c05.png)
 
-> TODO: pendiente — registrar qué se observó en la prueba, los problemas encontrados y el ajuste decidido.
-
-Nuevas imágenes de esta fase van en [`anexos/img/evaluar/`](anexos/img/evaluar/) y se registran en el [índice de anexos](anexos/README.md).

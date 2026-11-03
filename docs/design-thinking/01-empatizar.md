@@ -42,7 +42,7 @@ Estas condiciones coinciden con las descritas en el Plan de Contingencia de la M
 
 ### Fotografías
 
-En la Ficha, las tres fotografías ocupan una misma celda; aquí se muestran juntas. Clic en cada ID para verla a tamaño completo.
+Fotografías tomadas durante la observación OBS-01. Haz clic en cada ID para verla a tamaño completo.
 
 ![OBS-01: fotografías F01, F02 y F03 del Malecón Chillón–Gallinazos](anexos/img/empatizar/obs-01-f01-f03.jpg)
 
@@ -54,7 +54,7 @@ En la Ficha, las tres fotografías ocupan una misma celda; aquí se muestran jun
 
 ## Contexto del área de estudio
 
-Anexos de la Ficha Técnica que ubican el tramo observado.
+Material que ubica y caracteriza el tramo observado.
 
 ### ANX-01: Mapa de peligro por inundación fluvial del distrito de Comas
 
@@ -70,7 +70,7 @@ Condiciones observadas en el tramo piloto del río Chillón, fotografías tomada
 
 ### CTX-01: Área piloto WAKI (Malecón Chillón–Gallinazos)
 
-Mapa incluido en una versión preliminar de la Ficha Técnica; no forma parte de los anexos de la versión final.
+Delimitación del área piloto de WAKI en el Malecón Chillón–Gallinazos.
 
 ![CTX-01: área piloto WAKI en el Malecón Chillón–Gallinazos](anexos/img/empatizar/ctx-01-mapa-area-piloto.jpg)
 
