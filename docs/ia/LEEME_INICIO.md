@@ -64,13 +64,3 @@ El modo `replay` **NO es una nueva inferencia ni validación del modelo**; sirve
 - Revisa los términos de licencia de modelos dependientes de Ultralytics (AGPL-3.0/Enterprise según el caso) antes de redistribución/servicio comercial.
 
 Para integrar Python ve `CONTRATO_PARA_WEB.md`.
-
-## Crear el ZIP final **incluyendo tus pesos entrenados**
-
-Desde esta carpeta en tu computadora, ejecuta:
-
-```powershell
-python scripts\empaquetar_para_web.py --checkpoint "C:\Users\Jhunior\Downloads\WAKI\WAKI_Motor_IA_v2_1\models\segformer_chillon_finetuned" --out "WAKI_IA_FINAL_con_checkpoint.zip"
-```
-
-El ZIP resultante incorpora `config.json` y `model.safetensors` del checkpoint propio. Tu compañero podrá utilizar ambos perfiles de agua. Los pesos externos de B0 clásico, Grounding DINO y YOLOE **no quedan embebidos** por este comando: en el equipo servidor deben estar en su caché o descargarse al primer uso. Para una presentación sin conexión, prueba la demo `ejemplo_replay` o ejecuta una inferencia real previamente en ese equipo para poblar las cachés.
