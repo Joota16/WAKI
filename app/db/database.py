@@ -187,6 +187,7 @@ class Database:
                 connection.execute("ALTER TABLE image_analyses ADD COLUMN source TEXT NOT NULL DEFAULT 'iot' CHECK(source IN ('iot','test'))")
             report_columns = {row['name'] for row in connection.execute('PRAGMA table_info(reports)')}
             additions = {
+                'client_created_at': 'TEXT',
                 'phone': 'TEXT',
                 'other_situation': "TEXT NOT NULL DEFAULT ''",
                 'review_status': "TEXT NOT NULL DEFAULT 'pending' CHECK(review_status IN ('pending','validated','discarded'))",

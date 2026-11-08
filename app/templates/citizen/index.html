@@ -4,8 +4,13 @@
   <main class="w-full bg-surface pb-16">
     <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
       {% include "citizen/partials/intro.html" %}
+      <div class="report-offline-notice">
+        <p id="reportConnectionStatus" role="status">Tus reportes se guardan primero en este dispositivo antes de enviarse.</p>
+        <p id="reportOfflineReady">Preparando el formulario para usarlo sin conexión…</p>
+      </div>
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-8">
-        <form class="lg:col-span-8 flex flex-col gap-6" id="citizenReportForm" data-max-photos="{{ limits.max_photos }}" data-max-upload-mb="{{ limits.max_upload_mb }}" data-max-image-pixels="{{ limits.max_image_pixels }}">
+        <form class="lg:col-span-8 flex flex-col gap-6" id="citizenReportForm" data-max-photos="{{ limits.max_photos }}" data-max-upload-mb="{{ limits.max_upload_mb }}" data-max-image-pixels="{{ limits.max_image_pixels }}" data-upload-timeout-seconds="{{ limits.upload_timeout_seconds }}">
+          <p id="reportEditingNotice" class="location-warning" hidden>Estás corrigiendo un reporte rechazado. Al guardarlo se reemplazará el pendiente anterior.</p>
           <fieldset id="reportFields" class="report-fields">
             {% include "citizen/form/risk.html" %}
             {% include "citizen/form/situation.html" %}
@@ -16,9 +21,11 @@
             {% include "citizen/form/actions.html" %}
           </fieldset>
           <p id="reportSubmitError" class="form-error" role="alert" tabindex="-1" hidden></p>
+          <p id="reportSubmitStatus" class="report-offline-notice" role="status" aria-live="polite" hidden></p>
         </form>
         {% include "citizen/partials/sidebar.html" %}
       </div>
+      {% include "citizen/partials/outbox.html" %}
     </div>
     {% include "citizen/partials/success-modal.html" %}
   </main>

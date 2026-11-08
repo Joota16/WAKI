@@ -6,12 +6,14 @@ import { initAccountPages } from './account-pages.js';
 import { initHeader } from './header.js';
 import { initPWA } from './pwa.js';
 import { initNearbyNotifications } from './nearby-notifications.js';
+import { initOfflineReports } from '../offline/client.js';
 
 document.addEventListener('click', event => {
   const button = event.target.closest('[data-close-dialog]');
   if (button) document.getElementById(button.dataset.closeDialog)?.close();
 });
 initPWA();
+initOfflineReports();
 const sessionReady = initAuth();
 initHeader();
 initNearbyNotifications();

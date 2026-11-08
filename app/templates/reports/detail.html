@@ -7,6 +7,7 @@
       <h1 class="text-2xl font-bold">Reporte ciudadano</h1>
       <p class="text-sm text-on-surface-variant break-all">Reporte {{ report.id }}</p>
       <p class="text-sm">Registrado el {{ registered_local }} (Lima)</p>
+      {% if report.client_created_at %}<p class="text-sm">Creado en el dispositivo: {{ report.client_created_at | lima_datetime }} (Lima; fecha indicada por el dispositivo).</p>{% endif %}
       <p class="site-review-badge" data-report-review-label>{{ report.review_label }}</p>
       {% if report.phone %}<p class="text-sm" data-admin-only>Celular: <a href="tel:+51{{ report.phone }}" class="text-primary underline">{{ report.phone }}</a></p>{% endif %}
       {% if report.attention_label %}<p class="text-sm">Nivel de atención asignado: {{ report.attention_label }}</p>{% endif %}

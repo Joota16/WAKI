@@ -1,19 +1,30 @@
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
-from fastapi.responses import FileResponse
 
 from app.api.dependencies import same_origin
 from app.schemas.notifications import NearbySubscription, SubscriptionToken
+from app.services.pwa import offline_resources
 
 router = APIRouter(tags=['Avisos por cercanía'])
 WORKER_FILE = Path(__file__).resolve().parent.parent / 'static' / 'js' / 'service-worker.js'
 
 
 @router.get('/service-worker.js', include_in_schema=False)
-def service_worker():
-    return FileResponse(WORKER_FILE, media_type='text/javascript',
-                        headers={'Cache-Control': 'no-cache', 'Service-Worker-Allowed': '/'})
+def service_worker(request: Request):
+    _, version = offline_resources()
+    settings = request.app.state.settings
+    version += f'-{settings.max_photos}-{settings.max_upload_mb}-{settings.max_image_pixels}-{settings.report_upload_timeout_seconds}'
+    content = WORKER_FILE.read_text(encoding='utf-8').replace('__WAKI_OFFLINE_VERSION__', version)
+    return Response(content, media_type='text/javascript',
+                    headers={'Cache-Control': 'no-cache', 'Service-Worker-Allowed': '/'})
+
+
+@router.get('/pwa-assets.json', include_in_schema=False)
+def pwa_assets(response: Response):
+    response.headers['Cache-Control'] = 'no-cache'
+    assets, _ = offline_resources()
+    return {'assets': assets}
 
 
 @router.get('/api/notifications/config')

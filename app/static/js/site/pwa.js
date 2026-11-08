@@ -1,6 +1,6 @@
 import { message } from './utils.js';
 
-/** Instalación de WAKI; las páginas y los datos siempre se consultan por red. */
+/** Instalación de WAKI; el formulario puede prepararse para uso sin conexión. */
 export function initPWA() {
   const button = document.getElementById('pwa-install-button');
   const instructions = document.getElementById('pwa-install-dialog');

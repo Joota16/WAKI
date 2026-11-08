@@ -1,4 +1,5 @@
 import { hasAlertZone } from './alert-zones.js';
+import { workerReady } from '../offline/client.js';
 
 const STORAGE = 'waki-nearby-notifications';
 let settings = null;
@@ -23,8 +24,8 @@ export function initNearbyNotifications() {
   const disableButton = document.getElementById('nearby-disable');
   const supported = window.isSecureContext && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
   let config = null, busy = false;
-  const worker = supported ? navigator.serviceWorker.register('/service-worker.js', { scope: '/', updateViaCache: 'none' }) : null;
-  // El registro no pide permisos y no guarda páginas para uso sin internet.
+  const worker = supported ? workerReady : null;
+  // El registro compartido funciona también sin soporte de notificaciones.
   worker?.catch(() => {});
 
   function save() {

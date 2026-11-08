@@ -1,5 +1,6 @@
 import base64
 import json
+import os
 import time
 from uuid import uuid4
 
@@ -85,7 +86,7 @@ def test_publication_gate_covers_all_paths_filters_and_review_transitions(client
     guest.close()
 
 
-def test_keys_are_private_stable_and_worker_does_not_cache_pages(client, settings):
+def test_keys_are_private_stable_and_worker_preserves_push_with_offline_form(client, settings):
     config = client.get('/api/notifications/config')
     assert config.status_code == 200 and config.json()['enabled']
     key = config.json()['public_key']
@@ -93,15 +94,17 @@ def test_keys_are_private_stable_and_worker_does_not_cache_pages(client, setting
     service = NotificationsService(client.app.state.database, settings)
     service.initialize()
     assert service.public_key == key
-    assert service.private_key.stat().st_mode & 0o777 == 0o600
+    if os.name != 'nt':  # Windows usa ACL, no representa estos permisos POSIX en st_mode.
+        assert service.private_key.stat().st_mode & 0o777 == 0o600
     assert 'PRIVATE KEY' not in config.text
     worker = client.get('/service-worker.js')
     assert worker.status_code == 200
     assert worker.headers['service-worker-allowed'] == '/'
     assert 'no-cache' in worker.headers['cache-control']
     assert "addEventListener('push'" in worker.text
-    assert "addEventListener('fetch'" not in worker.text
-    assert 'caches.' not in worker.text
+    assert "addEventListener('fetch'" in worker.text
+    assert "addEventListener('sync'" in worker.text
+    assert '__WAKI_OFFLINE_VERSION__' not in worker.text
 
 
 def test_subscription_is_idempotent_owned_by_device_and_can_be_removed(client):

@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     max_photos: int = Field(default=5, ge=1, le=10)
     max_image_pixels: int = Field(default=20_000_000, ge=1, le=40_000_000)
     normalized_max_side: int = Field(default=1920, ge=64, le=4096)
+    report_upload_timeout_seconds: int = Field(default=120, ge=10, le=600)
     senamhi_enabled: bool = True
     senamhi_poll_seconds: int = Field(default=3600, ge=300, le=86400)
     iot_key: SecretStr = SecretStr("")
