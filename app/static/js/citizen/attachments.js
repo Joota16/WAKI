@@ -94,6 +94,7 @@ export function initAttachments() {
   return {
     get pending() { return pending > 0; },
     files: () => items.map(item => item.file),
+    async restore(files) { this.clear(); add(files); await work; },
     clear() {
       items.forEach(item => URL.revokeObjectURL(item.url));
       items = []; picker.value = camera.value = ''; error.hidden = true; render();

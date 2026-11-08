@@ -88,6 +88,10 @@ export function initLocation() {
   render();
   return {
     get pending() { return pending; },
+    restore(data) {
+      latitude.value = data.latitude ?? ''; longitude.value = data.longitude ?? '';
+      accuracy.value = data.accuracy_m ?? ''; showError(''); render();
+    },
     clear() { latitude.value = longitude.value = accuracy.value = ''; showError(''); render(); },
     values() {
       if (!latitude.value && !longitude.value) return {};

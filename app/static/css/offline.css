@@ -1,0 +1,3 @@
+body { margin: 0; background: #f8f9ff; color: #0b1c30; font: 1rem/1.6 system-ui, sans-serif; }
+main { max-width: 38rem; margin: 10vh auto; padding: 1.5rem; }
+a { display: inline-block; padding: .8rem 1rem; background: #006194; color: white; border-radius: .6rem; }
