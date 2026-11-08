@@ -29,7 +29,7 @@ class ReportsService:
     def present(row: dict, admin=False) -> ReportOut:
         # Solo se publican los campos del contrato de reportes.
         fields = {name: row[name] for name in (
-            "id", "created_at", "observations",
+            "id", "created_at", "client_created_at", "observations",
             "observed_condition", "situations", "other_situation", "latitude", "longitude", "accuracy_m",
         )}
         fields["photos"] = [
@@ -48,8 +48,11 @@ class ReportsService:
     def create(self, metadata: ReportInput, contents: list[bytes], request_key: str | None) -> ReportOut:
         if not 1 <= len(contents) <= self.settings.max_photos:
             raise InvalidImage(f"Adjunta entre 1 y {self.settings.max_photos} fotografías.")
-        payload = metadata.model_dump()
+        payload = metadata.model_dump(mode='json')
         fingerprint_payload = dict(payload)
+        if fingerprint_payload['client_created_at'] is None:
+            # Los envíos anteriores no incluían la fecha del dispositivo.
+            fingerprint_payload.pop('client_created_at')
         if not fingerprint_payload['other_situation']:
             # Conserva la huella de reintentos enviados antes de añadir el campo opcional.
             fingerprint_payload.pop('other_situation')

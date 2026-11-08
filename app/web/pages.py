@@ -84,7 +84,8 @@ def citizen_report(request: Request):
     settings = request.app.state.settings
     return templates.TemplateResponse(request=request, name="citizen/index.html", context={
         "limits": {"max_photos": settings.max_photos, "max_upload_mb": settings.max_upload_mb,
-                   "max_image_pixels": settings.max_image_pixels},
+                   "max_image_pixels": settings.max_image_pixels,
+                   "upload_timeout_seconds": settings.report_upload_timeout_seconds},
     })
 
 

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
 
 from app.schemas.attention import AttentionLevel
 from app.schemas.phone import OptionalPhone
@@ -41,6 +41,7 @@ class ReportReview(BaseModel):
 class ReportInput(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
 
+    client_created_at: AwareDatetime | None = None
     observations: str = Field(default="", max_length=2000)
     phone: OptionalPhone = None
     observed_condition: Literal["critico", "muy-alto", "alto", "normal"]
@@ -75,6 +76,7 @@ class PhotoOut(BaseModel):
 class ReportOut(BaseModel):
     id: str
     created_at: datetime
+    client_created_at: datetime | None = None
     observations: str
     observed_condition: str
     situations: list[str]
